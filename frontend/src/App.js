@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
@@ -13,6 +13,7 @@ import FAQ from './components/common/FAQ';
 import PrivacyPolicyPage from './components/common/PrivacyPolicyPage';
 import CookiesPolicyPage from './components/common/CookiePolicyPage';
 import CookieConsent from './components/common/CookiesConsent';
+import SystemAnnouncement from './components/common/SystemAnnouncement';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -48,6 +49,7 @@ function App() {
       <AuthProvider>
         <Router>
         <CookieConsent />
+        <SystemAnnouncement />p
           <Routes>
             <Route path="/" element={<MainLayout />}>
               <Route index element={<HomePage />} />

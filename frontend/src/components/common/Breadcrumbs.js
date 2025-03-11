@@ -1,7 +1,7 @@
 // File: frontend/src/components/common/Breadcrumbs.js
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../../utils/api';
 
 const Breadcrumbs = () => {

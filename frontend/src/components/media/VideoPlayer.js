@@ -1,18 +1,33 @@
-// File: frontend/src/components/media/VideoPlayer.js
 import React, { useEffect } from 'react';
 
-const VideoPlayer = ({ tmdbId, mediaType, season, episode }) => {
-  // Built the embed URL
+const VideoPlayer = ({ tmdbId, mediaType, season, episode, playerType = 'vidlink' }) => {
+  // Build the embed URL based on playerType
   let embedUrl = '';
   
-  if (mediaType === 'movie') {
-    embedUrl = `https://vidlink.pro/movie/${tmdbId}?primaryColor=82BC87&secondaryColor=161616&iconColor=E4D981&title=true&poster=true&autoplay=true&nextbutton=true`;
-  } else if (mediaType === 'tv' && season && episode) {
-    embedUrl = `https://vidlink.pro/tv/${tmdbId}/${season}/${episode}?primaryColor=82BC87&secondaryColor=161616&iconColor=E4D981&title=true&poster=true&autoplay=true&nextbutton=true`;
+  if (playerType === 'vidlink') {
+    if (mediaType === 'movie') {
+      embedUrl = `https://vidlink.pro/movie/${tmdbId}?primaryColor=82BC87&secondaryColor=161616&iconColor=E4D981&title=true&poster=true&autoplay=true&nextbutton=true`;
+    } else if (mediaType === 'tv' && season && episode) {
+      embedUrl = `https://vidlink.pro/tv/${tmdbId}/${season}/${episode}?primaryColor=82BC87&secondaryColor=161616&iconColor=E4D981&title=true&poster=true&autoplay=true&nextbutton=true`;
+    }
+  } else if (playerType === 'embedsu') {
+    if (mediaType === 'movie') {
+      embedUrl = `https://embed.su/embed/movie/${tmdbId}`;
+    } else if (mediaType === 'tv' && season && episode) {
+      embedUrl = `https://embed.su/embed/tv/${tmdbId}/${season}/${episode}`;
+    }
+  } else if (playerType === 'vidsrc') {
+    if (mediaType === 'movie') {
+      embedUrl = `https://vidsrc.to/embed/movie/${tmdbId}`;
+    } else if (mediaType === 'tv' && season && episode) {
+      embedUrl = `https://vidsrc.to/embed/tv/${tmdbId}/${season}/${episode}`;
+    }
   }
   
-  // Add event listener for player messages
+  // Add event listener for vidlink player messages
   useEffect(() => {
+    if (playerType !== 'vidlink') return; // Only for vidlink player
+    
     const handleMessage = (event) => {
       if (event.origin !== 'https://vidlink.pro') return;
       
@@ -27,7 +42,7 @@ const VideoPlayer = ({ tmdbId, mediaType, season, episode }) => {
     return () => {
       window.removeEventListener('message', handleMessage);
     };
-  }, []);
+  }, [playerType]);
   
   if (!embedUrl) {
     return (
@@ -47,7 +62,11 @@ const VideoPlayer = ({ tmdbId, mediaType, season, episode }) => {
         className="w-full h-full"
         frameBorder="0"
         allowFullScreen
-        title="Playex Video Player"
+        title={
+          playerType === 'vidlink' ? "VidLink Player" : 
+          playerType === 'embedsu' ? "EmbedSu Player" : 
+          "Vidsrc Player"
+        }
       ></iframe>
     </div>
   );

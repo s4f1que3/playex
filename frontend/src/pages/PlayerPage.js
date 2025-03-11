@@ -1,7 +1,6 @@
-// File: frontend/src/pages/PlayerPage.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
 import VideoPlayer from '../components/media/VideoPlayer';
 import Spinner from '../components/common/Spinner';
@@ -9,6 +8,19 @@ import Spinner from '../components/common/Spinner';
 const PlayerPage = ({ mediaType }) => {
   const { id, season, episode } = useParams();
   const navigate = useNavigate();
+  
+  // Add state for player type
+  const [playerType, setPlayerType] = useState(() => {
+    // Get from localStorage or default to 'vidlink'
+    return localStorage.getItem('preferredPlayer') || 'vidlink';
+  });
+  
+  // Function to handle player type change
+  const handlePlayerChange = (type) => {
+    localStorage.setItem('preferredPlayer', type);
+    // Reload the current page to apply changes
+    window.location.reload();
+  };
   
   // Fetch media details
   const { data, isLoading, error } = useQuery(
@@ -77,8 +89,45 @@ const PlayerPage = ({ mediaType }) => {
           tmdbId={id} 
           mediaType={mediaType} 
           season={season} 
-          episode={episode} 
+          episode={episode}
+          playerType={playerType}
         />
+      </div>
+      
+      {/* Player selection buttons - centered below player */}
+      <div className="bg-gray-900 py-3 border-b border-gray-800">
+        <div className="container mx-auto px-4 flex justify-center space-x-3">
+          <button
+            onClick={() => handlePlayerChange('vidlink')}
+            className={`px-4 py-2 rounded font-medium ${
+              playerType === 'vidlink' 
+                ? 'bg-[#82BC87] text-white' 
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            } transition duration-200`}
+          >
+            VidLink
+          </button>
+          <button
+            onClick={() => handlePlayerChange('embedsu')}
+            className={`px-4 py-2 rounded font-medium ${
+              playerType === 'embedsu' 
+                ? 'bg-[#82BC87] text-white' 
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            } transition duration-200`}
+          >
+            EmbedSu
+          </button>
+          <button
+            onClick={() => handlePlayerChange('vidsrc')}
+            className={`px-4 py-2 rounded font-medium ${
+              playerType === 'vidsrc' 
+                ? 'bg-[#82BC87] text-white' 
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+            } transition duration-200`}
+          >
+            Vidsrc
+          </button>
+        </div>
       </div>
       
       <div className="container mx-auto px-4 py-6">

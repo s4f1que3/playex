@@ -1,6 +1,6 @@
 // File: frontend/src/pages/HomePage.js
 import React from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../utils/api';
 import HeroSlider from '../components/media/HeroSlider';
 import MediaCarousel from '../components/media/MediaCarousel';

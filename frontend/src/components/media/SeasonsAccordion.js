@@ -1,7 +1,7 @@
 // File: frontend/src/components/media/SeasonsAccordion.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { tmdbApi, tmdbHelpers } from '../../utils/api';
 import Spinner from '../common/Spinner';
 import { useWatchProgress } from '../../hooks/useWatchProgress';

@@ -1,7 +1,7 @@
 // File: frontend/src/pages/MediaDetailsPage.js
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../utils/api';
 import Spinner from '../components/common/Spinner';
 import MediaInfo from '../components/media/MediaInfo';

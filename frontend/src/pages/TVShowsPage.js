@@ -1,6 +1,6 @@
 // File: frontend/src/pages/TVShowsPage.js
 import React, { useState, useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { tmdbApi } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';

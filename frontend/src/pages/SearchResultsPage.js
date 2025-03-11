@@ -1,7 +1,7 @@
 // File: frontend/src/pages/SearchResultsPage.js
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
 import Pagination from '../components/common/Pagnation';

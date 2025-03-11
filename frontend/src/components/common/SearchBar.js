@@ -1,7 +1,7 @@
 // File: frontend/src/components/common/SearchBar.js
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { tmdbApi, tmdbHelpers } from '../../utils/api';
 
 const SearchBar = ({ isMobile = false }) => {
