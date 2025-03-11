@@ -49,7 +49,7 @@ function App() {
       <AuthProvider>
         <Router>
         <CookieConsent />
-        <SystemAnnouncement />p
+        <SystemAnnouncement />
           <Routes>
             <Route path="/" element={<MainLayout />}>
               <Route index element={<HomePage />} />
