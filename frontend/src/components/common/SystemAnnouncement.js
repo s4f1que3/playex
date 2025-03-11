@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
 const SystemAnnouncement = () => {
-  const [showAnnouncement, setShowAnnouncement] = useState(false);
+  const [showAnnouncement, setShowAnnouncement] = useState(true);
   
   useEffect(() => {
-    // Check if the announcement should be shown
-    // This could be fetched from an API or config file
-    const announcementEnabled = true; // Set this to false to hide the announcement
-    
-    if (announcementEnabled) {
-      setShowAnnouncement(true);
-    }
+    const timer = setTimeout(() => {
+      setShowAnnouncement(false);
+    }, 20000); // 20 seconds
+
+    return () => clearTimeout(timer);
   }, []);
   
   if (!showAnnouncement) return null;
@@ -20,8 +18,7 @@ const SystemAnnouncement = () => {
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         <div className="text-white mb-4 md:mb-0">
           <p>
-            🔔 Important Announcement: This is an unfinished version of the website. 
-            Some features such as signup/login may be temporarily unavailable. 
+            🔔 Please feel free to share this website with your friends. The official domain will be here soon! 
           </p>
         </div>
       </div>
