@@ -10,16 +10,14 @@ const SearchBar = ({ isMobile = false }) => {
   const navigate = useNavigate();
   const searchRef = useRef(null);
   
-  // Search suggestions query
-  const { data: suggestions, isLoading } = useQuery(
-    ['searchSuggestions', searchTerm],
-    () => tmdbApi.get('/search/multi', { params: { query: searchTerm } })
+  // Search suggestions query - FIXED FOR TANSTACK QUERY V5
+  const { data: suggestions, isLoading } = useQuery({
+    queryFn: ['searchSuggestions', searchTerm],
+    queryFn: () => tmdbApi.get('/search/multi', { params: { query: searchTerm } })
       .then(res => res.data.results.slice(0, 5)),
-    {
-      enabled: searchTerm.length > 2,
-      staleTime: 60000 // 1 minute
-    }
-  );
+    enabled: searchTerm.length > 2,
+    staleTime: 60000 // 1 minute
+  });
   
   // Close suggestions when clicking outside
   useEffect(() => {

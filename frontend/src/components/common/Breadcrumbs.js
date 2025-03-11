@@ -12,14 +12,12 @@ const Breadcrumbs = () => {
   const mediaType = pathnames[0] === 'movie' || pathnames[0] === 'tv' ? pathnames[0] : null;
   const mediaId = mediaType && pathnames[1];
 
-  const { data: mediaDetails } = useQuery(
-    ['mediaDetails', mediaType, mediaId],
-    () => tmdbApi.get(`/${mediaType}/${mediaId}`).then(res => res.data),
-    {
-      enabled: !!mediaType && !!mediaId, // This controls when the query executes
-      staleTime: 300000 // 5 minutes
-    }
-  );
+  const { data: mediaDetails } = useQuery({
+    queryKey: ['mediaDetails', mediaType, mediaId],
+    queryFn: () => tmdbApi.get(`/${mediaType}/${mediaId}`).then(res => res.data),
+    enabled: !!mediaType && !!mediaId,
+    staleTime: 300000 // 5 minutes
+});
   
   // Skip rendering breadcrumbs on home page or auth pages
   if (

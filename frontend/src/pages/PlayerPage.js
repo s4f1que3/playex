@@ -23,24 +23,22 @@ const PlayerPage = ({ mediaType }) => {
   };
   
   // Fetch media details
-  const { data, isLoading, error } = useQuery(
-    ['playerMedia', mediaType, id, season, episode],
-    () => {
-      if (mediaType === 'movie') {
-        return tmdbApi.get(`/movie/${id}`).then(res => res.data);
-      } else if (mediaType === 'tv') {
-        return Promise.all([
-          tmdbApi.get(`/tv/${id}`).then(res => res.data),
-          tmdbApi.get(`/tv/${id}/season/${season}/episode/${episode}`).then(res => res.data)
-        ]).then(([tvData, episodeData]) => {
-          return { ...tvData, episode: episodeData };
-        });
-      }
-    },
-    {
-      staleTime: 300000 // 5 minutes
+const { data, isLoading, error } = useQuery({
+  queryKey: ['playerMedia', mediaType, id, season, episode],
+  queryFn: () => {
+    if (mediaType === 'movie') {
+      return tmdbApi.get(`/movie/${id}`).then(res => res.data);
+    } else if (mediaType === 'tv') {
+      return Promise.all([
+        tmdbApi.get(`/tv/${id}`).then(res => res.data),
+        tmdbApi.get(`/tv/${id}/season/${season}/episode/${episode}`).then(res => res.data)
+      ]).then(([tvData, episodeData]) => {
+        return { ...tvData, episode: episodeData };
+      });
     }
-  );
+  },
+  staleTime: 300000 // 5 minutes
+});
   
   // Redirect to details page if missing required params for TV shows
   useEffect(() => {

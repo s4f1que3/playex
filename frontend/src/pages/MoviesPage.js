@@ -48,32 +48,30 @@ const MoviesPage = () => {
   }, [page, filters, navigate]);
   
   // Fetch movies with current filters
-  const { data, isLoading, error } = useQuery(
-    ['discoverMovies', page, filters],
-    () => {
-      // Convert filters object to API params
-      const params = {
-        page,
-        sort_by: filters.sort_by || 'popularity.desc'
-      };
-      
-      if (filters.with_genres) {
-        params.with_genres = Array.isArray(filters.with_genres) 
-          ? filters.with_genres.join(',') 
-          : filters.with_genres;
-      }
-      
-      if (filters.primary_release_year) {
-        params.primary_release_year = filters.primary_release_year;
-      }
-      
-      return tmdbApi.get('/discover/movie', { params }).then(res => res.data);
-    },
-    {
-      keepPreviousData: true,
-      staleTime: 300000 // 5 minutes
+const { data, isLoading, error } = useQuery({
+  queryKey: ['discoverMovies', page, filters],
+  queryFn: () => {
+    // Convert filters object to API params
+    const params = {
+      page,
+      sort_by: filters.sort_by || 'popularity.desc'
+    };
+    
+    if (filters.with_genres) {
+      params.with_genres = Array.isArray(filters.with_genres) 
+        ? filters.with_genres.join(',') 
+        : filters.with_genres;
     }
-  );
+    
+    if (filters.primary_release_year) {
+      params.primary_release_year = filters.primary_release_year;
+    }
+    
+    return tmdbApi.get('/discover/movie', { params }).then(res => res.data);
+  },
+  keepPreviousData: true,
+  staleTime: 300000 // 5 minutes
+});
   
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);

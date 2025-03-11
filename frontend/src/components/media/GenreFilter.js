@@ -4,13 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../../utils/api';
 
 const GenreFilter = ({ selectedGenres, setSelectedGenres, mediaType }) => {
-  const { data: genresData, isLoading } = useQuery(
-    ['genres', mediaType],
-    () => tmdbApi.get(`/genre/${mediaType}/list`).then(res => res.data.genres),
-    {
-      staleTime: 24 * 60 * 60 * 1000, // 24 hours
-    }
-  );
+  const { data: genresData, isLoading } = useQuery({
+    queryKey: ['genres', mediaType],
+    queryFn: () => tmdbApi.get(`/genre/${mediaType}/list`).then(res => res.data.genres),
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours
+  });
   
   const toggleGenre = (genreId) => {
     if (selectedGenres.includes(genreId)) {

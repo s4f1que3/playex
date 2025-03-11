@@ -11,14 +11,12 @@ const SeasonsAccordion = ({ tvId, seasons }) => {
   const { getMediaProgress } = useWatchProgress();
   
   // Fetch season details
-  const { data: seasonDetails, isLoading } = useQuery(
-    ['seasonDetails', tvId, activeSeason],
-    () => tmdbApi.get(`/tv/${tvId}/season/${activeSeason}`).then(res => res.data),
-    {
-      enabled: !!tvId && !!activeSeason,
-      staleTime: 300000 // 5 minutes
-    }
-  );
+  const { data: seasonDetails, isLoading } = useQuery({
+    queryKey: ['seasonDetails', tvId, activeSeason],
+    queryFn: () => tmdbApi.get(`/tv/${tvId}/season/${activeSeason}`).then(res => res.data),
+    enabled: !!tvId && !!activeSeason,
+    staleTime: 300000 // 5 minutes
+  });
   
   if (!seasons || seasons.length === 0) {
     return (

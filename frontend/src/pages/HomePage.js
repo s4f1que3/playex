@@ -12,49 +12,39 @@ const HomePage = () => {
   const { watchProgress } = useWatchProgress();
   
   // Fetch trending movies and TV shows
-  const { data: trendingData, isLoading: trendingLoading, error: trendingError } = useQuery(
-    'trending',
-    () => tmdbApi.get('/trending/all/week').then(res => res.data.results),
-    {
-      staleTime: 600000 // 10 minutes
-    }
-  );
-  
-  // Fetch popular movies
-  const { data: popularMovies, isLoading: moviesLoading, error: moviesError } = useQuery(
-    'popularMovies',
-    () => tmdbApi.get('/movie/popular').then(res => res.data.results),
-    {
-      staleTime: 600000 // 10 minutes
-    }
-  );
-  
-  // Fetch popular TV shows
-  const { data: popularTVShows, isLoading: tvLoading, error: tvError } = useQuery(
-    'popularTVShows',
-    () => tmdbApi.get('/tv/popular').then(res => res.data.results),
-    {
-      staleTime: 600000 // 10 minutes
-    }
-  );
+const { data: trendingData, isLoading: trendingLoading, error: trendingError } = useQuery({
+  queryKey: ['trending'],
+  queryFn: () => tmdbApi.get('/trending/all/week').then(res => res.data.results),
+  staleTime: 600000 // 10 minutes
+});
+
+// Fetch popular movies
+const { data: popularMovies, isLoading: moviesLoading, error: moviesError } = useQuery({
+  queryKey: ['popularMovies'],
+  queryFn: () => tmdbApi.get('/movie/popular').then(res => res.data.results),
+  staleTime: 600000 // 10 minutes
+});
+
+// Fetch popular TV shows
+const { data: popularTVShows, isLoading: tvLoading, error: tvError } = useQuery({
+  queryKey: ['popularTVShows'],
+  queryFn: () => tmdbApi.get('/tv/popular').then(res => res.data.results),
+  staleTime: 600000 // 10 minutes
+});
   
   // Fetch top rated movies
-  const { data: topRatedMovies, isLoading: topRatedMoviesLoading, error: topRatedMoviesError } = useQuery(
-    'topRatedMovies',
-    () => tmdbApi.get('/movie/top_rated').then(res => res.data.results),
-    {
-      staleTime: 600000 // 10 minutes
-    }
-  );
-  
-  // Fetch top rated TV shows
-  const { data: topRatedTVShows, isLoading: topRatedTVLoading, error: topRatedTVError } = useQuery(
-    'topRatedTVShows',
-    () => tmdbApi.get('/tv/top_rated').then(res => res.data.results),
-    {
-      staleTime: 600000 // 10 minutes
-    }
-  );
+const { data: topRatedMovies, isLoading: topRatedMoviesLoading, error: topRatedMoviesError } = useQuery({
+  queryKey: ['topRatedMovies'],
+  queryFn: () => tmdbApi.get('/movie/top_rated').then(res => res.data.results),
+  staleTime: 600000 // 10 minutes
+});
+
+// Fetch top rated TV shows
+const { data: topRatedTVShows, isLoading: topRatedTVLoading, error: topRatedTVError } = useQuery({
+  queryKey: ['topRatedTVShows'],
+  queryFn: () => tmdbApi.get('/tv/top_rated').then(res => res.data.results),
+  staleTime: 600000 // 10 minutes
+});
   
   // Get continue watching items from watch progress
   const continueWatchingItems = React.useMemo(() => {

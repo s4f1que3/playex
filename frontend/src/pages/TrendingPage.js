@@ -35,14 +35,12 @@ const TrendingPage = () => {
   }, [page, timeWindow, navigate]);
   
   // Fetch trending media
-  const { data, isLoading, error } = useQuery(
-    ['trending', page, timeWindow],
-    () => tmdbApi.get(`/trending/all/${timeWindow}`, { params: { page } }).then(res => res.data),
-    {
-      keepPreviousData: true,
-      staleTime: 300000 // 5 minutes
-    }
-  );
+const { data, isLoading, error } = useQuery({
+  queryKey: ['trending', page, timeWindow],
+  queryFn: () => tmdbApi.get(`/trending/all/${timeWindow}`, { params: { page } }).then(res => res.data),
+  keepPreviousData: true,
+  staleTime: 300000 // 5 minutes
+});
   
   const handlePageChange = (newPage) => {
     setPage(newPage);

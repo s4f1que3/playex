@@ -18,26 +18,24 @@ const MediaDetailsPage = ({ mediaType }) => {
   });
   
   // Fetch media details
-  const { data, isLoading, error } = useQuery(
-    ['mediaDetails', mediaType, id],
-    () => tmdbApi.get(`/${mediaType}/${id}`, {
-      params: {
-        append_to_response: 'credits,videos,recommendations,similar'
-      }
-    }).then(res => {
-      // Initialize user actions from API if available
-      if (res.data.user_data) {
-        setUserActions({
-          isInWatchlist: res.data.user_data.in_watchlist,
-          isInFavorites: res.data.user_data.in_favorites
-        });
-      }
-      return res.data;
-    }),
-    {
-      staleTime: 300000 // 5 minutes
+const { data, isLoading, error } = useQuery({
+  queryKey: ['mediaDetails', mediaType, id],
+  queryFn: () => tmdbApi.get(`/${mediaType}/${id}`, {
+    params: {
+      append_to_response: 'credits,videos,recommendations,similar'
     }
-  );
+  }).then(res => {
+    // Initialize user actions from API if available
+    if (res.data.user_data) {
+      setUserActions({
+        isInWatchlist: res.data.user_data.in_watchlist,
+        isInFavorites: res.data.user_data.in_favorites
+      });
+    }
+    return res.data;
+  }),
+  staleTime: 300000 // 5 minutes
+});
   
   const handleActionComplete = (actionType, value) => {
     setUserActions(prev => ({

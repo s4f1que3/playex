@@ -9,13 +9,11 @@ const WatchlistPage = () => {
   const [mediaType, setMediaType] = useState('all');
   
   // Fetch watchlist data
-  const { data, isLoading, error, refetch } = useQuery(
-    'watchlist',
-    () => api.get('/api/user-media/watchlist').then(res => res.data),
-    {
-      staleTime: 300000 // 5 minutes
-    }
-  );
+const { data, isLoading, error, refetch } = useQuery({
+  queryKey: ['watchlist'],  // Note: string converted to array
+  queryFn: () => api.get('/api/user-media/watchlist').then(res => res.data),
+  staleTime: 300000 // 5 minutes
+});
   
   // Filter data based on selected media type
   const filteredData = React.useMemo(() => {

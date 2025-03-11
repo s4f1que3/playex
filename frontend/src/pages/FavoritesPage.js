@@ -9,13 +9,11 @@ const FavoritesPage = () => {
   const [mediaType, setMediaType] = useState('all');
   
   // Fetch favorites data
-  const { data, isLoading, error, refetch } = useQuery(
-    'favorites',
-    () => api.get('/api/user-media/favorites').then(res => res.data),
-    {
-      staleTime: 300000 // 5 minutes
-    }
-  );
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['favorites'],  // Note: single string keys should be arrays in v5
+    queryFn: () => api.get('/api/user-media/favorites').then(res => res.data),
+    staleTime: 300000 // 5 minutes
+  });
   
   // Filter data based on selected media type
   const filteredData = React.useMemo(() => {

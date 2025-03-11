@@ -38,20 +38,18 @@ const SearchResultsPage = () => {
   }, [searchQuery, navigate]);
   
   // Fetch search results
-  const { data, isLoading, error } = useQuery(
-    ['search', searchQuery, page],
-    () => tmdbApi.get('/search/multi', {
-      params: {
-        query: searchQuery,
-        page
-      }
-    }).then(res => res.data),
-    {
-      enabled: !!searchQuery,
-      keepPreviousData: true,
-      staleTime: 300000 // 5 minutes
+const { data, isLoading, error } = useQuery({
+  queryKey: ['search', searchQuery, page],
+  queryFn: () => tmdbApi.get('/search/multi', {
+    params: {
+      query: searchQuery,
+      page
     }
-  );
+  }).then(res => res.data),
+  enabled: !!searchQuery,
+  keepPreviousData: true,
+  staleTime: 300000 // 5 minutes
+});
   
   const handlePageChange = (newPage) => {
     setPage(newPage);
