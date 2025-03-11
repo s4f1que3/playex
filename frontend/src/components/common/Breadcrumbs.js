@@ -46,8 +46,6 @@ const Breadcrumbs = () => {
         return 'Watchlist';
       case 'favorites':
         return 'Favorites';
-      case 'watch-history':
-        return 'Watch History';
       case 'movie':
         return 'Movie';
       case 'tv':

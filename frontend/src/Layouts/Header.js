@@ -104,13 +104,6 @@ const Header = () => {
               {currentUser ? (
                 <>
                   <Link 
-                    to="/profile" 
-                    className="text-white hover:text-[#E4D981] transition duration-300"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  <Link 
                     to="/watchlist" 
                     className="text-white hover:text-[#E4D981] transition duration-300"
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -124,30 +117,9 @@ const Header = () => {
                   >
                     Favorites
                   </Link>
-                  <Link 
-                    to="/watch-history" 
-                    className="text-white hover:text-[#E4D981] transition duration-300"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Watch History
-                  </Link>
                 </>
               ) : (
                 <>
-                  <Link 
-                    to="/login" 
-                    className="text-white hover:text-[#E4D981] transition duration-300"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link 
-                    to="/register" 
-                    className="btn-primary inline-block w-full text-center"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
                 </>
               )}
             </nav>
