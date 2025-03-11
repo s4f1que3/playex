@@ -4,12 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../utils/api';
 import HeroSlider from '../components/media/HeroSlider';
 import MediaCarousel from '../components/media/MediaCarousel';
-import { useWatchProgress } from '../hooks/useWatchProgress';
 import { useAuth } from '../contexts/AuthContext';
 
 const HomePage = () => {
   const { currentUser } = useAuth();
-  const { watchProgress } = useWatchProgress();
   
   // Fetch trending movies and TV shows
 const { data: trendingData, isLoading: trendingLoading, error: trendingError } = useQuery({

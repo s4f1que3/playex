@@ -6,8 +6,13 @@ import { tmdbApi, tmdbHelpers } from '../../utils/api';
 import Spinner from '../common/Spinner';
 import { useWatchProgress } from '../../hooks/useWatchProgress';
 
-const SeasonsAccordion = ({ tvId, seasons }) => {
-  const [activeSeason, setActiveSeason] = useState(1);
+const SeasonsAccordion = ({ 
+  tvId, 
+  seasons, 
+  activeSeason, 
+  setActiveSeason 
+}) => {
+  
   const { getMediaProgress } = useWatchProgress();
   
   // Fetch season details

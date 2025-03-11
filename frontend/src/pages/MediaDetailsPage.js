@@ -16,26 +16,27 @@ const MediaDetailsPage = ({ mediaType }) => {
     isInWatchlist: false,
     isInFavorites: false
   });
-  
+  const [activeSeason, setActiveSeason] = useState(1); // Added activeSeason state
+
   // Fetch media details
-const { data, isLoading, error } = useQuery({
-  queryKey: ['mediaDetails', mediaType, id],
-  queryFn: () => tmdbApi.get(`/${mediaType}/${id}`, {
-    params: {
-      append_to_response: 'credits,videos,recommendations,similar'
-    }
-  }).then(res => {
-    // Initialize user actions from API if available
-    if (res.data.user_data) {
-      setUserActions({
-        isInWatchlist: res.data.user_data.in_watchlist,
-        isInFavorites: res.data.user_data.in_favorites
-      });
-    }
-    return res.data;
-  }),
-  staleTime: 300000 // 5 minutes
-});
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['mediaDetails', mediaType, id],
+    queryFn: () => tmdbApi.get(`/${mediaType}/${id}`, {
+      params: {
+        append_to_response: 'credits,videos,recommendations,similar'
+      }
+    }).then(res => {
+      // Initialize user actions from API if available
+      if (res.data.user_data) {
+        setUserActions({
+          isInWatchlist: res.data.user_data.in_watchlist,
+          isInFavorites: res.data.user_data.in_favorites
+        });
+      }
+      return res.data;
+    }),
+    staleTime: 300000 // 5 minutes
+  });
   
   const handleActionComplete = (actionType, value) => {
     setUserActions(prev => ({
@@ -82,6 +83,7 @@ const { data, isLoading, error } = useQuery({
           isInWatchlist={userActions.isInWatchlist}
           isInFavorites={userActions.isInFavorites}
           onActionComplete={handleActionComplete}
+          activeSeason={activeSeason} // Pass the activeSeason to MediaActions
         />
         
         {/* Cast List */}
@@ -89,7 +91,12 @@ const { data, isLoading, error } = useQuery({
         
         {/* Seasons and Episodes (TV Shows only) */}
         {mediaType === 'tv' && data.seasons && (
-          <SeasonsAccordion tvId={id} seasons={data.seasons} />
+          <SeasonsAccordion 
+            tvId={id} 
+            seasons={data.seasons} 
+            activeSeason={activeSeason} // Pass the activeSeason to SeasonsAccordion
+            setActiveSeason={setActiveSeason} // Pass the setter function to SeasonsAccordion
+          />
         )}
         
         {/* Similar Content */}

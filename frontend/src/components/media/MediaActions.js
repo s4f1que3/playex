@@ -11,20 +11,29 @@ import {
   isInWatchlist 
 } from '../../utils/LocalStorage';
 
-const MediaActions = ({ media, mediaType, onActionComplete, isInWatchlist: initialWatchlist, isInFavorites: initialFavorites }) => {
+
+const MediaActions = ({ 
+  media, 
+  mediaType, 
+  onActionComplete, 
+  isInWatchlist: initialWatchlist, 
+  isInFavorites: initialFavorites,
+  activeSeason = 1
+}) => {
+
   // Add this query to fetch first episode data
   const { data: firstEpisodeData } = useQuery({
-    queryKey: ['firstEpisode', media.id],
+    queryKey: ['firstEpisode', media.id, activeSeason],
     queryFn: async () => {
       if (mediaType === 'tv') {
-        const response = await tmdbApi.get(`/tv/${media.id}/season/1`);
+        const response = await tmdbApi.get(`/tv/${media.id}/season/${activeSeason}`);
         return response.data.episodes[0];
       }
       return null;
     },
     enabled: mediaType === 'tv'
   });
-
+  
   // Local state
   const [loading, setLoading] = useState({
     watchlist: false,
@@ -113,14 +122,14 @@ const MediaActions = ({ media, mediaType, onActionComplete, isInWatchlist: initi
           </Link>
         ) : (
           <Link
-            to={`/player/tv/${media.id}/1/1`}
+            to={`/player/tv/${media.id}/${activeSeason}/1`}
             className="btn-primary flex-grow md:flex-grow-0"
           >
             <span className="flex items-center justify-center">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
               </svg>
-              {firstEpisodeData ? 'Play First Episode' : 'Watch Episodes'}
+              {firstEpisodeData ? `Play S${activeSeason} E1` : 'Watch First Episode'}
             </span>
           </Link>
         )}

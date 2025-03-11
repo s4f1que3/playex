@@ -2,10 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { tmdbHelpers } from '../../utils/api';
-import { useWatchProgress } from '../../hooks/useWatchProgress';
 
 const MediaCard = ({ media, showType = true }) => {
-  const { getMediaProgress } = useWatchProgress();
   
   const { 
     id, 
@@ -25,9 +23,6 @@ const MediaCard = ({ media, showType = true }) => {
     ? new Date(release_date || first_air_date).getFullYear() 
     : '';
   
-  // Get watch progress
-  const progress = getMediaProgress(id, mediaType);
-  const progressPercentage = progress ? (progress.watched / progress.duration) * 100 : 0;
   
   // Format rating
   const rating = vote_average ? (vote_average / 10) * 5 : 0;
@@ -61,16 +56,6 @@ const MediaCard = ({ media, showType = true }) => {
               ))}
             </div>
           </div>
-          
-          {/* Watch progress bar */}
-          {progressPercentage > 0 && (
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-800">
-              <div 
-                className="h-full bg-[#82BC87]" 
-                style={{ width: `${progressPercentage}%` }}
-              ></div>
-            </div>
-          )}
           
           {/* Hover overlay */}
           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
