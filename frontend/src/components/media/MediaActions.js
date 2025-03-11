@@ -1,20 +1,41 @@
 // File: frontend/src/components/media/MediaActions.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { api } from '../../utils/api';
 import { useWatchProgress } from '../../hooks/useWatchProgress';
+import { 
+  toggleFavorite, 
+  toggleWatchlist, 
+  isInFavorites, 
+  isInWatchlist 
+} from '../../utils/LocalStorage';
 
-const MediaActions = ({ media, mediaType, isInWatchlist, isInFavorites, onActionComplete }) => {
+const MediaActions = ({ media, mediaType, onActionComplete, isInWatchlist: initialWatchlist, isInFavorites: initialFavorites }) => {
+  // Local state
   const [loading, setLoading] = useState({
     watchlist: false,
     favorites: false
   });
-  const [watchlist, setWatchlist] = useState(isInWatchlist);
-  const [favorites, setFavorites] = useState(isInFavorites);
+  const [watchlist, setWatchlist] = useState(false);
+  const [favorites, setFavorites] = useState(false);
   
-  const { currentUser } = useAuth();
+  // Watch progress hooks
   const { getMediaProgress } = useWatchProgress();
+  
+  // Load initial state from localStorage or props
+  useEffect(() => {
+    // Use provided props as initial values if available
+    setWatchlist(initialWatchlist !== undefined ? initialWatchlist : isInWatchlist(media.id, mediaType));
+    setFavorites(initialFavorites !== undefined ? initialFavorites : isInFavorites(media.id, mediaType));
+    
+    // Add event listener to refresh data when localStorage changes in other tabs
+    const handleStorageChange = () => {
+      setWatchlist(isInWatchlist(media.id, mediaType));
+      setFavorites(isInFavorites(media.id, mediaType));
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [media.id, mediaType, initialWatchlist, initialFavorites]);
   
   // Get watch progress
   const progress = getMediaProgress(media.id, mediaType);
@@ -22,31 +43,16 @@ const MediaActions = ({ media, mediaType, isInWatchlist, isInFavorites, onAction
   const progressPercentage = progress ? (progress.watched / progress.duration) * 100 : 0;
   
   // Handle watchlist action
-  const handleWatchlist = async () => {
-    if (!currentUser) {
-      // Redirect to login if not logged in
-      window.location.href = '/login';
-      return;
-    }
-    
+  const handleWatchlist = () => {
     try {
       setLoading({ ...loading, watchlist: true });
       
-      if (watchlist) {
-        // Remove from watchlist
-        await api.delete(`/api/user-media/watchlist/${mediaType}/${media.id}`);
-        setWatchlist(false);
-      } else {
-        // Add to watchlist
-        await api.post('/api/user-media/watchlist', {
-          mediaId: media.id,
-          mediaType
-        });
-        setWatchlist(true);
-      }
+      // Toggle watchlist status
+      const newState = toggleWatchlist(media.id, mediaType, media);
+      setWatchlist(newState);
       
       if (onActionComplete) {
-        onActionComplete('watchlist', !watchlist);
+        onActionComplete('watchlist', newState);
       }
     } catch (error) {
       console.error('Watchlist action error:', error);
@@ -56,31 +62,16 @@ const MediaActions = ({ media, mediaType, isInWatchlist, isInFavorites, onAction
   };
   
   // Handle favorites action
-  const handleFavorites = async () => {
-    if (!currentUser) {
-      // Redirect to login if not logged in
-      window.location.href = '/login';
-      return;
-    }
-    
+  const handleFavorites = () => {
     try {
       setLoading({ ...loading, favorites: true });
       
-      if (favorites) {
-        // Remove from favorites
-        await api.delete(`/api/user-media/favorites/${mediaType}/${media.id}`);
-        setFavorites(false);
-      } else {
-        // Add to favorites
-        await api.post('/api/user-media/favorites', {
-          mediaId: media.id,
-          mediaType
-        });
-        setFavorites(true);
-      }
+      // Toggle favorites status
+      const newState = toggleFavorite(media.id, mediaType, media);
+      setFavorites(newState);
       
       if (onActionComplete) {
-        onActionComplete('favorites', !favorites);
+        onActionComplete('favorites', newState);
       }
     } catch (error) {
       console.error('Favorites action error:', error);

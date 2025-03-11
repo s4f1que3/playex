@@ -7,41 +7,54 @@ const CookieConsent = () => {
   
   useEffect(() => {
     // Check if user has already consented
-    const hasConsented = localStorage.getItem('cookieConsent');
+    const hasConsented = localStorage.getItem('storageConsent');
     if (!hasConsented) {
       setShowConsent(true);
     }
   }, []);
   
   const handleAccept = () => {
-    localStorage.setItem('cookieConsent', 'true');
+    localStorage.setItem('storageConsent', 'true');
     setShowConsent(false);
   };
   
   if (!showConsent) return null;
   
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 p-4 z-50">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-        <div className="text-white mb-4 md:mb-0">
-          <p>
-            We use cookies and local storage to enhance your experience. By continuing to use Playex,
-            you agree to our <Link to="/cookies" className="text-[#82BC87] hover:text-[#E4D981]">Cookie Policy</Link>.
-          </p>
-        </div>
-        <div className="flex space-x-4">
-          <Link to="/cookies" className="text-[#E4D981] hover:text-white">
-            Learn More
-          </Link>
-          <button
-            onClick={handleAccept}
-            className="bg-[#82BC87] hover:bg-opacity-80 text-white px-4 py-2 rounded"
-          >
-            Accept
-          </button>
+    <>
+      {/* Dark overlay */}
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        {/* Modal dialog */}
+        <div className="bg-gray-800 rounded-lg shadow-xl max-w-lg w-full mx-4 overflow-hidden border border-gray-700">
+          {/* Header */}
+          <div className="px-6 py-4 border-b border-gray-700">
+            <h3 className="text-xl font-medium text-white">Privacy Settings</h3>
+          </div>
+          
+          {/* Content */}
+          <div className="px-6 py-4">
+            <p className="text-gray-300 mb-4">
+              We use cookies and local storage to enhance your experience, save your preferences, 
+              and remember your favorites and watchlist. By continuing to use Playex,
+              you agree to our <Link to="/privacy" className="text-[#82BC87] hover:text-[#E4D981]">Privacy Policy and</Link>, 
+              <Link to="/terms" className="text-[#82BC87] hover:text-[#E4D981]">Terms and Conditions</Link>.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-3 justify-end mt-4">
+              <Link to="/privacy" className="text-[#E4D981] hover:text-white py-2 text-center">
+                Learn More
+              </Link>
+              <button
+                onClick={handleAccept}
+                className="bg-[#82BC87] hover:bg-opacity-80 text-white px-6 py-2 rounded"
+              >
+                Accept
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

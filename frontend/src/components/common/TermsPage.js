@@ -6,7 +6,7 @@ const TermsPage = () => {
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <h1 className="text-3xl font-bold text-white mb-6">Terms of Service</h1>
       <div className="bg-gray-800 p-6 rounded-lg prose prose-invert max-w-none">
-        <p className="text-sm text-gray-400 mb-4">Last Updated: March 9, 2025</p>
+        <p className="text-sm text-gray-400 mb-4">Last Updated: March 11, 2025</p>
         
         <h2 className="text-xl font-semibold mt-6 mb-3">1. Introduction</h2>
         <p>
@@ -14,11 +14,15 @@ const TermsPage = () => {
           or any of our services (collectively, the "Service"), you agree to be bound by these Terms of Service ("Terms"). 
           If you do not agree to these Terms, please do not use the Service.
         </p>
+        <h2 className="text-xl font-semibold mt-6 mb-3">1.2 Embed Players</h2>
+        <p>
+          We use three embed players on our website : Vidlink.pro, Embed.su, and Vidsrc.me. If at any time we refer to embedded players, these are the three we are talking about.
+        </p>
         
         <h2 className="text-xl font-semibold mt-6 mb-3">2. Service Description</h2>
         <p>
           Playex is a streaming interface that aggregates and displays content from third-party sources. 
-          We use The Movie Database (TMDB) API for metadata and vidlink.pro for video playback. 
+          We use The Movie Database (TMDB) API for metadata and embed players for video playback. 
           Playex does not host, store, or distribute any media content directly. 
           We serve as an interface to help you discover and access content from other sources.
         </p>
@@ -27,47 +31,11 @@ const TermsPage = () => {
         
         <h3 className="text-lg font-medium mt-4 mb-2">3.1 Account Creation</h3>
         <p>
-          To use certain features of the Service, you may need to create an account. 
-          You must provide accurate, current, and complete information during the registration process 
-          and keep your account information updated.
+          We require no account creation to use our website. As we aim for our site to be easy to use, features (such as favorites and watchlist) work without account creation.
         </p>
         
-        <h3 className="text-lg font-medium mt-4 mb-2">3.2 Account Security</h3>
-        <p>
-          You are responsible for maintaining the confidentiality of your account credentials 
-          and for all activities that occur under your account. You agree to notify us immediately 
-          of any unauthorized use of your account or any other breach of security.
-        </p>
-        
-        <h3 className="text-lg font-medium mt-4 mb-2">3.3 Password Reset</h3>
-        <p>
-          If you forget your password, you can reset it through our password reset feature. 
-          We may send password reset instructions to the email address associated with your account.
-        </p>
-        
-        <h3 className="text-lg font-medium mt-4 mb-2">3.4 Account Termination</h3>
-        <p>
-          We reserve the right to suspend or terminate your account at our sole discretion, without notice, 
-          for conduct that we believe violates these Terms or is harmful to other users of the Service, 
-          us, or third parties, or for any other reason.
-        </p>
-        
-        <h2 className="text-xl font-semibold mt-6 mb-3">4. User Content and Collections</h2>
-        
-        <h3 className="text-lg font-medium mt-4 mb-2">4.1 User Collections</h3>
-        <p>
-          The Service allows you to create and maintain personal collections including watchlists, 
-          favorites, and watch history. You acknowledge that these collections are stored for your 
-          convenience and may be deleted or become unavailable at any time.
-        </p>
-        
-        <h3 className="text-lg font-medium mt-4 mb-2">4.2 Watch History</h3>
-        <p>
-          We store your watch progress and history to enhance your experience. 
-          You can delete your watch history through your account settings.
-        </p>
-        
-        <h3 className="text-lg font-medium mt-4 mb-2">4.3 Content Availability</h3>
+
+        <h3 className="text-lg font-medium mt-4 mb-2">4. Content Availability</h3>
         <p>
           Content availability depends on third-party services. We do not guarantee the availability, 
           quality, or legitimacy of any content accessed through our Service.
@@ -160,7 +128,7 @@ const TermsPage = () => {
         
         <h3 className="text-lg font-medium mt-4 mb-2">9.1 Governing Law</h3>
         <p>
-          These Terms shall be governed and construed in accordance with the laws of [Your Jurisdiction], 
+          These Terms shall be governed and construed in accordance with the laws of Saint Vincent and the Grenadines, 
           without regard to its conflict of law provisions.
         </p>
         
@@ -178,7 +146,7 @@ const TermsPage = () => {
         
         <h3 className="text-lg font-medium mt-4 mb-2">9.4 Contact Information</h3>
         <p>
-          If you have any questions about these Terms, please contact us at [contact@example.com].
+          If you have any questions about these Terms, please contact us at: <a href="mailto:contact.playex@gmail.com" className="text-[#82BC87] hover:text-[#E4D981]">contact.playex@gmail.com</a> for any further questions.
         </p>
         
         <p className="mt-8">Thank you for using Playex!</p>

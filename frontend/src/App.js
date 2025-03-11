@@ -23,13 +23,8 @@ import TrendingPage from './pages/TrendingPage'
 import MediaDetailsPage from './pages/MediaDetailsPage';
 import PlayerPage from './pages/PlayerPage';
 import SearchResultsPage from './pages/SearchResultsPage';
-import ProfilePage from './pages/ProfilePage';
 import WatchlistPage from './pages/WatchListPage';
 import FavoritesPage from './pages/FavoritesPage';
-import WatchHistoryPage from './pages/WatchHistoryPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 // Create a client
@@ -68,17 +63,11 @@ function App() {
               
               {/* Protected routes */}
               <Route element={<ProtectedRoute />}>
-                <Route path="profile" element={<ProfilePage />} />
+              
                 <Route path="watchlist" element={<WatchlistPage />} />
                 <Route path="favorites" element={<FavoritesPage />} />
-                <Route path="watch-history" element={<WatchHistoryPage />} />
               </Route>
             </Route>
-            
-            {/* Auth routes (without header/footer) */}
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             
             {/* 404 route */}
             <Route path="*" element={<NotFoundPage />} />

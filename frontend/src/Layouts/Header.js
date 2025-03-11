@@ -23,10 +23,6 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   return (
     <header
@@ -53,55 +49,14 @@ const Header = () => {
             <Link to="/trending" className="text-white hover:text-[#E4D981] transition duration-300">
               Trending
             </Link>
+            <Link to="/watchlist" className="text-white hover:text-[#E4D981] transition duration-300">
+              Watchlist
+            </Link>
+            <Link to="/favorites" className="text-white hover:text-[#E4D981] transition duration-300">
+              Favorites
+            </Link>
             <SearchBar />
           </nav>
-
-          {/* User Menu */}
-          <div className="hidden md:flex items-center space-x-4">
-            {currentUser ? (
-              <div className="relative group">
-                <button className="flex items-center space-x-2 text-white">
-                  <img 
-                    src={currentUser.profile_image || "/profile.png"} 
-                    alt={currentUser.username} 
-                    className="h-8 w-8 rounded-full object-cover"
-                  />
-                  <span>{currentUser.username}</span>
-                </button>
-                <div className="absolute right-0 mt-2 w-48 bg-[#161616] border border-gray-800 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
-                  <div className="py-2">
-                    <Link to="/profile" className="block px-4 py-2 text-white hover:bg-[#82BC87] hover:text-white transition duration-300">
-                      Profile
-                    </Link>
-                    <Link to="/watchlist" className="block px-4 py-2 text-white hover:bg-[#82BC87] hover:text-white transition duration-300">
-                      Watchlist
-                    </Link>
-                    <Link to="/favorites" className="block px-4 py-2 text-white hover:bg-[#82BC87] hover:text-white transition duration-300">
-                      Favorites
-                    </Link>
-                    <Link to="/watch-history" className="block px-4 py-2 text-white hover:bg-[#82BC87] hover:text-white transition duration-300">
-                      Watch History
-                    </Link>
-                    <button 
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-white hover:bg-red-600 hover:text-white transition duration-300"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <>
-                <Link to="/login" className="text-white hover:text-[#E4D981] transition duration-300">
-                  Login
-                </Link>
-                <Link to="/register" className="btn-primary">
-                  Sign Up
-                </Link>
-              </>
-            )}
-          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -176,15 +131,6 @@ const Header = () => {
                   >
                     Watch History
                   </Link>
-                  <button 
-                    onClick={() => {
-                      handleLogout();
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="text-white hover:text-red-500 transition duration-300 text-left"
-                  >
-                    Logout
-                  </button>
                 </>
               ) : (
                 <>

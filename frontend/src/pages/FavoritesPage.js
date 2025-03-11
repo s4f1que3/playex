@@ -1,19 +1,29 @@
 // File: frontend/src/pages/FavoritesPage.js
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
 import Spinner from '../components/common/Spinner';
+import { getFavorites, removeFromFavorites } from '../utils/LocalStorage';
 
 const FavoritesPage = () => {
   const [mediaType, setMediaType] = useState('all');
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Fetch favorites data
-  const { data, isLoading, error, refetch } = useQuery({
-    queryKey: ['favorites'],  // Note: single string keys should be arrays in v5
-    queryFn: () => api.get('/api/user-media/favorites').then(res => res.data),
-    staleTime: 300000 // 5 minutes
-  });
+  // Load favorites from localStorage
+  useEffect(() => {
+    setData(getFavorites());
+    setIsLoading(false);
+    
+    // Add event listener to refresh data when localStorage changes in other tabs
+    const handleStorageChange = (e) => {
+      if (e.key === 'user_favorites') {
+        setData(getFavorites());
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
   
   // Filter data based on selected media type
   const filteredData = React.useMemo(() => {
@@ -36,13 +46,9 @@ const FavoritesPage = () => {
   }, [filteredData]);
   
   // Remove item from favorites
-  const handleRemoveItem = async (mediaId, mediaType) => {
-    try {
-      await api.delete(`/api/user-media/favorites/${mediaType}/${mediaId}`);
-      refetch(); // Refresh data after removing an item
-    } catch (error) {
-      console.error('Failed to remove item from favorites:', error);
-    }
+  const handleRemoveItem = (mediaId, mediaType) => {
+    removeFromFavorites(mediaId, mediaType);
+    setData(getFavorites()); // Refresh data after removing an item
   };
   
   if (isLoading) {
@@ -93,11 +99,7 @@ const FavoritesPage = () => {
         </div>
       </div>
       
-      {error ? (
-        <div className="bg-red-900 bg-opacity-20 border border-red-800 text-red-200 px-4 py-3 rounded my-6">
-          <p>Failed to load your favorites. Please try again later.</p>
-        </div>
-      ) : transformedData.length === 0 ? (
+      {transformedData.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-[#E6C6BB] mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,7 +115,7 @@ const FavoritesPage = () => {
           </a>
         </div>
       ) : (
-        <MediaGrid items={transformedData} />
+        <MediaGrid items={transformedData} onRemove={handleRemoveItem} />
       )}
     </div>
   );

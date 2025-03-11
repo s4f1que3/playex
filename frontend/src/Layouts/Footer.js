@@ -47,11 +47,6 @@ const Footer = () => {
             <h3 className="text-[#E4D981] text-lg font-semibold mb-4">Account</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/profile" className="text-gray-400 hover:text-white transition duration-300">
-                  Profile
-                </Link>
-              </li>
-              <li>
                 <Link to="/watchlist" className="text-gray-400 hover:text-white transition duration-300">
                   Watchlist
                 </Link>
@@ -59,11 +54,6 @@ const Footer = () => {
               <li>
                 <Link to="/favorites" className="text-gray-400 hover:text-white transition duration-300">
                   Favorites
-                </Link>
-              </li>
-              <li>
-                <Link to="/watch-history" className="text-gray-400 hover:text-white transition duration-300">
-                  Watch History
                 </Link>
               </li>
             </ul>

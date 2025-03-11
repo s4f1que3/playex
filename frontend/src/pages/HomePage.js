@@ -46,42 +46,12 @@ const { data: topRatedTVShows, isLoading: topRatedTVLoading, error: topRatedTVEr
   staleTime: 600000 // 10 minutes
 });
   
-  // Get continue watching items from watch progress
-  const continueWatchingItems = React.useMemo(() => {
-    if (!watchProgress) return [];
-    
-    // Convert watchProgress object to array of items with extended info
-    return Object.values(watchProgress)
-      .filter(item => item.progress && item.progress.watched > 0)
-      .map(item => ({
-        id: item.id,
-        title: item.title,
-        name: item.title,
-        poster_path: item.poster_path,
-        backdrop_path: item.backdrop_path,
-        media_type: item.type,
-        vote_average: 0, // We don't have this info in the progress data
-        // Add any other required fields for MediaCard component
-      }))
-      .slice(0, 10); // Limit to 10 items
-  }, [watchProgress]);
-  
   return (
     <div className="-mt-[72px]"> {/* Offset the header padding in MainLayout */}
       {/* Hero Slider */}
       <HeroSlider items={trendingData || []} />
       
       <div className="container mx-auto px-4">
-        {/* Continue Watching (if logged in and has watch history) */}
-        {currentUser && continueWatchingItems.length > 0 && (
-          <MediaCarousel
-            title="Continue Watching"
-            items={continueWatchingItems}
-            viewAllLink="/watch-history"
-            loading={false}
-            error={null}
-          />
-        )}
         
         {/* Trending Now */}
         <MediaCarousel

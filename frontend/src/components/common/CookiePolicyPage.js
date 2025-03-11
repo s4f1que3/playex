@@ -6,7 +6,7 @@ const CookiePolicyPage = () => {
       <div className="bg-gray-800 rounded-lg p-6 shadow-lg">
         <h1 className="text-3xl font-bold text-white mb-6">Cookie Policy</h1>
         <div className="text-gray-300 space-y-6">
-          <p className="text-sm text-gray-400">Last Updated: March 9, 2025</p>
+          <p className="text-sm text-gray-400">Last Updated: March 11, 2025</p>
           
           <section>
             <h2 className="text-2xl font-semibold text-white mb-3">1. Introduction</h2>
@@ -31,7 +31,7 @@ const CookiePolicyPage = () => {
             
             <h3 className="text-xl font-medium text-white mt-4 mb-2">3.2 Categories of Cookies We Use</h3>
             <h4 className="text-lg font-medium text-white mt-3 mb-1">3.2.1 Essential Cookies</h4>
-            <p>These cookies are necessary for the Service to function properly. They enable core functionality such as security, network management, and user authentication. You cannot opt out of these cookies.</p>
+            <p>These cookies are necessary for the Service to function properly. They enable core functionality such as security and network management. You cannot opt out of these cookies.</p>
             
             <h4 className="text-lg font-medium text-white mt-3 mb-1">3.2.2 Preference Cookies</h4>
             <p>These cookies allow us to remember choices you make when you use our Service, such as your preferred language, theme settings, and other customization options.</p>
@@ -46,15 +46,9 @@ const CookiePolicyPage = () => {
           <section>
             <h2 className="text-2xl font-semibold text-white mb-3">4. Specific Uses of Storage Technologies</h2>
             <h3 className="text-xl font-medium text-white mt-4 mb-2">4.1 Authentication</h3>
-            <p>We use cookies and local storage to keep you logged in and to remember your authentication status.</p>
+            <p>We use cookies and local storage to enable your watchlist and favorites.</p>
             
-            <h3 className="text-xl font-medium text-white mt-4 mb-2">4.2 Watch Progress</h3>
-            <p>We use local storage (specifically vidLinkProgress) to track your watch progress across movies and TV shows, allowing you to continue watching where you left off.</p>
-            
-            <h3 className="text-xl font-medium text-white mt-4 mb-2">4.3 User Preferences</h3>
-            <p>We store your preferences, such as watchlists, favorites, and deleted items from watch history (using playexDeletedItems in local storage).</p>
-            
-            <h3 className="text-xl font-medium text-white mt-4 mb-2">4.4 Site Performance</h3>
+            <h3 className="text-xl font-medium text-white mt-4 mb-2">4.2 Site Performance</h3>
             <p>We use cookies to monitor and analyze site performance and to understand how users navigate through our Service.</p>
           </section>
           
@@ -108,8 +102,7 @@ const CookiePolicyPage = () => {
             <p>If you disable or clear cookies and local storage:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
               <li>You may not be able to stay logged in</li>
-              <li>Your watch progress will be lost</li>
-              <li>Personalized features like watchlists and favorites may not function properly</li>
+              <li>Personalized features like watchlists and favorites may not work</li>
               <li>Your preferences and settings will be reset</li>
             </ul>
           </section>

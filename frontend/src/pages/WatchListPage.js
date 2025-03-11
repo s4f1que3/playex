@@ -1,19 +1,29 @@
 // File: frontend/src/pages/WatchlistPage.js
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
 import Spinner from '../components/common/Spinner';
+import { getWatchlist, removeFromWatchlist } from '../utils/LocalStorage';
 
 const WatchlistPage = () => {
   const [mediaType, setMediaType] = useState('all');
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Fetch watchlist data
-const { data, isLoading, error, refetch } = useQuery({
-  queryKey: ['watchlist'],  // Note: string converted to array
-  queryFn: () => api.get('/api/user-media/watchlist').then(res => res.data),
-  staleTime: 300000 // 5 minutes
-});
+  // Load watchlist from localStorage
+  useEffect(() => {
+    setData(getWatchlist());
+    setIsLoading(false);
+    
+    // Add event listener to refresh data when localStorage changes in other tabs
+    const handleStorageChange = (e) => {
+      if (e.key === 'user_watchlist') {
+        setData(getWatchlist());
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
   
   // Filter data based on selected media type
   const filteredData = React.useMemo(() => {
@@ -36,13 +46,9 @@ const { data, isLoading, error, refetch } = useQuery({
   }, [filteredData]);
   
   // Remove item from watchlist
-  const handleRemoveItem = async (mediaId, mediaType) => {
-    try {
-      await api.delete(`/api/user-media/watchlist/${mediaType}/${mediaId}`);
-      refetch(); // Refresh data after removing an item
-    } catch (error) {
-      console.error('Failed to remove item from watchlist:', error);
-    }
+  const handleRemoveItem = (mediaId, mediaType) => {
+    removeFromWatchlist(mediaId, mediaType);
+    setData(getWatchlist()); // Refresh data after removing an item
   };
   
   if (isLoading) {
@@ -93,11 +99,7 @@ const { data, isLoading, error, refetch } = useQuery({
         </div>
       </div>
       
-      {error ? (
-        <div className="bg-red-900 bg-opacity-20 border border-red-800 text-red-200 px-4 py-3 rounded my-6">
-          <p>Failed to load your watchlist. Please try again later.</p>
-        </div>
-      ) : transformedData.length === 0 ? (
+      {transformedData.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-[#E4D981] mb-4">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,7 +115,7 @@ const { data, isLoading, error, refetch } = useQuery({
           </a>
         </div>
       ) : (
-        <MediaGrid items={transformedData} />
+        <MediaGrid items={transformedData} onRemove={handleRemoveItem} />
       )}
     </div>
   );
