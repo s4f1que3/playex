@@ -1,37 +1,30 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import { authApi } from '../utils/api';
 
 // Create context
 const AuthContext = createContext();
 
-// API URL - update this to your actual backend URL
+// API URL for logging purposes only
 const API_URL = process.env.REACT_APP_API_URL || 'https://playex-backend.onrender.com';
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  
-  // Initialize axios with token if available
-  useEffect(() => {
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
-      delete axios.defaults.headers.common['Authorization'];
-    }
-  }, [token]);
   
   // Load user data if token exists
   useEffect(() => {
     const loadUser = async () => {
+      const token = localStorage.getItem('token');
+      
       if (token) {
         try {
-          const { data } = await axios.get(`${API_URL}/api/auth/me`);
+          console.log('Loading current user data...');
+          const { data } = await authApi.getCurrentUser();
           setCurrentUser(data.user);
+          console.log('User data loaded successfully');
         } catch (error) {
-          console.error('Error loading user:', error);
+          console.error('Error loading user:', error.response?.data?.message || error.message);
           localStorage.removeItem('token');
-          setToken(null);
           setCurrentUser(null);
         }
       }
@@ -39,26 +32,22 @@ export const AuthProvider = ({ children }) => {
     };
     
     loadUser();
-  }, [token]);
+  }, []);
   
   // Register function
   const register = async (username, email, password) => {
     try {
       console.log(`Registering user with API: ${API_URL}/api/auth/register`);
       
-      const { data } = await axios.post(`${API_URL}/api/auth/register`, {
-        username,
-        email,
-        password
-      });
+      const { data } = await authApi.register(username, email, password);
       
+      console.log('Registration successful');
       localStorage.setItem('token', data.token);
-      setToken(data.token);
       setCurrentUser(data.user);
       
       return data;
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Registration error:', error.response?.data?.message || error.message);
       throw error;
     }
   };
@@ -68,44 +57,35 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log(`Logging in with API: ${API_URL}/api/auth/login`);
       
-      const response = await axios.post(`${API_URL}/api/auth/login`, {
-        email,
-        password
-      });
+      const { data } = await authApi.login(email, password);
       
-      console.log('Login response:', response.status);
-      
-      const { data } = response;
-      
+      console.log('Login successful');
       localStorage.setItem('token', data.token);
-      setToken(data.token);
       setCurrentUser(data.user);
       
       return data;
     } catch (error) {
-      console.error('Login error:', error.response?.data || error.message);
+      console.error('Login error:', error.response?.data?.message || error.message);
       throw error;
     }
   };
   
   // Logout function
   const logout = () => {
+    console.log('Logging out user');
     localStorage.removeItem('token');
-    setToken(null);
     setCurrentUser(null);
   };
   
   // Reset password function
   const resetPassword = async (email, newPassword) => {
     try {
-      const { data } = await axios.post(`${API_URL}/api/auth/reset-password`, {
-        email,
-        newPassword
-      });
-      
+      console.log(`Resetting password for: ${email}`);
+      const { data } = await authApi.resetPassword(email, newPassword);
+      console.log('Password reset successful');
       return data;
     } catch (error) {
-      console.error('Password reset error:', error);
+      console.error('Password reset error:', error.response?.data?.message || error.message);
       throw error;
     }
   };
