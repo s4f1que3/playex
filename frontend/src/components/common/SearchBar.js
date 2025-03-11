@@ -12,7 +12,7 @@ const SearchBar = ({ isMobile = false }) => {
   
   // Search suggestions query - FIXED FOR TANSTACK QUERY V5
   const { data: suggestions, isLoading } = useQuery({
-    queryFn: ['searchSuggestions', searchTerm],
+    queryKey: ['searchSuggestions', searchTerm],
     queryFn: () => tmdbApi.get('/search/multi', { params: { query: searchTerm } })
       .then(res => res.data.results.slice(0, 5)),
     enabled: searchTerm.length > 2,
