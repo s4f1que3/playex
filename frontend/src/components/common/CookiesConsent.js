@@ -28,7 +28,7 @@ const CookieConsent = () => {
         <div className="bg-gray-800 rounded-lg shadow-xl max-w-lg w-full mx-4 overflow-hidden border border-gray-700">
           {/* Header */}
           <div className="px-6 py-4 border-b border-gray-700">
-            <h3 className="text-xl font-medium text-white">Privacy Settings</h3>
+            <h3 className="text-xl font-medium text-white">Cookies Consent</h3>
           </div>
           
           {/* Content */}
