@@ -36,7 +36,7 @@ const CookieConsent = () => {
             <p className="text-gray-300 mb-4">
               We use cookies and local storage to enhance your experience, save your preferences, 
               and remember your favorites and watchlist. By continuing to use Playex,
-              you agree to our <Link to="/privacy" className="text-[#82BC87] hover:text-[#E4D981]">Privacy Policy and</Link>
+              you agree to our <Link to="/privacy" className="text-[#82BC87] hover:text-[#E4D981]">Privacy Policy</Link> and
               <Link to="/terms" className="text-[#82BC87] hover:text-[#E4D981]"> Terms and Conditions</Link>.
             </p>
             
