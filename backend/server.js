@@ -1,12 +1,10 @@
+require('dotenv').config(); // Load environment variables at the top
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
-const dotenv = require('dotenv');
-
-// Load environment variables
-dotenv.config();
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
@@ -17,22 +15,27 @@ const userMediaRoutes = require('./routes/userMediaRoutes');
 // Create Express app
 const app = express();
 
-// Set up middleware
+// Set up security middleware
 app.use(helmet());
 
-// CORS configuration - update with your actual frontend URL
+// CORS configuration - Allow frontend to communicate with backend
+const allowedOrigins = ['https://playex.onrender.com', 'http://localhost:3000'];
 app.use(cors({
-  origin: ['https://playex-frontend.onrender.com', 'http://localhost:3000'],
+  origin: allowedOrigins, // Ensure this matches your actual frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
 
+// Handle CORS preflight requests globally
+app.options('*', cors());
+
+// Middleware for JSON, URL encoding, and logging
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// Add a root route handler
+// Root route to check API status
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Playex API is running',
@@ -67,8 +70,8 @@ app.use((err, req, res, next) => {
 // Serve static assets in production
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/build')));
-  
-  // This should come AFTER the API routes
+
+  // Serve React app for unknown routes (AFTER API routes)
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
   });
