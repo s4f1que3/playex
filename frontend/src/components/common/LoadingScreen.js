@@ -62,7 +62,7 @@ const LoadingScreen = ({ finishLoading }) => {
             Playex
           </h1>
           <p className="text-white text-opacity-70 animate-fadeIn animation-delay-300" 
-          style={{position: 'relative', bottom: '-35px'}}>
+          style={{position: 'relative', bottom: '-50px'}}>
             Your Ultimate Streaming Experience
           </p>
         </div>
