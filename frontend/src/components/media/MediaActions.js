@@ -140,9 +140,9 @@ const MediaActions = ({
           disabled={loading.watchlist}
           className={`flex-grow md:flex-grow-0 ${
             watchlist
-              ? 'bg-[#E4D981] text-[#161616] hover:bg-opacity-80'
-              : 'bg-gray-700 text-white hover:bg-gray-600'
-          } font-medium py-2 px-4 rounded transition duration-300 flex items-center justify-center`}
+              ? 'bg-[#E4D981] text-[#161616] hover:bg-opacity-95 hover:translate-y-[-2px] hover:shadow-[0_4px_12px_rgba(228,217,129,0.35)]'
+              : 'bg-gray-700 text-white hover:bg-gray-600 hover:translate-y-[-2px] hover:shadow-[0_4px_12px_rgba(55,65,81,0.35)]'
+          } font-medium py-2 px-4 rounded transition-all duration-300 ease-out transform flex items-center justify-center`}
         >
           {loading.watchlist ? (
             <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-current"></div>
@@ -173,9 +173,9 @@ const MediaActions = ({
           disabled={loading.favorites}
           className={`flex-grow md:flex-grow-0 ${
             favorites
-              ? 'bg-[#E6C6BB] text-[#161616] hover:bg-opacity-80'
-              : 'bg-gray-700 text-white hover:bg-gray-600'
-          } font-medium py-2 px-4 rounded transition duration-300 flex items-center justify-center`}
+              ? 'bg-[#E6C6BB] text-[#161616] hover:bg-opacity-95 hover:translate-y-[-2px] hover:shadow-[0_4px_12px_rgba(230,198,187,0.35)]'
+              : 'bg-gray-700 text-white hover:bg-gray-600 hover:translate-y-[-2px] hover:shadow-[0_4px_12px_rgba(55,65,81,0.35)]'
+          } font-medium py-2 px-4 rounded transition-all duration-300 ease-out transform flex items-center justify-center`}
         >
           {loading.favorites ? (
             <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-current"></div>
