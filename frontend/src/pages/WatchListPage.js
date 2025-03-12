@@ -8,6 +8,8 @@ const WatchlistPage = () => {
   const [mediaType, setMediaType] = useState('all');
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedItems, setSelectedItems] = useState({});
+  const [selectionMode, setSelectionMode] = useState(false);
   
   // Load watchlist from localStorage
   useEffect(() => {
@@ -50,6 +52,64 @@ const WatchlistPage = () => {
     removeFromWatchlist(mediaId, mediaType);
     setData(getWatchlist()); // Refresh data after removing an item
   };
+
+  // Clear entire watchlist
+  const clearWatchlist = () => {
+    if (window.confirm('Are you sure you want to clear your entire watchlist?')) {
+      // Direct implementation since clearWatchlist isn't exported
+      localStorage.setItem('user_watchlist', JSON.stringify([]));
+      setData([]);
+      setSelectedItems({});
+    }
+  };
+
+  // Toggle item selection
+  const toggleSelectItem = (mediaId, mediaType) => {
+    const itemKey = `${mediaType}-${mediaId}`;
+    setSelectedItems(prev => ({
+      ...prev,
+      [itemKey]: !prev[itemKey]
+    }));
+  };
+
+  // Clear selected items
+  const clearSelectedItems = () => {
+    const selectedCount = Object.values(selectedItems).filter(Boolean).length;
+    
+    if (selectedCount === 0) {
+      alert('No items selected');
+      return;
+    }
+    
+    if (window.confirm(`Are you sure you want to remove ${selectedCount} item(s) from your watchlist?`)) {
+      // Get keys of selected items
+      const selectedKeys = Object.keys(selectedItems)
+        .filter(key => selectedItems[key]);
+      
+      // Since clearSelectedItems isn't exported, implement directly
+      const watchlist = getWatchlist();
+      
+      const newWatchlist = watchlist.filter(item => {
+        const itemKey = `${item.media_type}-${item.media_id}`;
+        return !selectedKeys.includes(itemKey);
+      });
+      
+      localStorage.setItem('user_watchlist', JSON.stringify(newWatchlist));
+      
+      // Refresh data and reset selection
+      setData(getWatchlist());
+      setSelectedItems({});
+      setSelectionMode(false);
+    }
+  };
+
+  // Toggle selection mode
+  const toggleSelectionMode = () => {
+    setSelectionMode(prev => !prev);
+    if (selectionMode) {
+      setSelectedItems({});
+    }
+  };
   
   if (isLoading) {
     return (
@@ -64,8 +124,8 @@ const WatchlistPage = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-white">My Watchlist</h1>
         
-        {/* Media Type Filter */}
         <div className="flex space-x-2">
+          {/* Media Type Filter */}
           <button
             onClick={() => setMediaType('all')}
             className={`px-4 py-2 rounded-lg transition duration-300 ${
@@ -115,7 +175,41 @@ const WatchlistPage = () => {
           </a>
         </div>
       ) : (
-        <MediaGrid items={transformedData} onRemove={handleRemoveItem} />
+        <>
+          {/* Watchlist Management Buttons */}
+          <div className="flex space-x-3 mb-4">
+            <button
+              onClick={toggleSelectionMode}
+              className="px-4 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition duration-300"
+            >
+              {selectionMode ? 'Cancel Selection' : 'Select Items'}
+            </button>
+            
+            {selectionMode && (
+              <button
+                onClick={clearSelectedItems}
+                className="px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-500 transition duration-300"
+              >
+                Clear Selected
+              </button>
+            )}
+            
+            <button
+              onClick={clearWatchlist}
+              className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition duration-300"
+            >
+              Clear Watchlist
+            </button>
+          </div>
+          
+          <MediaGrid 
+            items={transformedData}
+            selectionMode={selectionMode}
+            onSelectItem={toggleSelectItem}
+            onRemove={handleRemoveItem}
+            selectedItems={selectedItems}
+          />
+        </>
       )}
     </div>
   );

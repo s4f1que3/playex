@@ -4,7 +4,16 @@ import MediaCard from '../common/MediaCard';
 import Spinner from '../common/Spinner';
 import { useMediaQueries } from '../../hooks/useMediaQueries';
 
-const MediaGrid = ({ items, loading, error, columnCount }) => {
+const MediaGrid = ({ 
+  items, 
+  loading, 
+  error, 
+  columnCount,
+  selectionMode = false,
+  onSelectItem,
+  onRemove,
+  selectedItems = {}
+}) => {
   const { isMobile, isTablet } = useMediaQueries();
   
   // Dynamically set column count based on screen size and provided prop
@@ -45,7 +54,23 @@ const MediaGrid = ({ items, loading, error, columnCount }) => {
   return (
     <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-${cols} gap-4 md:gap-6`}>
       {items.map((item) => (
-        <MediaCard key={item.id} media={item} />
+        <div key={item.id} className="relative">
+          {selectionMode && (
+            <div className="absolute top-2 left-2 z-10 bg-black bg-opacity-60 rounded-md p-1">
+              <input
+                type="checkbox"
+                checked={selectedItems[`${item.media_type}-${item.id}`] || false}
+                onChange={() => onSelectItem(item.id, item.media_type)}
+                className="w-5 h-5 cursor-pointer accent-[#82BC87]"
+              />
+            </div>
+          )}
+          
+          <MediaCard 
+            media={item} 
+            onRemove={selectionMode ? null : (() => onRemove(item.id, item.media_type))} 
+          />
+        </div>
       ))}
     </div>
   );

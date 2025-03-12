@@ -8,6 +8,8 @@ const FavoritesPage = () => {
   const [mediaType, setMediaType] = useState('all');
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedItems, setSelectedItems] = useState({});
+  const [selectionMode, setSelectionMode] = useState(false);
   
   // Load favorites from localStorage
   useEffect(() => {
@@ -49,6 +51,63 @@ const FavoritesPage = () => {
   const handleRemoveItem = (mediaId, mediaType) => {
     removeFromFavorites(mediaId, mediaType);
     setData(getFavorites()); // Refresh data after removing an item
+  };
+  
+  // Clear entire favorites list
+  const clearFavorites = () => {
+    if (window.confirm('Are you sure you want to clear your entire favorites list?')) {
+      localStorage.setItem('user_favorites', JSON.stringify([]));
+      setData([]);
+      setSelectedItems({});
+    }
+  };
+
+  // Toggle item selection
+  const toggleSelectItem = (mediaId, mediaType) => {
+    const itemKey = `${mediaType}-${mediaId}`;
+    setSelectedItems(prev => ({
+      ...prev,
+      [itemKey]: !prev[itemKey]
+    }));
+  };
+
+  // Clear selected items
+  const clearSelectedItems = () => {
+    const selectedCount = Object.values(selectedItems).filter(Boolean).length;
+    
+    if (selectedCount === 0) {
+      alert('No items selected');
+      return;
+    }
+    
+    if (window.confirm(`Are you sure you want to remove ${selectedCount} item(s) from your favorites?`)) {
+      // Get keys of selected items
+      const selectedKeys = Object.keys(selectedItems)
+        .filter(key => selectedItems[key]);
+      
+      // Implement directly since we don't have a utility function
+      const favorites = getFavorites();
+      
+      const newFavorites = favorites.filter(item => {
+        const itemKey = `${item.media_type}-${item.media_id}`;
+        return !selectedKeys.includes(itemKey);
+      });
+      
+      localStorage.setItem('user_favorites', JSON.stringify(newFavorites));
+      
+      // Refresh data and reset selection
+      setData(getFavorites());
+      setSelectedItems({});
+      setSelectionMode(false);
+    }
+  };
+
+  // Toggle selection mode
+  const toggleSelectionMode = () => {
+    setSelectionMode(prev => !prev);
+    if (selectionMode) {
+      setSelectedItems({});
+    }
   };
   
   if (isLoading) {
@@ -115,7 +174,41 @@ const FavoritesPage = () => {
           </a>
         </div>
       ) : (
-        <MediaGrid items={transformedData} onRemove={handleRemoveItem} />
+        <>
+          {/* Favorites Management Buttons */}
+          <div className="flex space-x-3 mb-4">
+            <button
+              onClick={toggleSelectionMode}
+              className="px-4 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition duration-300"
+            >
+              {selectionMode ? 'Cancel Selection' : 'Select Items'}
+            </button>
+            
+            {selectionMode && (
+              <button
+                onClick={clearSelectedItems}
+                className="px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-500 transition duration-300"
+              >
+                Clear Selected
+              </button>
+            )}
+            
+            <button
+              onClick={clearFavorites}
+              className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition duration-300"
+            >
+              Clear Favorites
+            </button>
+          </div>
+          
+          <MediaGrid 
+            items={transformedData}
+            selectionMode={selectionMode}
+            onSelectItem={toggleSelectItem}
+            onRemove={handleRemoveItem}
+            selectedItems={selectedItems}
+          />
+        </>
       )}
     </div>
   );
