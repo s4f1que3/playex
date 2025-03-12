@@ -8,16 +8,20 @@ const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter(Boolean);
 
-  // Fetch media title for movie or TV show pages
-  const mediaType = pathnames[0] === 'movie' || pathnames[0] === 'tv' ? pathnames[0] : null;
+  // Fetch media title for movie, TV show, or actor pages
+  const mediaType = ['movie', 'tv', 'actor'].includes(pathnames[0]) ? pathnames[0] : null;
   const mediaId = mediaType && pathnames[1];
 
   const { data: mediaDetails } = useQuery({
     queryKey: ['mediaDetails', mediaType, mediaId],
-    queryFn: () => tmdbApi.get(`/${mediaType}/${mediaId}`).then(res => res.data),
+    queryFn: () => {
+      // For actor details, use the person endpoint
+      const endpoint = mediaType === 'actor' ? 'person' : mediaType;
+      return tmdbApi.get(`/${endpoint}/${mediaId}`).then(res => res.data);
+    },
     enabled: !!mediaType && !!mediaId,
     staleTime: 300000 // 5 minutes
-});
+  });
   
   // Skip rendering breadcrumbs on home page or auth pages
   if (
@@ -36,6 +40,8 @@ const Breadcrumbs = () => {
         return 'Movies';
       case 'tv-shows':
         return 'TV Shows';
+      case 'actors':
+        return 'Actors';
       case 'trending':
         return 'Trending';
       case 'search':
@@ -50,6 +56,8 @@ const Breadcrumbs = () => {
         return 'Movie';
       case 'tv':
         return 'TV Show';
+      case 'actor':
+        return 'Actor';
       case 'player':
         return 'Player';
       default:
@@ -64,8 +72,8 @@ const Breadcrumbs = () => {
       return '/'; // Redirect to home since we don't have a dedicated player page
     }
     
-    // For movie/tv in player path, redirect to the media details page
-    if ((pathname === 'movie' || pathname === 'tv') && pathnames[0] === 'player') {
+    // For movie/tv/actor in player path, redirect to the media details page
+    if ((pathname === 'movie' || pathname === 'tv' || pathname === 'actor') && pathnames[0] === 'player') {
       const mediaId = pathnames[2];
       return `/${pathname}/${mediaId}`;
     }
@@ -80,18 +88,22 @@ const Breadcrumbs = () => {
          return `/tv/${pathname}`;
        }
     
-    // For movie/tv as first segment, this is already correct
-    if ((pathname === 'movie' || pathname === 'tv') && index === 0) {
+    // For movie/tv/actor as first segment, this is already correct
+    if ((pathname === 'movie' || pathname === 'tv' || pathname === 'actor') && index === 0) {
       return `/${pathname}/${pathnames[1]}`;
     }
     
-    // Special case for movies and tv-shows pages
+    // Special case for movies, tv-shows, and actors pages
     if (pathname === 'movies') {
       return '/movies';
     }
     
     if (pathname === 'tv-shows') {
       return '/tv-shows';
+    }
+    
+    if (pathname === 'actors') {
+      return '/actors';
     }
     
     // Default behavior for other routes

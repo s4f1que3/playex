@@ -39,6 +39,11 @@ const Footer = () => {
                   Trending
                 </Link>
               </li>
+              <li>
+                <Link to="/actors" className="text-gray-400 hover:text-white transition duration-300">
+                  Actors
+                </Link>
+              </li>
             </ul>
           </div>
           

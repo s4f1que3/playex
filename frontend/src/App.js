@@ -26,6 +26,9 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import WatchlistPage from './pages/WatchListPage';
 import FavoritesPage from './pages/FavoritesPage';
 import NotFoundPage from './pages/NotFoundPage';
+import ActorsPage from './pages/ActorsPage';
+import ActorsPersonal from './pages/ActorsPersonal';
+import ActorCreditsPage from './pages/ActorCreditsPage';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -46,6 +49,7 @@ function App() {
         <CookieConsent />
         <SystemAnnouncement />
           <Routes>
+            {/* general routes */}
             <Route path="/" element={<MainLayout />}>
               <Route index element={<HomePage />} />
               <Route path="movies" element={<MoviesPage />} />
@@ -60,6 +64,12 @@ function App() {
               <Route path="tv/:id" element={<MediaDetailsPage mediaType="tv" />} />
               <Route path="player/movie/:id" element={<PlayerPage mediaType="movie" />} />
               <Route path="player/tv/:id/:season/:episode" element={<PlayerPage mediaType="tv" />} />
+
+              {/* Actor routes */}
+             <Route path="/actors" element={<ActorsPage />} />
+             <Route path="/actor/:id" element={<ActorsPersonal />} />
+             <Route path="/actor/:id/movies" element={<ActorCreditsPage type="movie" />} />
+             <Route path="/actor/:id/tv" element={<ActorCreditsPage type="tv" />} />
               
               {/* Protected routes */}
               <Route element={<ProtectedRoute />}>

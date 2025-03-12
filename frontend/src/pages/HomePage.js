@@ -43,6 +43,20 @@ const { data: topRatedTVShows, isLoading: topRatedTVLoading, error: topRatedTVEr
   queryFn: () => tmdbApi.get('/tv/top_rated').then(res => res.data.results),
   staleTime: 600000 // 10 minutes
 });
+
+// Fetch popular actors/persons
+const { data: popularActors, isLoading: actorsLoading, error: actorsError } = useQuery({
+  queryKey: ['popularActors'],
+  queryFn: () => tmdbApi.get('/person/popular').then(res => {
+    // Add media_type to each person object
+    const actors = res.data.results.map(actor => ({
+      ...actor,
+      media_type: 'person'
+    }));
+    return actors;
+  }),
+  staleTime: 600000 // 10 minutes
+});
   
   return (
     <div className="-mt-[72px]"> {/* Offset the header padding in MainLayout */}
@@ -76,6 +90,16 @@ const { data: topRatedTVShows, isLoading: topRatedTVLoading, error: topRatedTVEr
           viewAllLink="/tv-shows"
           loading={tvLoading}
           error={tvError}
+        />
+        
+        {/* Popular Actors */}
+        <MediaCarousel
+          title="Popular Actors"
+          items={popularActors}
+          viewAllLink="/actors"
+          loading={actorsLoading}
+          error={actorsError}
+          mediaType="person" // Specify that these are people
         />
         
         {/* Top Rated Movies */}

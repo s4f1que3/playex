@@ -4,15 +4,17 @@ import MediaCard from '../common/MediaCard';
 import Spinner from '../common/Spinner';
 import { useMediaQueries } from '../../hooks/useMediaQueries';
 
-const MediaGrid = ({ 
-  items, 
-  loading, 
-  error, 
+const MediaGrid = ({
+  items,
+  loading,
+  error,
   columnCount,
   selectionMode = false,
   onSelectItem,
   onRemove,
-  selectedItems = {}
+  selectedItems = {},
+  showType = true,
+  mediaType = null
 }) => {
   const { isMobile, isTablet } = useMediaQueries();
   
@@ -38,6 +40,7 @@ const MediaGrid = ({
     return (
       <div className="bg-red-900 bg-opacity-20 border border-red-800 text-red-200 px-4 py-3 rounded my-6">
         <p>Failed to load content. Please try again later.</p>
+        <p className="text-sm">{error?.message}</p>
       </div>
     );
   }
@@ -53,25 +56,35 @@ const MediaGrid = ({
   
   return (
     <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-${cols} gap-4 md:gap-6`}>
-      {items.map((item) => (
-        <div key={item.id} className="relative">
-          {selectionMode && (
-            <div className="absolute top-2 left-2 z-10 bg-black bg-opacity-60 rounded-md p-1">
-              <input
-                type="checkbox"
-                checked={selectedItems[`${item.media_type}-${item.id}`] || false}
-                onChange={() => onSelectItem(item.id, item.media_type)}
-                className="w-5 h-5 cursor-pointer accent-[#82BC87]"
-              />
-            </div>
-          )}
-          
-          <MediaCard 
-            media={item} 
-            onRemove={selectionMode ? null : (() => onRemove(item.id, item.media_type))} 
-          />
-        </div>
-      ))}
+      {items.map((item) => {
+        // If mediaType prop is provided, use it to override the item's media_type
+        const itemMediaType = mediaType || item.media_type || 'movie';
+        const enhancedItem = {
+          ...item,
+          media_type: itemMediaType
+        };
+        
+        return (
+          <div key={`${item.id}-${itemMediaType}`} className="relative">
+            {selectionMode && (
+              <div className="absolute top-2 left-2 z-10 bg-black bg-opacity-60 rounded-md p-1">
+                <input
+                  type="checkbox"
+                  checked={selectedItems[`${itemMediaType}-${item.id}`] || false}
+                  onChange={() => onSelectItem(item.id, itemMediaType)}
+                  className="w-5 h-5 cursor-pointer accent-[#82BC87]"
+                />
+              </div>
+            )}
+            
+            <MediaCard
+              media={enhancedItem}
+              onRemove={selectionMode ? null : onRemove ? (() => onRemove(item.id, itemMediaType)) : undefined}
+              showType={showType}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -40,8 +40,15 @@ const SearchBar = ({ isMobile = false }) => {
   };
   
   const handleSuggestionClick = (item) => {
-    const mediaType = item.media_type === 'movie' ? 'movie' : 'tv';
-    navigate(`/${mediaType}/${item.id}`);
+    // Handle different media types
+    if (item.media_type === 'movie') {
+      navigate(`/movie/${item.id}`);
+    } else if (item.media_type === 'tv') {
+      navigate(`/tv/${item.id}`);
+    } else if (item.media_type === 'person') {
+      navigate(`/actor/${item.id}`);
+    }
+    
     setShowSuggestions(false);
     setSearchTerm('');
   };
@@ -51,7 +58,7 @@ const SearchBar = ({ isMobile = false }) => {
       <form onSubmit={handleSearch} className="flex">
         <input
           type="text"
-          placeholder="Search movies, TV shows..."
+          placeholder="Search movies, TV shows, actors..."
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -82,8 +89,8 @@ const SearchBar = ({ isMobile = false }) => {
           ) : suggestions && suggestions.length > 0 ? (
             <ul>
               {suggestions.map((item) => {
-                // Only show movies and TV shows
-                if (item.media_type !== 'movie' && item.media_type !== 'tv') {
+                // Skip suggestions that are not movies, TV shows, or people
+                if (!['movie', 'tv', 'person'].includes(item.media_type)) {
                   return null;
                 }
                 
@@ -94,14 +101,20 @@ const SearchBar = ({ isMobile = false }) => {
                       onClick={() => handleSuggestionClick(item)}
                     >
                       <img
-                        src={tmdbHelpers.getImageUrl(item.poster_path, 'w92') || 'https://via.placeholder.com/45x68?text=No+Image'}
+                        src={tmdbHelpers.getImageUrl(
+                          item.media_type === 'person' ? item.profile_path : item.poster_path, 
+                          'w92'
+                        ) || 'https://via.placeholder.com/45x68?text=No+Image'}
                         alt={item.title || item.name}
                         className="w-10 h-15 object-cover rounded mr-3"
                       />
                       <div>
                         <div className="text-white font-medium">{item.title || item.name}</div>
                         <div className="text-xs text-gray-400">
-                          {item.media_type === 'movie' ? 'Movie' : 'TV Show'} • {item.release_date || item.first_air_date ? new Date(item.release_date || item.first_air_date).getFullYear() : 'N/A'}
+                          {item.media_type === 'movie' ? 'Movie' : 
+                           item.media_type === 'tv' ? 'TV Show' : 'Actor'} 
+                          {item.media_type !== 'person' && item.release_date || item.first_air_date ? 
+                            ` • ${new Date(item.release_date || item.first_air_date).getFullYear()}` : ''}
                         </div>
                       </div>
                     </button>
