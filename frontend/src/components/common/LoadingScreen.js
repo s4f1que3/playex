@@ -56,11 +56,13 @@ const LoadingScreen = ({ finishLoading }) => {
         </div>
         
         {/* Text */}
-        <div className="absolute bottom-0 left-0 right-0 text-center" style={{bottom: '-20px'}}>
-          <h1 className="text-3xl font-bold text-[#82BC87] mb-2 animate-fadeIn" style={{transform: 'translateY(-15px)'}}>
+        <div className="absolute bottom-0 left-0 right-0 text-center" style={{bottom: '15px'}}>
+          <h1 className="text-3xl font-bold text-[#82BC87] mb-2 animate-fadeIn"
+          style={{position: 'relative', top: '-25px'}}>
             Playex
           </h1>
-          <p className="text-white text-opacity-70 animate-fadeIn animation-delay-300" style={{marginBottom: '25px'}}>
+          <p className="text-white text-opacity-70 animate-fadeIn animation-delay-300" 
+          style={{position: 'relative', bottom: '-25px'}}>
             Your Ultimate Streaming Experience
           </p>
         </div>
