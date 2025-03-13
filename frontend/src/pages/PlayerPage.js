@@ -123,7 +123,7 @@ const { data, isLoading, error } = useQuery({
                 : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
             } transition duration-200`}
           >
-            Vidsrc
+            VidSrc
           </button>
         </div>
       </div>
@@ -165,6 +165,12 @@ const { data, isLoading, error } = useQuery({
             
             <p className="text-gray-300 mt-4">
               {mediaType === 'tv' && data.episode ? data.episode.overview : data.overview}
+            </p>
+
+                {/* Player page announcment */}
+
+            <p className="text-gray-300 mt-4 bg-gray-800 p-4 rounded-lg">
+              Ad Blockers May Affect The Embedded Player's Ability To Show Content. We Apologize For Any Inconveniences.
             </p>
           </div>
           
