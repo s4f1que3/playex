@@ -75,52 +75,63 @@ const MediaDetailsPage = ({ mediaType }) => {
     );
   }
   
+  console.log('Media Details Data:', data); // Add this to debug
+
   return (
-    <div className="-mx-4 -mt-6"> {/* Extend content to full width */}
+    <div className="-mx-4 -mt-6">
       <MediaInfo media={data} mediaType={mediaType} />
       
-      <div className="container mx-auto px-4">
-        {/* Media Actions (Watch Now, Add to Watchlist, etc.) */}
+      <div className="container mx-auto px-4 space-y-8"> {/* Added space-y-8 for consistent spacing */}
         <MediaActions
           media={data}
           mediaType={mediaType}
           isInWatchlist={userActions.isInWatchlist}
           isInFavorites={userActions.isInFavorites}
           onActionComplete={handleActionComplete}
-          activeSeason={activeSeason} // Pass the activeSeason to MediaActions
+          activeSeason={activeSeason}
         />
         
-        {/* Cast List */}
-        {data?.credits?.cast && <CastList cast={data.credits.cast} />}
+        {/* Cast List with debug logging */}
+        {data?.credits?.cast && (
+          <div className="mb-8">
+            <CastList cast={data.credits.cast} />
+          </div>
+        )}
         
-        {/* Seasons and Episodes (TV Shows only) */}
+        {/* Seasons (TV Shows only) */}
         {mediaType === 'tv' && data?.seasons && (
-          <SeasonsAccordion 
-            tvId={id} 
-            seasons={data.seasons} 
-            activeSeason={activeSeason} // Pass the activeSeason to SeasonsAccordion
-            setActiveSeason={setActiveSeason} // Pass the setter function to SeasonsAccordion
-          />
+          <div className="mb-8">
+            <SeasonsAccordion 
+              tvId={id} 
+              seasons={data.seasons} 
+              activeSeason={activeSeason}
+              setActiveSeason={setActiveSeason}
+            />
+          </div>
         )}
         
-        {/* Similar Content */}
-        {data?.similar?.results?.length > 0 && (
-          <MediaCarousel
-            title="Similar Content"
-            items={data.similar.results.map(item => ({ ...item, media_type: mediaType }))}
-            loading={false}
-            error={null}
-          />
+        {/* Similar Content with debug logging */}
+        {data?.similar?.results && data.similar.results.length > 0 && (
+          <div className="mb-8">
+            <MediaCarousel
+              title="Similar Content"
+              items={data.similar.results.map(item => ({ ...item, media_type: mediaType }))}
+              loading={false}
+              error={null}
+            />
+          </div>
         )}
         
-        {/* Recommended Content */}
-        {data?.recommendations?.results?.length > 0 && (
-          <MediaCarousel
-            title="Recommended For You"
-            items={data.recommendations.results.map(item => ({ ...item, media_type: mediaType }))}
-            loading={false}
-            error={null}
-          />
+        {/* Recommended Content with debug logging */}
+        {data?.recommendations?.results && data.recommendations.results.length > 0 && (
+          <div className="mb-8">
+            <MediaCarousel
+              title="Recommended For You"
+              items={data.recommendations.results.map(item => ({ ...item, media_type: mediaType }))}
+              loading={false}
+              error={null}
+            />
+          </div>
         )}
       </div>
     </div>
