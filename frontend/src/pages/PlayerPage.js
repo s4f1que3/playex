@@ -172,10 +172,12 @@ const { data, isLoading, error } = useQuery({
           {mediaType === 'tv' && (
             <div className="md:w-1/4 bg-gray-800 rounded-lg p-4">
               <h3 className="text-lg font-bold text-white mb-4">Episodes</h3>
-              
+
               <div className="space-y-2">
+                {/* Modified Link - using state to pass the active season */}
                 <Link 
                   to={`/tv/${id}`}
+                  state={{ activeSeason: parseInt(season) }}
                   className="flex items-center justify-center w-full bg-[#82BC87] hover:bg-opacity-80 text-white font-medium py-2 px-4 rounded transition duration-300"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">

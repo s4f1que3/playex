@@ -1,49 +1,49 @@
 // File: frontend/src/components/media/CastList.js
-import React, { useState } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { tmdbHelpers } from '../../utils/api';
 
-const CastList = ({ cast, limit = 6 }) => {
-  const [showAll, setShowAll] = useState(false);
-  
+const CastList = ({ cast }) => {
+  // If no cast data or empty array, don't show anything
   if (!cast || cast.length === 0) {
     return null;
   }
   
-  const displayCast = showAll ? cast : cast.slice(0, limit);
+  // Take only the first 12 cast members
+  const displayCast = cast.slice(0, 12);
   
   return (
     <div className="py-8">
       <h2 className="text-2xl font-bold text-white mb-6">Top Cast</h2>
       
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {displayCast.map((person) => (
-          <div key={person.id} className="bg-gray-800 rounded-lg overflow-hidden">
-            <div className="aspect-[2/3] overflow-hidden">
+        {displayCast.map((actor) => (
+          <Link 
+            to={`/actor/${actor.id}`} 
+            key={actor.id}
+            className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition duration-300 group"
+          >
+            <div className="aspect-[2/3] relative">
               <img
-                src={tmdbHelpers.getImageUrl(person.profile_path) || 'https://via.placeholder.com/300x450?text=No+Image'}
-                alt={person.name}
-                className="w-full h-full object-cover transition duration-300 hover:scale-110"
+                src={tmdbHelpers.getImageUrl(actor.profile_path) || 'https://via.placeholder.com/300x450?text=No+Image'}
+                alt={actor.name}
+                className="w-full h-full object-cover"
                 loading="lazy"
               />
             </div>
+            
             <div className="p-3">
-              <h3 className="font-semibold text-white text-sm truncate">{person.name}</h3>
-              <p className="text-gray-400 text-xs truncate">{person.character}</p>
+              <h3 className="font-medium text-white group-hover:text-[#82BC87] transition duration-300 truncate">
+                {actor.name}
+              </h3>
+              
+              {actor.character && (
+                <p className="text-gray-400 text-sm truncate">{actor.character}</p>
+              )}
             </div>
-          </div>
+          </Link>
         ))}
       </div>
-      
-      {cast.length > limit && (
-        <div className="text-center mt-6">
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="btn-secondary inline-block"
-          >
-            {showAll ? 'Show Less' : `Show All (${cast.length})`}
-          </button>
-        </div>
-      )}
     </div>
   );
 };

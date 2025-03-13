@@ -1,6 +1,6 @@
 // File: frontend/src/pages/MediaDetailsPage.js
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../utils/api';
 import Spinner from '../components/common/Spinner';
@@ -12,29 +12,33 @@ import MediaCarousel from '../components/media/MediaCarousel';
 
 const MediaDetailsPage = ({ mediaType }) => {
   const { id } = useParams();
+  const location = useLocation();
   const [userActions, setUserActions] = useState({
     isInWatchlist: false,
     isInFavorites: false
   });
-  const [activeSeason, setActiveSeason] = useState(1); // Added activeSeason state
+  
+  // Initialize activeSeason with the value from location state if available
+  const [activeSeason, setActiveSeason] = useState(() => {
+    // Check if we have season info in the location state (from the "All Episodes" button)
+    if (location.state && location.state.activeSeason) {
+      return location.state.activeSeason;
+    }
+    // Default to season 1
+    return 1;
+  });
 
-  // Fetch media details
+  // Updated query to properly fetch additional data
   const { data, isLoading, error } = useQuery({
     queryKey: ['mediaDetails', mediaType, id],
-    queryFn: () => tmdbApi.get(`/${mediaType}/${id}`, {
-      params: {
-        append_to_response: 'credits,videos,recommendations,similar'
-      }
-    }).then(res => {
-      // Initialize user actions from API if available
-      if (res.data.user_data) {
-        setUserActions({
-          isInWatchlist: res.data.user_data.in_watchlist,
-          isInFavorites: res.data.user_data.in_favorites
-        });
-      }
-      return res.data;
-    }),
+    queryFn: async () => {
+      const response = await tmdbApi.get(`/${mediaType}/${id}`, {
+        params: {
+          append_to_response: 'credits,videos,recommendations,similar'
+        }
+      });
+      return response.data;
+    },
     staleTime: 300000 // 5 minutes
   });
   
@@ -87,10 +91,10 @@ const MediaDetailsPage = ({ mediaType }) => {
         />
         
         {/* Cast List */}
-        <CastList cast={data.credits?.cast} />
+        {data?.credits?.cast && <CastList cast={data.credits.cast} />}
         
         {/* Seasons and Episodes (TV Shows only) */}
-        {mediaType === 'tv' && data.seasons && (
+        {mediaType === 'tv' && data?.seasons && (
           <SeasonsAccordion 
             tvId={id} 
             seasons={data.seasons} 
@@ -100,7 +104,7 @@ const MediaDetailsPage = ({ mediaType }) => {
         )}
         
         {/* Similar Content */}
-        {data.similar?.results?.length > 0 && (
+        {data?.similar?.results?.length > 0 && (
           <MediaCarousel
             title="Similar Content"
             items={data.similar.results.map(item => ({ ...item, media_type: mediaType }))}
@@ -110,7 +114,7 @@ const MediaDetailsPage = ({ mediaType }) => {
         )}
         
         {/* Recommended Content */}
-        {data.recommendations?.results?.length > 0 && (
+        {data?.recommendations?.results?.length > 0 && (
           <MediaCarousel
             title="Recommended For You"
             items={data.recommendations.results.map(item => ({ ...item, media_type: mediaType }))}
