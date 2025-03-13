@@ -1,5 +1,5 @@
 // File: frontend/src/pages/MediaDetailsPage.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../utils/api';
@@ -73,8 +73,6 @@ const MediaDetailsPage = ({ mediaType }) => {
     }));
   };
   
-  const isLoading = isLoadingMedia || isLoadingCredits || isLoadingSimilar || isLoadingRecommendations;
-  
   if (isLoadingMedia) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
@@ -128,7 +126,12 @@ const MediaDetailsPage = ({ mediaType }) => {
         {/* Cast List with loading state */}
         {isLoadingCredits ? (
           <div className="py-8">
-            <h2 className="text-2xl font-bold text-white mb-6">Top Cast</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-white">Top Cast</h2>
+              <div className="px-4 py-2 rounded-lg bg-gray-800 text-gray-300">
+                Loading...
+              </div>
+            </div>
             <div className="flex justify-center">
               <Spinner size="medium" />
             </div>
