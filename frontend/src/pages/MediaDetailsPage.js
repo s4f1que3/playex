@@ -123,6 +123,16 @@ const MediaDetailsPage = ({ mediaType }) => {
           activeSeason={activeSeason}
         />
         
+        {/* Seasons and Episodes (TV Shows only) */}
+        {mediaType === 'tv' && mediaData.seasons && (
+          <SeasonsAccordion 
+            tvId={id} 
+            seasons={mediaData.seasons} 
+            activeSeason={activeSeason}
+            setActiveSeason={setActiveSeason}
+          />
+        )}
+
         {/* Cast List with loading state */}
         {isLoadingCredits ? (
           <div className="py-8">
@@ -139,16 +149,6 @@ const MediaDetailsPage = ({ mediaType }) => {
         ) : hasCast ? (
           <CastList cast={creditsData.cast} />
         ) : null}
-        
-        {/* Seasons and Episodes (TV Shows only) */}
-        {mediaType === 'tv' && mediaData.seasons && (
-          <SeasonsAccordion 
-            tvId={id} 
-            seasons={mediaData.seasons} 
-            activeSeason={activeSeason}
-            setActiveSeason={setActiveSeason}
-          />
-        )}
         
         {/* Similar Content with loading state */}
         {isLoadingSimilar ? (
