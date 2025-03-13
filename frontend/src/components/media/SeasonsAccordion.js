@@ -11,7 +11,8 @@ const SeasonsAccordion = ({
   activeSeason, 
   setActiveSeason 
 }) => {
-  
+  // Add state to track if episodes are expanded or collapsed
+  const [isEpisodesExpanded, setIsEpisodesExpanded] = useState(true);
   
   // Fetch season details
   const { data: seasonDetails, isLoading } = useQuery({
@@ -31,10 +32,33 @@ const SeasonsAccordion = ({
   
   return (
     <div className="py-8">
-      <h2 className="text-2xl font-bold text-white mb-6">Seasons & Episodes</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-white">Seasons & Episodes</h2>
+        
+        <button 
+          onClick={() => setIsEpisodesExpanded(!isEpisodesExpanded)}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-all duration-300"
+        >
+          {isEpisodesExpanded ? (
+            <>
+              Hide 
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
+                <path d="m18 15-6-6-6 6"/>
+              </svg>
+            </>
+          ) : (
+            <>
+              Show 
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </>
+          )}
+        </button>
+      </div>
       
-      {/* Season Tabs */}
-      <div className="flex overflow-x-auto pb-2 mb-6 scrollbar-hide">
+      {/* Season Tabs - Always visible regardless of expanded state */}
+      <div className="flex overflow-x-auto pb-2 mb-4 scrollbar-hide">
         <div className="flex space-x-2">
           {seasons.map((season) => (
             <button
@@ -52,68 +76,98 @@ const SeasonsAccordion = ({
         </div>
       </div>
       
-      {/* Episodes List */}
+      {/* Episodes List - Collapsible */}
       {isLoading ? (
-        <Spinner />
-      ) : seasonDetails?.episodes ? (
-        <div className="space-y-4">
-          {seasonDetails.episodes.map((episode) => {
-            
-            return (
-              <div 
-                key={episode.id} 
-                className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition duration-300"
-              >
-                <Link to={`/player/tv/${tvId}/${activeSeason}/${episode.episode_number}`}>
-                  <div className="flex flex-col md:flex-row">
-                    {/* Episode Image */}
-                    <div className="md:w-1/3 lg:w-1/4">
-                      <div className="relative aspect-video">
-                        <img
-                          src={tmdbHelpers.getImageUrl(episode.still_path) || 'https://via.placeholder.com/500x281?text=No+Preview'}
-                          alt={episode.name}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                        
-                        {/* Play button overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition duration-300">
-                          <div className="bg-[#82BC87] rounded-full p-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Episode Info */}
-                    <div className="p-4 md:w-2/3 lg:w-3/4">
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h3 className="font-bold text-white text-lg">
-                            {episode.episode_number}. {episode.name}
-                          </h3>
-                          <div className="text-gray-400 text-sm mt-1">
-                            {episode.air_date ? new Date(episode.air_date).toLocaleDateString() : 'Air date unknown'} • {episode.runtime ? `${episode.runtime} min` : 'Runtime unknown'}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <p className="text-gray-300 mt-2 line-clamp-2">
-                        {episode.overview || 'No description available.'}
-                      </p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            );
-          })}
+        <div className="py-4 flex justify-center">
+          <Spinner />
         </div>
       ) : (
-        <div className="text-gray-400 text-center py-4">
-          No episodes available for this season.
-        </div>
+        <>
+          {/* Collapsible content */}
+          <div 
+            className={`transition-all duration-500 origin-top overflow-hidden ${
+              isEpisodesExpanded ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'
+            }`}
+          >
+            {seasonDetails?.episodes ? (
+              <div className="space-y-4 mt-4">
+                {seasonDetails.episodes.map((episode) => (
+                  <div 
+                    key={episode.id} 
+                    className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition duration-300"
+                  >
+                    <Link to={`/player/tv/${tvId}/${activeSeason}/${episode.episode_number}`}>
+                      <div className="flex flex-col md:flex-row">
+                        {/* Episode Image */}
+                        <div className="md:w-1/3 lg:w-1/4">
+                          <div className="relative aspect-video">
+                            <img
+                              src={tmdbHelpers.getImageUrl(episode.still_path) || 'https://via.placeholder.com/500x281?text=No+Preview'}
+                              alt={episode.name}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                            
+                            {/* Play button overlay */}
+                            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition duration-300">
+                              <div className="bg-[#82BC87] rounded-full p-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Episode Info */}
+                        <div className="p-4 md:w-2/3 lg:w-3/4">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h3 className="font-bold text-white text-lg">
+                                {episode.episode_number}. {episode.name}
+                              </h3>
+                              <div className="text-gray-400 text-sm mt-1">
+                                {episode.air_date ? new Date(episode.air_date).toLocaleDateString() : 'Air date unknown'} • {episode.runtime ? `${episode.runtime} min` : 'Runtime unknown'}
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <p className="text-gray-300 mt-2 line-clamp-2">
+                            {episode.overview || 'No description available.'}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-gray-400 text-center py-4">
+                No episodes available for this season.
+              </div>
+            )}
+          </div>
+          
+          {/* Collapsed view summary */}
+          {!isEpisodesExpanded && seasonDetails?.episodes && (
+            <div className="text-gray-400 mt-4 bg-gray-800 bg-opacity-50 rounded-lg p-4">
+              <div className="flex justify-between items-center">
+                <span>
+                  <span className="text-white font-medium">{seasonDetails.episodes.length}</span> episodes available in {seasonDetails.name || `Season ${activeSeason}`}
+                </span>
+                <Link 
+                  to={`/player/tv/${tvId}/${activeSeason}/1`}
+                  className="bg-[#82BC87] hover:bg-[#6da972] text-white px-4 py-2 rounded-lg transition duration-300 flex items-center gap-2"
+                >
+                  Play Episode 1
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                </Link>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
