@@ -63,8 +63,8 @@ const VideoPlayer = ({ tmdbId, mediaType, season, episode, playerType = 'vidlink
         frameBorder="0"
         allowFullScreen
         title={
-          playerType === 'vidlink' ? "VidLink Player" : 
-          playerType === 'embedsu' ? "EmbedSu Player" : 
+          playerType === 'vidlink' ? "Playex Player" : 
+          playerType === 'embedsu' ? "Playex Player" : 
           "Vidsrc Player"
         }
       ></iframe>
