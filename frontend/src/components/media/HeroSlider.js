@@ -5,11 +5,9 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { tmdbHelpers } from '../../utils/api';
-import { useWatchProgress } from '../../hooks/useWatchProgress';
 
 const HeroSlider = ({ items }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { getMediaProgress } = useWatchProgress();
   
   const settings = {
     dots: true,
@@ -55,9 +53,6 @@ const HeroSlider = ({ items }) => {
             ? new Date(release_date || first_air_date).getFullYear() 
             : '';
             
-          // Get watch progress for continue watching button
-          const progress = getMediaProgress(id, mediaType);
-          const hasStarted = progress && progress.watched > 0;
           
           return (
             <div key={id} className="relative">
@@ -94,7 +89,7 @@ const HeroSlider = ({ items }) => {
                           More Info
                         </span>
                       </Link>
-                      {hasStarted && (
+                      
                         <Link
                           to={mediaType === 'movie' ? `/player/movie/${id}` : `/tv/${id}`}
                           className="btn-secondary"
@@ -106,7 +101,6 @@ const HeroSlider = ({ items }) => {
                             Continue Watching
                           </span>
                         </Link>
-                      )}
                     </div>
                   </div>
                 </div>

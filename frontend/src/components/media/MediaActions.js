@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../../utils/api';
-import { useWatchProgress } from '../../hooks/useWatchProgress';
 import { 
   toggleFavorite, 
   toggleWatchlist, 
@@ -41,9 +40,7 @@ const MediaActions = ({
   });
   const [watchlist, setWatchlist] = useState(false);
   const [favorites, setFavorites] = useState(false);
-  
-  // Watch progress hooks
-  const { getMediaProgress } = useWatchProgress();
+
   
   // Load initial state from localStorage or props
   useEffect(() => {
@@ -60,11 +57,6 @@ const MediaActions = ({
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [media.id, mediaType, initialWatchlist, initialFavorites]);
-  
-  // Get watch progress
-  const progress = getMediaProgress(media.id, mediaType);
-  const hasStarted = progress && progress.watched > 0;
-  const progressPercentage = progress ? (progress.watched / progress.duration) * 100 : 0;
   
   // Handle watchlist action
   const handleWatchlist = () => {
@@ -117,7 +109,7 @@ const MediaActions = ({
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
               </svg>
-              {hasStarted ? 'Continue Watching' : 'Watch Now'}
+              {'Watch Now'}
             </span>
           </Link>
         ) : (
@@ -201,21 +193,6 @@ const MediaActions = ({
         </button>
       </div>
       
-      {/* Progress bar */}
-      {hasStarted && (
-        <div className="mt-4">
-          <div className="flex justify-between text-sm text-gray-400 mb-1">
-            <span>Progress</span>
-            <span>{Math.round(progressPercentage)}%</span>
-          </div>
-          <div className="bg-gray-700 rounded-full h-2">
-            <div
-              className="bg-[#82BC87] h-2 rounded-full"
-              style={{ width: `${progressPercentage}%` }}
-            ></div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

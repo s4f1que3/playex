@@ -1,12 +1,11 @@
 // File: frontend/src/hooks/useWatchProgress.js
 import { useEffect, useState, useCallback } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import { api } from '../utils/api';
 
 export function useWatchProgress() {
   const [watchProgress, setWatchProgress] = useState({});
   const [deletedItems, setDeletedItems] = useState([]);
-  const { currentUser } = useAuth();
+  
 
   // Load watch progress and deleted items from localStorage
   useEffect(() => {

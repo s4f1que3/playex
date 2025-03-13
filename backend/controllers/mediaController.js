@@ -1,6 +1,4 @@
 const tmdbClient = require('../config/tmdb');
-const Watchlist = require('../models/watchlistModel');
-const Favorites = require('../models/favoritesModel');
 
 const mediaController = {
   // Get trending media (movies and TV shows)

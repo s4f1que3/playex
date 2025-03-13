@@ -20,26 +20,50 @@ const MediaDetailsPage = ({ mediaType }) => {
   
   // Initialize activeSeason with the value from location state if available
   const [activeSeason, setActiveSeason] = useState(() => {
-    // Check if we have season info in the location state (from the "All Episodes" button)
     if (location.state && location.state.activeSeason) {
       return location.state.activeSeason;
     }
-    // Default to season 1
     return 1;
   });
 
-  // Updated query to properly fetch additional data
-  const { data, isLoading, error } = useQuery({
+  // Main media details query
+  const { data: mediaData, isLoading: isLoadingMedia, error: mediaError } = useQuery({
     queryKey: ['mediaDetails', mediaType, id],
-    queryFn: async () => {
-      const response = await tmdbApi.get(`/${mediaType}/${id}`, {
-        params: {
-          append_to_response: 'credits,videos,recommendations,similar'
-        }
-      });
-      return response.data;
-    },
+    queryFn: () => tmdbApi.get(`/${mediaType}/${id}`).then(res => {
+      // Initialize user actions from API if available
+      if (res.data.user_data) {
+        setUserActions({
+          isInWatchlist: res.data.user_data.in_watchlist,
+          isInFavorites: res.data.user_data.in_favorites
+        });
+      }
+      return res.data;
+    }),
     staleTime: 300000 // 5 minutes
+  });
+
+  // Separate query for credits
+  const { data: creditsData, isLoading: isLoadingCredits } = useQuery({
+    queryKey: ['mediaCredits', mediaType, id],
+    queryFn: () => tmdbApi.get(`/${mediaType}/${id}/credits`).then(res => res.data),
+    staleTime: 300000,
+    enabled: !!mediaData // Only run if media data loaded
+  });
+
+  // Separate query for similar content
+  const { data: similarData, isLoading: isLoadingSimilar } = useQuery({
+    queryKey: ['mediaSimilar', mediaType, id],
+    queryFn: () => tmdbApi.get(`/${mediaType}/${id}/similar`).then(res => res.data),
+    staleTime: 300000,
+    enabled: !!mediaData // Only run if media data loaded
+  });
+
+  // Separate query for recommendations
+  const { data: recommendationsData, isLoading: isLoadingRecommendations } = useQuery({
+    queryKey: ['mediaRecommendations', mediaType, id],
+    queryFn: () => tmdbApi.get(`/${mediaType}/${id}/recommendations`).then(res => res.data),
+    staleTime: 300000,
+    enabled: !!mediaData // Only run if media data loaded
   });
   
   const handleActionComplete = (actionType, value) => {
@@ -49,7 +73,9 @@ const MediaDetailsPage = ({ mediaType }) => {
     }));
   };
   
-  if (isLoading) {
+  const isLoading = isLoadingMedia || isLoadingCredits || isLoadingSimilar || isLoadingRecommendations;
+  
+  if (isLoadingMedia) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <Spinner size="large" />
@@ -57,16 +83,16 @@ const MediaDetailsPage = ({ mediaType }) => {
     );
   }
   
-  if (error) {
+  if (mediaError) {
     return (
       <div className="bg-red-900 bg-opacity-20 border border-red-800 text-red-200 px-4 py-3 rounded my-6">
         <p>Failed to load {mediaType} details. Please try again later.</p>
-        <p className="text-sm">{error.message}</p>
+        <p className="text-sm">{mediaError.message}</p>
       </div>
     );
   }
   
-  if (!data) {
+  if (!mediaData) {
     return (
       <div className="text-center py-12 text-gray-400">
         <p className="text-2xl mb-2">No {mediaType} found</p>
@@ -75,15 +101,23 @@ const MediaDetailsPage = ({ mediaType }) => {
     );
   }
   
-  console.log('Media Details Data:', data); // Add this to debug
-
+  // Check if we have cast data
+  const hasCast = creditsData?.cast && creditsData.cast.length > 0;
+  
+  // Check if we have similar content
+  const hasSimilar = similarData?.results && similarData.results.length > 0;
+  
+  // Check if we have recommendations
+  const hasRecommendations = recommendationsData?.results && recommendationsData.results.length > 0;
+  
   return (
-    <div className="-mx-4 -mt-6">
-      <MediaInfo media={data} mediaType={mediaType} />
+    <div className="-mx-4 -mt-6"> {/* Extend content to full width */}
+      <MediaInfo media={mediaData} mediaType={mediaType} />
       
-      <div className="container mx-auto px-4 space-y-8"> {/* Added space-y-8 for consistent spacing */}
+      <div className="container mx-auto px-4">
+        {/* Media Actions */}
         <MediaActions
-          media={data}
+          media={mediaData}
           mediaType={mediaType}
           isInWatchlist={userActions.isInWatchlist}
           isInFavorites={userActions.isInFavorites}
@@ -91,48 +125,61 @@ const MediaDetailsPage = ({ mediaType }) => {
           activeSeason={activeSeason}
         />
         
-        {/* Cast List with debug logging */}
-        {data?.credits?.cast && (
-          <div className="mb-8">
-            <CastList cast={data.credits.cast} />
+        {/* Cast List with loading state */}
+        {isLoadingCredits ? (
+          <div className="py-8">
+            <h2 className="text-2xl font-bold text-white mb-6">Top Cast</h2>
+            <div className="flex justify-center">
+              <Spinner size="medium" />
+            </div>
           </div>
+        ) : hasCast ? (
+          <CastList cast={creditsData.cast} />
+        ) : null}
+        
+        {/* Seasons and Episodes (TV Shows only) */}
+        {mediaType === 'tv' && mediaData.seasons && (
+          <SeasonsAccordion 
+            tvId={id} 
+            seasons={mediaData.seasons} 
+            activeSeason={activeSeason}
+            setActiveSeason={setActiveSeason}
+          />
         )}
         
-        {/* Seasons (TV Shows only) */}
-        {mediaType === 'tv' && data?.seasons && (
-          <div className="mb-8">
-            <SeasonsAccordion 
-              tvId={id} 
-              seasons={data.seasons} 
-              activeSeason={activeSeason}
-              setActiveSeason={setActiveSeason}
-            />
+        {/* Similar Content with loading state */}
+        {isLoadingSimilar ? (
+          <div className="py-8">
+            <h2 className="text-2xl font-bold text-white mb-6">Similar Content</h2>
+            <div className="flex justify-center">
+              <Spinner size="medium" />
+            </div>
           </div>
-        )}
+        ) : hasSimilar ? (
+          <MediaCarousel
+            title="Similar Content"
+            items={similarData.results.map(item => ({ ...item, media_type: mediaType }))}
+            loading={false}
+            error={null}
+          />
+        ) : null}
         
-        {/* Similar Content with debug logging */}
-        {data?.similar?.results && data.similar.results.length > 0 && (
-          <div className="mb-8">
-            <MediaCarousel
-              title="Similar Content"
-              items={data.similar.results.map(item => ({ ...item, media_type: mediaType }))}
-              loading={false}
-              error={null}
-            />
+        {/* Recommended Content with loading state */}
+        {isLoadingRecommendations ? (
+          <div className="py-8">
+            <h2 className="text-2xl font-bold text-white mb-6">Recommended For You</h2>
+            <div className="flex justify-center">
+              <Spinner size="medium" />
+            </div>
           </div>
-        )}
-        
-        {/* Recommended Content with debug logging */}
-        {data?.recommendations?.results && data.recommendations.results.length > 0 && (
-          <div className="mb-8">
-            <MediaCarousel
-              title="Recommended For You"
-              items={data.recommendations.results.map(item => ({ ...item, media_type: mediaType }))}
-              loading={false}
-              error={null}
-            />
-          </div>
-        )}
+        ) : hasRecommendations ? (
+          <MediaCarousel
+            title="Recommended For You"
+            items={recommendationsData.results.map(item => ({ ...item, media_type: mediaType }))}
+            loading={false}
+            error={null}
+          />
+        ) : null}
       </div>
     </div>
   );

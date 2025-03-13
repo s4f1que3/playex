@@ -1,6 +1,3 @@
-const Watchlist = require('../models/watchlistModel');
-const Favorites = require('../models/favoritesModel');
-const WatchHistory = require('../models/watchHistoryModel');
 const tmdbClient = require('../config/tmdb');
 
 const userMediaController = {
