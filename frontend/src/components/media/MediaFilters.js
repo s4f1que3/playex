@@ -1,11 +1,12 @@
 // File: frontend/src/components/media/MediaFilters.js
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../../utils/api';
 import GenreFilter from './GenreFilter';
 import YearFilter from './YearFilter';
 
 const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
+  const filterRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedGenres, setSelectedGenres] = useState(initialFilters.with_genres || []);
   const [sortBy, setSortBy] = useState(initialFilters.sort_by || 'popularity.desc');
@@ -48,11 +49,23 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
     onFilterChange(filters);
   };
 
+  // Add click outside listener
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (filterRef.current && !filterRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <div className="relative mb-6">
       <div className="flex items-center gap-4">
         {/* Filters dropdown button */}
-        <div className="relative">
+        <div className="relative" ref={filterRef}>
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-full flex items-center gap-2"

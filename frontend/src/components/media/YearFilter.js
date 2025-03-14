@@ -22,6 +22,12 @@ const YearFilter = ({ selectedYear, onChange }) => {
     return year >= 1900 && year <= currentYear;
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && searchYear && isValidYear(searchYear)) {
+      handleYearSelect(searchYear);
+    }
+  };
+
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
@@ -29,6 +35,7 @@ const YearFilter = ({ selectedYear, onChange }) => {
           type="text"
           value={searchYear}
           onChange={handleYearInput}
+          onKeyDown={handleKeyDown}
           placeholder="Search year..."
           className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-[#82BC87] w-2/3"
         />
