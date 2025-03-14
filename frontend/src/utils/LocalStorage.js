@@ -98,22 +98,22 @@ export const isInWatchlist = (mediaId, mediaType) => {
 };
 
 // Media action helper functions
-export const toggleFavorite = (mediaId, mediaType, details) => {
+export const toggleFavorites = (mediaId, mediaType, details) => {
   if (isInFavorites(mediaId, mediaType)) {
     removeFromFavorites(mediaId, mediaType);
-    return false; // Item removed from favorites
+    return false;
   } else {
     addToFavorites(mediaId, mediaType, details);
-    return true; // Item added to favorites
+    return true;
   }
 };
 
 export const toggleWatchlist = (mediaId, mediaType, details) => {
   if (isInWatchlist(mediaId, mediaType)) {
     removeFromWatchlist(mediaId, mediaType);
-    return false; // Item removed from watchlist
+    return false;
   } else {
     addToWatchlist(mediaId, mediaType, details);
-    return true; // Item added to watchlist
+    return true;
   }
 };
