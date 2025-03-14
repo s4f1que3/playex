@@ -188,12 +188,24 @@ export const tmdbHelpers = {
   },
   
   // Get media tag
-  getMediaTag: (mediaType, releaseYear, runtime, seasons = null, episodes = null) => {
-    if (mediaType === 'movie') {
-      return `${releaseYear} ${runtime} Movie`;
-    } else if (mediaType === 'tv' && seasons && episodes) {
-      return `ssn ${seasons} ep ${episodes} TV`;
+  getMediaTag: (mediaType, releaseYear, runtime, seasons = null, episodes = null, lastSeasonEpisodes = null) => {
+    const tags = [];
+    
+    if (releaseYear) {
+      tags.push(releaseYear.toString());
     }
-    return mediaType === 'movie' ? 'Movie' : 'TV Show';
+    
+    if (mediaType === 'movie') {
+      if (runtime) tags.push(runtime);
+      tags.push('Movie');
+    } 
+    else if (mediaType === 'tv') {
+      if (seasons) {
+        tags.push(`${seasons} Seasons`);
+      }
+      tags.push('TV');
+    }
+    
+    return tags;
   }
 };

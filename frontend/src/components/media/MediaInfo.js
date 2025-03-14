@@ -90,9 +90,15 @@ const MediaInfo = ({ media, mediaType }) => {
             </h1>
             
             <div className="flex items-center flex-wrap gap-2 mb-4">
-              <span className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm">
-                {mediaTag}
-              </span>
+              {/* Display each tag separately */}
+              {mediaTag.map((tag, index) => (
+                <span 
+                  key={index} 
+                  className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm"
+                >
+                  {tag}
+                </span>
+              ))}
               
               {status && (
                 <span className="text-gray-400 bg-gray-800 px-3 py-1 rounded-full text-sm">
