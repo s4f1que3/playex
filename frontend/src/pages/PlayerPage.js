@@ -170,7 +170,7 @@ const { data, isLoading, error } = useQuery({
                 {/* Player page announcment */}
 
             <p className="text-gray-300 mt-4 bg-gray-800 p-4 rounded-lg">
-              Ad Blockers May Affect The Embedded Player's Ability To Show Content. We Apologize For Any Inconveniences.
+              We Recommend Getting An Ad-Blocker To Ehance Your Streaming Experience.
             </p>
           </div>
           
