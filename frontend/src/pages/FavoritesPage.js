@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import MediaGrid from '../components/media/MediaGrid';
 import Spinner from '../components/common/Spinner';
+import ConfirmationDialog from '../components/common/ConfirmationDialog';
 import { getFavorites, removeFromFavorites } from '../utils/LocalStorage';
 
 const FavoritesPage = () => {
@@ -10,6 +11,7 @@ const FavoritesPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState({});
   const [selectionMode, setSelectionMode] = useState(false);
+  const [dialog, setDialog] = useState({ isOpen: false, type: null });
   
   // Load favorites from localStorage
   useEffect(() => {
@@ -55,11 +57,18 @@ const FavoritesPage = () => {
   
   // Clear entire favorites list
   const clearFavorites = () => {
-    if (window.confirm('Are you sure you want to clear your entire favorites list?')) {
-      localStorage.setItem('user_favorites', JSON.stringify([]));
-      setData([]);
-      setSelectedItems({});
-    }
+    setDialog({
+      isOpen: true,
+      type: 'clearAll',
+      title: 'Clear All Favorites',
+      message: 'Are you sure you want to clear your entire favorites list?',
+      onConfirm: () => {
+        localStorage.setItem('user_favorites', JSON.stringify([]));
+        setData([]);
+        setSelectedItems({});
+        setDialog({ isOpen: false });
+      }
+    });
   };
 
   // Toggle item selection
@@ -79,27 +88,27 @@ const FavoritesPage = () => {
       alert('No items selected');
       return;
     }
-    
-    if (window.confirm(`Are you sure you want to remove ${selectedCount} item(s) from your favorites?`)) {
-      // Get keys of selected items
-      const selectedKeys = Object.keys(selectedItems)
-        .filter(key => selectedItems[key]);
-      
-      // Implement directly since we don't have a utility function
-      const favorites = getFavorites();
-      
-      const newFavorites = favorites.filter(item => {
-        const itemKey = `${item.media_type}-${item.media_id}`;
-        return !selectedKeys.includes(itemKey);
-      });
-      
-      localStorage.setItem('user_favorites', JSON.stringify(newFavorites));
-      
-      // Refresh data and reset selection
-      setData(getFavorites());
-      setSelectedItems({});
-      setSelectionMode(false);
-    }
+
+    setDialog({
+      isOpen: true,
+      type: 'clearSelected',
+      title: 'Remove Selected Items',
+      message: `Are you sure you want to remove ${selectedCount} item(s) from your favorites?`,
+      onConfirm: () => {
+        const selectedKeys = Object.keys(selectedItems).filter(key => selectedItems[key]);
+        const favorites = getFavorites();
+        const newFavorites = favorites.filter(item => {
+          const itemKey = `${item.media_type}-${item.media_id}`;
+          return !selectedKeys.includes(itemKey);
+        });
+        
+        localStorage.setItem('user_favorites', JSON.stringify(newFavorites));
+        setData(getFavorites());
+        setSelectedItems({});
+        setSelectionMode(false);
+        setDialog({ isOpen: false });
+      }
+    });
   };
 
   // Toggle selection mode
@@ -210,6 +219,14 @@ const FavoritesPage = () => {
           />
         </>
       )}
+      
+      <ConfirmationDialog
+        isOpen={dialog.isOpen}
+        title={dialog.title}
+        message={dialog.message}
+        onConfirm={dialog.onConfirm}
+        onCancel={() => setDialog({ isOpen: false })}
+      />
     </div>
   );
 };

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import MediaGrid from '../components/media/MediaGrid';
 import Spinner from '../components/common/Spinner';
+import ConfirmationDialog from '../components/common/ConfirmationDialog';
 import { getWatchlist, removeFromWatchlist } from '../utils/LocalStorage';
 
 const WatchlistPage = () => {
@@ -10,6 +11,7 @@ const WatchlistPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState({});
   const [selectionMode, setSelectionMode] = useState(false);
+  const [dialog, setDialog] = useState({ isOpen: false, type: null });
   
   // Load watchlist from localStorage
   useEffect(() => {
@@ -55,12 +57,18 @@ const WatchlistPage = () => {
 
   // Clear entire watchlist
   const clearWatchlist = () => {
-    if (window.confirm('Are you sure you want to clear your entire watchlist?')) {
-      // Direct implementation since clearWatchlist isn't exported
-      localStorage.setItem('user_watchlist', JSON.stringify([]));
-      setData([]);
-      setSelectedItems({});
-    }
+    setDialog({
+      isOpen: true,
+      type: 'clearAll',
+      title: 'Clear Entire Watchlist',
+      message: 'Are you sure you want to clear your entire watchlist?',
+      onConfirm: () => {
+        localStorage.setItem('user_watchlist', JSON.stringify([]));
+        setData([]);
+        setSelectedItems({});
+        setDialog({ isOpen: false });
+      }
+    });
   };
 
   // Toggle item selection
@@ -80,27 +88,27 @@ const WatchlistPage = () => {
       alert('No items selected');
       return;
     }
-    
-    if (window.confirm(`Are you sure you want to remove ${selectedCount} item(s) from your watchlist?`)) {
-      // Get keys of selected items
-      const selectedKeys = Object.keys(selectedItems)
-        .filter(key => selectedItems[key]);
-      
-      // Since clearSelectedItems isn't exported, implement directly
-      const watchlist = getWatchlist();
-      
-      const newWatchlist = watchlist.filter(item => {
-        const itemKey = `${item.media_type}-${item.media_id}`;
-        return !selectedKeys.includes(itemKey);
-      });
-      
-      localStorage.setItem('user_watchlist', JSON.stringify(newWatchlist));
-      
-      // Refresh data and reset selection
-      setData(getWatchlist());
-      setSelectedItems({});
-      setSelectionMode(false);
-    }
+
+    setDialog({
+      isOpen: true,
+      type: 'clearSelected',
+      title: 'Remove Selected Items',
+      message: `Are you sure you want to remove ${selectedCount} item(s) from your watchlist?`,
+      onConfirm: () => {
+        const selectedKeys = Object.keys(selectedItems).filter(key => selectedItems[key]);
+        const watchlist = getWatchlist();
+        const newWatchlist = watchlist.filter(item => {
+          const itemKey = `${item.media_type}-${item.media_id}`;
+          return !selectedKeys.includes(itemKey);
+        });
+        
+        localStorage.setItem('user_watchlist', JSON.stringify(newWatchlist));
+        setData(getWatchlist());
+        setSelectedItems({});
+        setSelectionMode(false);
+        setDialog({ isOpen: false });
+      }
+    });
   };
 
   // Toggle selection mode
@@ -211,6 +219,14 @@ const WatchlistPage = () => {
           />
         </>
       )}
+      
+      <ConfirmationDialog
+        isOpen={dialog.isOpen}
+        title={dialog.title}
+        message={dialog.message}
+        onConfirm={dialog.onConfirm}
+        onCancel={() => setDialog({ isOpen: false })}
+      />
     </div>
   );
 };
