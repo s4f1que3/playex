@@ -24,9 +24,9 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
 
-  // Helper to get genre name
+  // Helper to get genre name - Fix the data structure reference
   const getGenreName = (genreId) => {
-    const genre = genresData?.genres?.find(g => g.id === genreId);
+    const genre = genresData?.find(g => g.id === genreId);
     return genre ? genre.name : genreId;
   };
 
@@ -131,22 +131,19 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
 
         {/* Selected filters display */}
         <div className="flex flex-wrap items-center gap-2">
-          {selectedGenres.map(genreId => {
-            const genreName = genresData?.genres?.find(g => g.id === genreId)?.name || genreId;
-            return (
-              <button
-                key={genreId}
-                onClick={() => {
-                  setSelectedGenres(selectedGenres.filter(id => id !== genreId));
-                  handleFilterChange();
-                }}
-                className="bg-[#82BC87] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-[#6ea973] transition-colors"
-              >
-                {genreName}
-                <span>×</span>
-              </button>
-            );
-          })}
+          {selectedGenres.map(genreId => (
+            <button
+              key={genreId}
+              onClick={() => {
+                setSelectedGenres(selectedGenres.filter(id => id !== genreId));
+                handleFilterChange();
+              }}
+              className="bg-[#82BC87] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-[#6ea973] transition-colors"
+            >
+              {getGenreName(genreId)}
+              <span>×</span>
+            </button>
+          ))}
           {releaseYear && (
             <button
               onClick={() => {
