@@ -66,28 +66,38 @@ const MediaGrid = ({
         };
         
         return (
-          <Link 
-            key={item.id} 
-            to={`/player/${itemMediaType}/${item.id}`}
-            className="media-card"
-          >
+          <div key={`${item.media_type}-${item.id}`} className="relative">
             {selectionMode && (
-              <div className="absolute top-2 left-2 z-10 bg-black bg-opacity-60 rounded-md p-1">
-                <input
-                  type="checkbox"
-                  checked={selectedItems[`${itemMediaType}-${item.id}`] || false}
-                  onChange={() => onSelectItem(item.id, itemMediaType)}
-                  className="w-5 h-5 cursor-pointer accent-[#82BC87]"
-                />
+              <div 
+                onClick={() => onSelectItem(item.id, item.media_type)}
+                className="absolute inset-0 z-10 bg-black bg-opacity-80 flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-opacity-70"
+              >
+                <div className={`w-8 h-8 rounded-lg shadow-lg transform transition-transform duration-200 ${
+                  selectedItems[`${item.media_type}-${item.id}`] 
+                    ? 'bg-[#82BC87] scale-110' 
+                    : 'bg-gray-800 hover:bg-gray-700'
+                } flex items-center justify-center`}>
+                  {selectedItems[`${item.media_type}-${item.id}`] ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <div className="w-4 h-4 border-2 border-gray-400 rounded"></div>
+                  )}
+                </div>
               </div>
             )}
-            
-            <MediaCard
-              media={enhancedItem}
-              onRemove={selectionMode ? null : onRemove ? (() => onRemove(item.id, itemMediaType)) : undefined}
-              showType={showType}
-            />
-          </Link>
+            <Link 
+              to={`/player/${itemMediaType}/${item.id}`}
+              className="media-card"
+            >
+              <MediaCard
+                media={enhancedItem}
+                onRemove={selectionMode ? null : onRemove ? (() => onRemove(item.id, itemMediaType)) : undefined}
+                showType={showType}
+              />
+            </Link>
+          </div>
         );
       })}
     </div>

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import MediaGrid from '../components/media/MediaGrid';
 import Spinner from '../components/common/Spinner';
 import ConfirmationDialog from '../components/common/ConfirmationDialog';
+import AlertOverlay from '../components/common/AlertOverlay';
 import { getFavorites, removeFromFavorites } from '../utils/LocalStorage';
 
 const FavoritesPage = () => {
@@ -12,6 +13,7 @@ const FavoritesPage = () => {
   const [selectedItems, setSelectedItems] = useState({});
   const [selectionMode, setSelectionMode] = useState(false);
   const [dialog, setDialog] = useState({ isOpen: false, type: null });
+  const [alert, setAlert] = useState({ isOpen: false, title: '', message: '' });
   
   // Load favorites from localStorage
   useEffect(() => {
@@ -85,7 +87,11 @@ const FavoritesPage = () => {
     const selectedCount = Object.values(selectedItems).filter(Boolean).length;
     
     if (selectedCount === 0) {
-      alert('No items selected');
+      setAlert({
+        isOpen: true,
+        title: 'No Items Selected',
+        message: 'Please select at least one item to remove.'
+      });
       return;
     }
 
@@ -227,6 +233,14 @@ const FavoritesPage = () => {
         onConfirm={dialog.onConfirm}
         onCancel={() => setDialog({ isOpen: false })}
       />
+      
+      {alert.isOpen && (
+        <AlertOverlay
+          title={alert.title}
+          message={alert.message}
+          onClose={() => setAlert({ isOpen: false })}
+        />
+      )}
     </div>
   );
 };
