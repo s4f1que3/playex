@@ -85,7 +85,7 @@ const PrivacyPolicyPage = () => {
                 <p>We may share your information with third-party service providers that help us operate our Service:</p>
                 <ul className="list-disc pl-6 mt-2 space-y-1">
                   <li><strong>TMDB API:</strong> We use The Movie Database (TMDB) API to retrieve media metadata. Your search queries and interactions with media content may be shared with TMDB in accordance with their privacy policy.</li>
-                  <li><strong>vidlink.pro:</strong> We use vidlink.pro for video playback. When you watch content, information about your viewing activity may be shared with vidlink.pro in accordance with their privacy policy.</li>
+                  <li><strong>Embed Players:</strong> We use vidlink.pro, embed.su, and vidsrc.me for video playback. When you watch content, information about your viewing activity may be shared with them in accordance with their privacy policy.</li>
                 </ul>
                 
                 <h3 className="text-xl font-medium text-white mt-4 mb-2">4.2 Legal Requirements</h3>
