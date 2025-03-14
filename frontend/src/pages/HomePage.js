@@ -60,15 +60,8 @@ const { data: popularActors, isLoading: actorsLoading, error: actorsError } = us
   
   return (
     <div className="-mt-[72px]"> {/* Offset the header padding in MainLayout */}
-      {/* Add padding-top for mobile to account for fixed header */}
-      <div className="pt-16 md:pt-0"> {/* Add this wrapper div */}
-        <section className="relative">
-          {/* Adjust carousel container height for mobile */}
-          <div className="h-[50vh] md:h-[70vh] lg:h-[85vh] relative">
-            <HeroSlider items={trendingData || []} />
-          </div>
-        </section>
-      </div>
+      {/* Hero Slider */}
+      <HeroSlider items={trendingData || []} />
       
       <div className="container mx-auto px-4">
         
