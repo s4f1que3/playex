@@ -54,7 +54,9 @@ const { data, isLoading, error } = useQuery({
     // Convert filters object to API params
     const params = {
       page,
-      sort_by: filters.sort_by || 'popularity.desc'
+      sort_by: filters.sort_by || 'popularity.desc',
+      'vote_count.gte': 100, // Add minimum vote count threshold
+      include_adult: false
     };
     
     if (filters.with_genres) {
@@ -65,6 +67,11 @@ const { data, isLoading, error } = useQuery({
     
     if (filters.primary_release_year) {
       params.primary_release_year = filters.primary_release_year;
+    }
+
+    // For vote average sorting, ensure we have a minimum threshold
+    if (filters.sort_by === 'vote_average.desc') {
+      params['vote_count.gte'] = 200; // Higher threshold for top rated
     }
     
     return tmdbApi.get('/discover/movie', { params }).then(res => res.data);
@@ -96,7 +103,7 @@ const { data, isLoading, error } = useQuery({
       />
       
       <MediaGrid 
-        items={data?.results} 
+        items={data?.results?.map(item => ({ ...item, media_type: 'movie' }))}
         loading={isLoading} 
         error={error}
         showType={false}

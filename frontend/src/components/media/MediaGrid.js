@@ -1,5 +1,6 @@
 // File: frontend/src/components/media/MediaGrid.js
 import React from 'react';
+import { Link } from 'react-router-dom';
 import MediaCard from '../common/MediaCard';
 import Spinner from '../common/Spinner';
 import { useMediaQueries } from '../../hooks/useMediaQueries';
@@ -65,7 +66,11 @@ const MediaGrid = ({
         };
         
         return (
-          <div key={`${item.id}-${itemMediaType}`} className="relative">
+          <Link 
+            key={item.id} 
+            to={`/player/${itemMediaType}/${item.id}`}
+            className="media-card"
+          >
             {selectionMode && (
               <div className="absolute top-2 left-2 z-10 bg-black bg-opacity-60 rounded-md p-1">
                 <input
@@ -82,7 +87,7 @@ const MediaGrid = ({
               onRemove={selectionMode ? null : onRemove ? (() => onRemove(item.id, itemMediaType)) : undefined}
               showType={showType}
             />
-          </div>
+          </Link>
         );
       })}
     </div>
