@@ -1,5 +1,7 @@
 // File: frontend/src/components/media/MediaFilters.js
 import React, { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { tmdbApi } from '../../utils/api';
 import GenreFilter from './GenreFilter';
 import YearFilter from './YearFilter';
 
@@ -14,6 +16,27 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
     { value: 'vote_average.desc', label: 'Top Rated' },
     { value: 'primary_release_date.desc', label: 'Latest' }
   ];
+
+  // Add query for genres to get names
+  const { data: genresData } = useQuery({
+    queryKey: ['genres', mediaType],
+    queryFn: () => tmdbApi.get(`/genre/${mediaType}/list`).then(res => res.data.genres),
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours
+  });
+
+  // Helper to get genre name
+  const getGenreName = (genreId) => {
+    const genre = genresData?.genres?.find(g => g.id === genreId);
+    return genre ? genre.name : genreId;
+  };
+
+  const clearAllFilters = () => {
+    setSelectedGenres([]);
+    setSortBy('popularity.desc');
+    setReleaseYear('');
+    handleFilterChange();
+    setIsOpen(false);
+  };
 
   // Apply filters when changes are made
   const handleFilterChange = () => {
@@ -47,7 +70,7 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
 
           {/* Filters dropdown panel */}
           {isOpen && (
-            <div className="absolute top-full left-0 mt-2 w-72 bg-gray-900 rounded-lg shadow-xl z-50 p-4">
+            <div className="absolute top-full left-0 mt-2 w-96 bg-gray-900 rounded-lg shadow-xl z-50 p-4">
               {/* Sort options */}
               <div className="mb-4">
                 <label className="block text-sm text-gray-400 mb-2">Sort By</label>
@@ -92,25 +115,38 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
                   showSelected={false}
                 />
               </div>
+
+              {/* Clear filters button */}
+              <div className="mt-6 pt-4 border-t border-gray-800">
+                <button
+                  onClick={clearAllFilters}
+                  className="w-full bg-red-900 hover:bg-red-800 text-red-100 px-4 py-2 rounded-lg text-sm transition-colors"
+                >
+                  Clear All Filters
+                </button>
+              </div>
             </div>
           )}
         </div>
 
         {/* Selected filters display */}
         <div className="flex flex-wrap items-center gap-2">
-          {selectedGenres.map(genreId => (
-            <button
-              key={genreId}
-              onClick={() => {
-                setSelectedGenres(selectedGenres.filter(id => id !== genreId));
-                handleFilterChange();
-              }}
-              className="bg-[#82BC87] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-[#6ea973] transition-colors"
-            >
-              {genreId}
-              <span>×</span>
-            </button>
-          ))}
+          {selectedGenres.map(genreId => {
+            const genreName = genresData?.genres?.find(g => g.id === genreId)?.name || genreId;
+            return (
+              <button
+                key={genreId}
+                onClick={() => {
+                  setSelectedGenres(selectedGenres.filter(id => id !== genreId));
+                  handleFilterChange();
+                }}
+                className="bg-[#82BC87] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-[#6ea973] transition-colors"
+              >
+                {genreName}
+                <span>×</span>
+              </button>
+            );
+          })}
           {releaseYear && (
             <button
               onClick={() => {

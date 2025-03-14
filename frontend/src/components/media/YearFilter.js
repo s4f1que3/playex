@@ -30,12 +30,12 @@ const YearFilter = ({ selectedYear, onChange }) => {
           value={searchYear}
           onChange={handleYearInput}
           placeholder="Search year..."
-          className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-[#82BC87]"
+          className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-[#82BC87] w-2/3"
         />
         {searchYear && isValidYear(searchYear) && (
           <button
             onClick={() => handleYearSelect(searchYear)}
-            className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm hover:bg-gray-700"
+            className="bg-gray-800 text-white px-4 py-1 rounded-full text-sm hover:bg-gray-700 whitespace-nowrap"
           >
             Add {searchYear}
           </button>
