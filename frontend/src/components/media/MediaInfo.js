@@ -90,16 +90,45 @@ const MediaInfo = ({ media, mediaType }) => {
             </h1>
             
             <div className="flex items-center flex-wrap gap-2 mb-4">
-              {/* Display each tag separately */}
-              {mediaTag.map((tag, index) => (
-                <span 
-                  key={index} 
-                  className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm"
-                >
-                  {tag}
-                </span>
-              ))}
-              
+              {/* Display each tag with appropriate links */}
+              {mediaTag.map((tag, index) => {
+                // Handle year tag
+                if (tag.match(/^\d{4}$/)) {
+                  return (
+                    <Link
+                      key={index}
+                      to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?${
+                        mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year'
+                      }=${tag}`}
+                      className="text-[#E6C6BB] hover:bg-gray-700 bg-gray-800 px-3 py-1 rounded-full text-sm transition-colors"
+                    >
+                      {tag}
+                    </Link>
+                  );
+                }
+                // Handle Movie/TV tag
+                else if (tag === 'Movie' || tag === 'TV') {
+                  return (
+                    <Link
+                      key={index}
+                      to={`/${tag === 'Movie' ? 'movies' : 'tv-shows'}`}
+                      className="text-[#E6C6BB] hover:bg-gray-700 bg-gray-800 px-3 py-1 rounded-full text-sm transition-colors"
+                    >
+                      {tag}
+                    </Link>
+                  );
+                }
+                // Other tags remain non-clickable
+                return (
+                  <span 
+                    key={index} 
+                    className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm"
+                  >
+                    {tag}
+                  </span>
+                );
+              })}
+
               {status && (
                 <span className="text-gray-400 bg-gray-800 px-3 py-1 rounded-full text-sm">
                   {status}
