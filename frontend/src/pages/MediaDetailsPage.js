@@ -1,6 +1,6 @@
 // File: frontend/src/pages/MediaDetailsPage.js
 import React, { useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../utils/api';
 import Spinner from '../components/common/Spinner';
@@ -149,39 +149,63 @@ const MediaDetailsPage = ({ mediaType }) => {
         ) : hasCast ? (
           <CastList cast={creditsData.cast} />
         ) : null}
-        
-        {/* Similar Content with loading state */}
-        {isLoadingSimilar ? (
+
+        {/* Similar Content section */}
+        {isLoadingRecommendations ? (
           <div className="py-8">
             <h2 className="text-2xl font-bold text-white mb-6">Similar Content</h2>
             <div className="flex justify-center">
               <Spinner size="medium" />
             </div>
           </div>
-        ) : hasSimilar ? (
-          <MediaCarousel
-            title="Similar Content"
-            items={similarData.results.map(item => ({ ...item, media_type: mediaType }))}
-            loading={false}
-            error={null}
-          />
+        ) : hasRecommendations ? (
+          <div className="mb-8">
+            <MediaCarousel
+              title={
+                <div className="w-full px-4 flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-white">Similar Content</h2>
+                  <Link 
+                    to={`/${mediaType}/${id}/similar`}
+                    className="text-[#E4D981] hover:text-[#c7bd6a] transition-colors text-sm pl-[1200px]"
+                  >
+                    View All
+                  </Link>
+                </div>
+              }
+              items={recommendationsData.results.map(item => ({ ...item, media_type: mediaType }))}
+              loading={false}
+              error={null}
+            />
+          </div>
         ) : null}
         
-        {/* Recommended Content with loading state */}
-        {isLoadingRecommendations ? (
+        {/* Recommended Content section */}
+        {isLoadingSimilar ? (
           <div className="py-8">
             <h2 className="text-2xl font-bold text-white mb-6">Recommended For You</h2>
             <div className="flex justify-center">
               <Spinner size="medium" />
             </div>
           </div>
-        ) : hasRecommendations ? (
-          <MediaCarousel
-            title="Recommended For You"
-            items={recommendationsData.results.map(item => ({ ...item, media_type: mediaType }))}
-            loading={false}
-            error={null}
-          />
+        ) : hasSimilar ? (
+          <div className="mb-8">
+            <MediaCarousel
+              title={
+                <div className="w-full px-4 flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-white">Recommended For You</h2>
+                  <Link 
+                    to={`/${mediaType}/${id}/recommended`}
+                    className="text-[#E4D981] hover:text-[#c7bd6a] transition-colors text-sm pl-[1100px]"
+                  >
+                    View All
+                  </Link>
+                </div>
+              }
+              items={similarData.results.map(item => ({ ...item, media_type: mediaType }))}
+              loading={false}
+              error={null}
+            />
+          </div>
         ) : null}
       </div>
     </div>

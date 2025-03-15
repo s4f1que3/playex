@@ -60,6 +60,10 @@ const Breadcrumbs = () => {
         return 'Actor';
       case 'player':
         return 'Player';
+      case 'similar':
+        return 'Similar Content';
+      case 'recommended':
+        return 'Recommended';
       default:
         return pathname;
     }

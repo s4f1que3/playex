@@ -201,7 +201,7 @@ export const tmdbHelpers = {
     } 
     else if (mediaType === 'tv') {
       if (seasons) {
-        tags.push(`${seasons} Seasons`);
+        tags.push(`${seasons} Season(s)`);
       }
       tags.push('TV');
     }

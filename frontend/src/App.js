@@ -30,6 +30,8 @@ import NotFoundPage from './pages/NotFoundPage';
 import ActorsPage from './pages/ActorsPage';
 import ActorsPersonal from './pages/ActorsPersonal';
 import ActorCreditsPage from './pages/ActorCreditsPage';
+import RecommendedContentPage from './pages/RecommendedContentPage';
+import SimilarContentPage from './pages/SimilarContentPage';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -90,6 +92,8 @@ function App() {
                   <Route path="tv/:id" element={<MediaDetailsPage mediaType="tv" />} />
                   <Route path="player/movie/:id" element={<PlayerPage mediaType="movie" />} />
                   <Route path="player/tv/:id/:season/:episode" element={<PlayerPage mediaType="tv" />} />
+                  <Route path=":mediaType/:id/similar" element={<SimilarContentPage />} />
+                  <Route path=":mediaType/:id/recommended" element={<RecommendedContentPage />} />
                   
                   {/* Actor routes */}
                   <Route path="/actors" element={<ActorsPage />} />
