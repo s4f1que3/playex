@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
 import VideoPlayer from '../components/media/VideoPlayer';
 import Spinner from '../components/common/Spinner';
+import { setLastWatchedEpisode } from '../utils/LocalStorage';
 
 const PlayerPage = ({ mediaType }) => {
   const { id, season, episode } = useParams();
@@ -46,6 +47,13 @@ const { data, isLoading, error } = useQuery({
       navigate(`/tv/${id}`);
     }
   }, [mediaType, id, season, episode, navigate]);
+
+  useEffect(() => {
+    // Update last watched episode when player loads
+    if (mediaType === 'tv') {
+      setLastWatchedEpisode(id, season, episode);
+    }
+  }, [mediaType, id, season, episode]);
   
   if (isLoading) {
     return (

@@ -8,7 +8,9 @@ import {
   toggleFavorites, 
   toggleWatchlist, 
   isInFavorites, 
-  isInWatchlist 
+  isInWatchlist,
+  getLastWatchedEpisode, // Make sure this is imported
+  setLastWatchedEpisode  // Import this if you need it
 } from '../../utils/LocalStorage';
 
 const MediaActions = ({ 
@@ -40,6 +42,8 @@ const MediaActions = ({
   const [favorites, setFavorites] = useState(isInFavorites(media.id, mediaType));
   // Add dialog state
   const [dialog, setDialog] = useState({ isOpen: false, type: null });
+  // Add last watched episode state
+  const [lastWatched, setLastWatched] = useState(null);
 
   // Use effect to keep state in sync with localStorage
   useEffect(() => {
@@ -58,6 +62,14 @@ const MediaActions = ({
     return () => window.removeEventListener('storage', checkStatus);
   }, [media.id, mediaType]);
   
+  // Fetch last watched episode on mount
+  useEffect(() => {
+    if (mediaType === 'tv') {
+      const lastWatchedData = getLastWatchedEpisode(media.id);
+      setLastWatched(lastWatchedData);
+    }
+  }, [media.id, mediaType]);
+
   // Handle watchlist action
   const handleWatchlist = () => {
     try {
@@ -137,14 +149,20 @@ const MediaActions = ({
             </Link>
           ) : (
             <Link
-              to={`/player/tv/${media.id}/${activeSeason}/1`}
+              to={lastWatched 
+                ? `/player/tv/${media.id}/${lastWatched.season}/${lastWatched.episode}`
+                : `/player/tv/${media.id}/${activeSeason}/1`}
               className="btn-primary flex-grow md:flex-grow-0"
             >
               <span className="flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                 </svg>
-                {firstEpisodeData ? `Play S${activeSeason} E1` : 'Watch First Episode'}
+                {lastWatched 
+                  ? `Continue S${lastWatched.season} E${lastWatched.episode}`
+                  : firstEpisodeData 
+                    ? `Start S${activeSeason} E1` 
+                    : 'Watch First Episode'}
               </span>
             </Link>
           )}

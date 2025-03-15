@@ -8,11 +8,11 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import MainLayout from './Layouts/MainLayout';
 
 // Components
-import TermsPage from './components/common/TermsPage';
+import TermsPage from './components/common/legal/TermsPage';
 import FAQ from './components/common/FAQ';
-import PrivacyPolicyPage from './components/common/PrivacyPolicyPage';
-import CookiesPolicyPage from './components/common/CookiePolicyPage';
-import CookieConsent from './components/common/CookiesConsent';
+import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
+import CookiesPolicyPage from './components/common/legal/CookiePolicyPage';
+import CookieConsent from './components/common/legal/CookiesConsent';
 import SystemAnnouncement from './components/common/SystemAnnouncement';
 import LoadingScreen from './components/common/LoadingScreen';
 

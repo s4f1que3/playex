@@ -4,6 +4,7 @@
 const FAVORITES_KEY = 'user_favorites';
 const WATCHLIST_KEY = 'user_watchlist';
 const PROGRESS_KEY = 'user_watch_progress';
+const LAST_WATCHED_KEY = 'user_last_watched';
 
 // Favorites helper functions
 export const getFavorites = () => {
@@ -95,6 +96,26 @@ export const isInWatchlist = (mediaId, mediaType) => {
   return watchlist.some(
     item => item.media_id === mediaId && item.media_type === mediaType
   );
+};
+
+// Last watched episode tracking
+export const getLastWatchedEpisode = (showId) => {
+  const lastWatchedData = localStorage.getItem(LAST_WATCHED_KEY);
+  const lastWatched = lastWatchedData ? JSON.parse(lastWatchedData) : {};
+  return lastWatched[showId] || null;
+};
+
+export const setLastWatchedEpisode = (showId, seasonNumber, episodeNumber) => {
+  const lastWatchedData = localStorage.getItem(LAST_WATCHED_KEY);
+  const lastWatched = lastWatchedData ? JSON.parse(lastWatchedData) : {};
+  
+  lastWatched[showId] = {
+    season: seasonNumber,
+    episode: episodeNumber,
+    updatedAt: new Date().toISOString()
+  };
+  
+  localStorage.setItem(LAST_WATCHED_KEY, JSON.stringify(lastWatched));
 };
 
 // Media action helper functions

@@ -15,13 +15,14 @@ const FAQ = () => {
           
           <section>
             <h2 className="text-2xl font-semibold text-white mb-3">2. Why is the player not working?</h2>
-            <p>The embedded player may not be working for a few reasons:</p>
+            <p>As we have no control over the embedded player(s) due to them being external, we can't solve any issues relating to them.</p>
+            <p>However, the embedded player(s) may not be working for a few reasons:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
-              <li><strong>Ad blockers</strong> - If you currently have any ad blockers active, this may interrupt the fetching process of the embedded player. Disable them on our site, close the site tab, re-access it, and try again.</li>
+              <li><strong>Ad blockers</strong> - Some ad-blockers may interrupt the fetching process of the embedded player. Disable them on our site, close the site tab, re-access it, and try again.</li>
               <li><strong>New media</strong> - If the Movie or TV-Show was just realeased, the selected embedded player may not yet have it.</li>
               <li><strong>WI-FI Issues</strong> - Ensure your internet connection is working.</li>
-              <li><strong>Wait 2-3 Minutes</strong> - Sometimes, the player may have an interruption fetching the data to play the media. Give the player 2-3 minutes to resolve this issue and play your media.</li>
-              <li>Additionally, if none of these work, try reloading the page. If that still doesn't work, contact us at <a href="mailto:contact.playex@gmail.com" className="text-[#82BC87] hover:text-[#E4D981]">contact.playex@gmail.com</a>, describe your issue, and we will resolve this ASAP.</li>
+              <li><strong>Wait 2-3 Minutes</strong> - Sometimes, the player may have an interruption fetching the data to play the media. Give the player 2-3 minutes or reload the page to resolve this issue and play your media.</li>
+              <li>If none of these work, try reloading the page. If that still doesn't work, contact us at <a href="mailto:contact.playex@gmail.com" className="text-[#82BC87] hover:text-[#E4D981]">contact.playex@gmail.com</a>, describe your issue, and we will resolve this to the best of our ability ASAP.</li>
             </ul>
           </section>
           
@@ -37,7 +38,7 @@ const FAQ = () => {
           
           <section>
             <h2 className="text-2xl font-semibold text-white mb-3">5. How do I report a problem with a movie or TV show?</h2>
-            <p>If a video isn't working, has missing episodes, or the quality is poor, you can report it by contacting us at <a href="mailto:contact.playex@gmail.com" className="text-[#82BC87] hover:text-[#E4D981]">contact.playex@gmail.com</a>. Be sure to include the title, season/episode (if applicable), and a brief description of the issue.</p>
+            <p>You can contact us at <a href="mailto:contact.playex@gmail.com" className="text-[#82BC87] hover:text-[#E4D981]">contact.playex@gmail.com</a>. Be sure to include a brief description of the issue.</p>
           </section>
           
           <section>
@@ -52,7 +53,7 @@ const FAQ = () => {
           
           <section>
             <h2 className="text-2xl font-semibold text-white mb-3">8. Why is the quality on the player bad?</h2>
-            <p>To fix the quality issue, click the settings icon on the bottom right, click quality, and upgrade the quality to your preference. Currently, the highest quality available is 1080p.</p>
+            <p>To fix the quality issue, click the settings icon on the bottom right, click quality, and upgrade the quality to your preference. Currently, the highest quality available may be 1080p or 4k depending on the embeddded player.</p>
             <p className="mt-2">However, on some movies and/or TV-Shows, higher qualities may not yet be available. You would need to wait until they are to fix the quality.</p>
             <p className="mt-2">Additionally, you might find on new movies and tv-shows, that you may select a higher/ the highest quality and the quality is still in CAM. To resolve this, you would have to wait until the media is released in proper quality.</p>
           </section>

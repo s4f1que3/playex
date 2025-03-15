@@ -1,8 +1,9 @@
 // File: frontend/src/components/media/SeasonsAccordion.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi, tmdbHelpers } from '../../utils/api';
+import { getLastWatchedEpisode } from '../../utils/LocalStorage';
 import Spinner from '../common/Spinner';
 
 const SeasonsAccordion = ({ 
@@ -13,6 +14,13 @@ const SeasonsAccordion = ({
 }) => {
   // Add state to track if episodes are expanded or collapsed
   const [isEpisodesExpanded, setIsEpisodesExpanded] = useState(true);
+  const [lastWatched, setLastWatched] = useState(null);
+  
+  // Fetch last watched episode info
+  useEffect(() => {
+    const lastWatchedData = getLastWatchedEpisode(tvId);
+    setLastWatched(lastWatchedData);
+  }, [tvId]);
   
   // Fetch season details
   const { data: seasonDetails, isLoading } = useQuery({
@@ -94,10 +102,38 @@ const SeasonsAccordion = ({
                 {seasonDetails.episodes.map((episode) => (
                   <div 
                     key={episode.id} 
-                    className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition duration-300"
+                    className={`bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition duration-300 relative ${
+                      lastWatched && 
+                      lastWatched.season === activeSeason && 
+                      lastWatched.episode === episode.episode_number
+                        ? 'ring-2 ring-[#82BC87]'
+                        : ''
+                    }`}
                   >
+                    {/* Last Watched Badge */}
+                    {lastWatched && 
+                     lastWatched.season === activeSeason && 
+                     lastWatched.episode === episode.episode_number && (
+                      <div className="absolute top-2 left-2 bg-[#82BC87] text-white text-xs px-2 py-1 rounded-md font-medium z-10">
+                        Last Watched
+                      </div>
+                    )}
                     <Link to={`/player/tv/${tvId}/${activeSeason}/${episode.episode_number}`}>
-                      <div className="flex flex-col md:flex-row">
+                      <div className="flex flex-col md:flex-row relative">
+                        {/* Last Watched Tag - Positioned absolutely over the episode card */}
+                        {lastWatched && 
+                         lastWatched.season === activeSeason && 
+                         lastWatched.episode === episode.episode_number && (
+                          <div className="absolute top-0 left-0 m-4 z-10">
+                            <div className="bg-[#82BC87] text-white px-3 py-1.5 rounded-md font-medium flex items-center gap-2 shadow-lg">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                              </svg>
+                              Last Watched
+                            </div>
+                          </div>
+                        )}
+                        
                         {/* Episode Image */}
                         <div className="md:w-1/3 lg:w-1/4">
                           <div className="relative aspect-video">
@@ -122,13 +158,20 @@ const SeasonsAccordion = ({
                         {/* Episode Info */}
                         <div className="p-4 md:w-2/3 lg:w-3/4">
                           <div className="flex items-start justify-between">
-                            <div>
+                            <div className="flex items-center gap-3">
                               <h3 className="font-bold text-white text-lg">
                                 {episode.episode_number}. {episode.name}
                               </h3>
-                              <div className="text-gray-400 text-sm mt-1">
-                                {episode.air_date ? new Date(episode.air_date).toLocaleDateString() : 'Air date unknown'} • {episode.runtime ? `${episode.runtime} min` : 'Runtime unknown'}
-                              </div>
+                              {lastWatched && 
+                               lastWatched.season === activeSeason && 
+                               lastWatched.episode === episode.episode_number && (
+                                <span className="bg-[#82BC87] text-white text-xs px-2 py-1 rounded font-medium flex items-center gap-1">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                                  </svg>
+                                  Last Watched
+                                </span>
+                              )}
                             </div>
                           </div>
                           
