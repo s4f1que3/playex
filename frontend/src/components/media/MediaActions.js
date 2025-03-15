@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../../utils/api';
 import ConfirmationDialog from '../common/ConfirmationDialog';
+import VideosButton from './VideosButton';
 import { 
   toggleFavorites, 
   toggleWatchlist, 
@@ -17,7 +18,8 @@ const MediaActions = ({
   media, 
   mediaType, 
   onActionComplete, 
-  activeSeason = 1
+  activeSeason = 1,
+  showVideosButton = false
 }) => {
 
   // Add this query to fetch first episode data
@@ -232,6 +234,14 @@ const MediaActions = ({
               </>
             )}
           </button>
+
+          {showVideosButton && (
+            <VideosButton 
+              mediaType={mediaType} 
+              mediaId={media.id} 
+              className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-all duration-300"
+            />
+          )}
         </div>
         
       </div>

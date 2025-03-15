@@ -9,6 +9,7 @@ import MediaActions from '../components/media/MediaActions';
 import CastList from '../components/media/CastList';
 import SeasonsAccordion from '../components/media/SeasonsAccordion';
 import MediaCarousel from '../components/media/MediaCarousel';
+import VideosButton from '../components/media/VideosButton';
 
 const MediaDetailsPage = ({ mediaType }) => {
   const { id } = useParams();
@@ -109,6 +110,7 @@ const MediaDetailsPage = ({ mediaType }) => {
             isInFavorites={userActions.isInFavorites}
             onActionComplete={handleActionComplete}
             activeSeason={activeSeason}
+            showVideosButton={mediaType === 'movie'}
           />
         </div>
 
