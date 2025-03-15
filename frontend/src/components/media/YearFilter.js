@@ -3,19 +3,16 @@ import React, { useState } from 'react';
 const YearFilter = ({ selectedYear, onChange }) => {
   const [searchYear, setSearchYear] = useState('');
   const currentYear = new Date().getFullYear();
-  
+
   const handleYearInput = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 4);
     setSearchYear(value);
   };
 
   const handleYearSelect = (year) => {
-    if (selectedYear === year) {
-      onChange(''); // Clear the year if it's already selected
-    } else {
-      onChange(year);
-    }
-    setSearchYear(''); // Clear search after selection
+    const newYear = selectedYear === year ? '' : year;
+    onChange(newYear);
+    setSearchYear('');
   };
 
   const isValidYear = (year) => {
@@ -23,7 +20,7 @@ const YearFilter = ({ selectedYear, onChange }) => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && searchYear && isValidYear(searchYear)) {
+    if (e.key === 'Enter' && searchYear && isValidYear(parseInt(searchYear))) {
       handleYearSelect(searchYear);
     }
   };

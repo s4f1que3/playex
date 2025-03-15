@@ -2,20 +2,20 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../../utils/api';
+import { useFilterParams } from '../../hooks/useFilterParams';
 
-const GenreFilter = ({ selectedGenres, setSelectedGenres, mediaType, showSelected = false }) => {
+const GenreFilter = ({ selectedGenres, setSelectedGenres, mediaType, showSelected }) => {
   const { data: genresData, isLoading } = useQuery({
     queryKey: ['genres', mediaType],
     queryFn: () => tmdbApi.get(`/genre/${mediaType}/list`).then(res => res.data.genres),
     staleTime: 24 * 60 * 60 * 1000, // 24 hours
   });
-  
+
   const toggleGenre = (genreId) => {
-    if (selectedGenres.includes(genreId)) {
-      setSelectedGenres(selectedGenres.filter(id => id !== genreId));
-    } else {
-      setSelectedGenres([...selectedGenres, genreId]);
-    }
+    const newGenres = selectedGenres.includes(genreId)
+      ? selectedGenres.filter(id => id !== genreId)
+      : [...selectedGenres, genreId];
+    setSelectedGenres(newGenres);
   };
 
   // Helper to get genre name by ID
@@ -26,7 +26,7 @@ const GenreFilter = ({ selectedGenres, setSelectedGenres, mediaType, showSelecte
 
   // Render selected genres badges
   const renderSelectedGenres = () => {
-    if (!showSelected || selectedGenres.length === 0) return null;
+    if (selectedGenres.length === 0) return null;
 
     return (
       <div className="flex flex-wrap gap-2">

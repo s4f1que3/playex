@@ -55,29 +55,21 @@ const { data, isLoading, error } = useQuery({
     const params = {
       page,
       sort_by: filters.sort_by || 'popularity.desc',
-      'vote_count.gte': 100, // Add minimum vote count threshold
-      include_null_first_air_dates: false // Exclude shows with no air dates
+      'vote_count.gte': 100,
+      include_null_first_air_dates: false,
+      with_genres: filters.with_genres?.length > 0 ? filters.with_genres.join(',') : undefined,
+      first_air_date_year: filters.first_air_date_year || undefined
     };
-    
-    if (filters.with_genres) {
-      params.with_genres = Array.isArray(filters.with_genres) 
-        ? filters.with_genres.join(',') 
-        : filters.with_genres;
-    }
-    
-    if (filters.first_air_date_year) {
-      params.first_air_date_year = filters.first_air_date_year;
-    }
 
     // For vote average sorting, ensure we have a minimum threshold
     if (filters.sort_by === 'vote_average.desc') {
-      params['vote_count.gte'] = 200; // Higher threshold for top rated
+      params['vote_count.gte'] = 200;
     }
     
     return tmdbApi.get('/discover/tv', { params }).then(res => res.data);
   },
-  keepPreviousData: true,
-  staleTime: 300000 // 5 minutes
+  keepPreviousData: false, // Changed to false to ensure fresh data on filter change
+  staleTime: 300000
 });
   
   const handleFilterChange = (newFilters) => {

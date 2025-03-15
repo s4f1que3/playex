@@ -43,11 +43,16 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
   const handleFilterChange = () => {
     const filters = {
       sort_by: sortBy,
-      with_genres: selectedGenres,
-      [mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year']: releaseYear
+      with_genres: selectedGenres.length > 0 ? selectedGenres : undefined,
+      [mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year']: releaseYear || undefined
     };
     onFilterChange(filters);
   };
+
+  // Add effect to handle filter changes
+  useEffect(() => {
+    handleFilterChange();
+  }, [sortBy, selectedGenres, releaseYear]);
 
   // Add click outside listener
   useEffect(() => {

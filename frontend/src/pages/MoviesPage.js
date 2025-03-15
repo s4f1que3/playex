@@ -55,29 +55,21 @@ const { data, isLoading, error } = useQuery({
     const params = {
       page,
       sort_by: filters.sort_by || 'popularity.desc',
-      'vote_count.gte': 100, // Add minimum vote count threshold
-      include_adult: false
+      'vote_count.gte': 100,
+      include_adult: false,
+      with_genres: filters.with_genres?.length > 0 ? filters.with_genres.join(',') : undefined,
+      primary_release_year: filters.primary_release_year || undefined
     };
-    
-    if (filters.with_genres) {
-      params.with_genres = Array.isArray(filters.with_genres) 
-        ? filters.with_genres.join(',') 
-        : filters.with_genres;
-    }
-    
-    if (filters.primary_release_year) {
-      params.primary_release_year = filters.primary_release_year;
-    }
 
     // For vote average sorting, ensure we have a minimum threshold
     if (filters.sort_by === 'vote_average.desc') {
-      params['vote_count.gte'] = 200; // Higher threshold for top rated
+      params['vote_count.gte'] = 200;
     }
     
     return tmdbApi.get('/discover/movie', { params }).then(res => res.data);
   },
-  keepPreviousData: true,
-  staleTime: 300000 // 5 minutes
+  keepPreviousData: false, // Changed to false to ensure fresh data on filter change
+  staleTime: 300000
 });
   
   const handleFilterChange = (newFilters) => {
