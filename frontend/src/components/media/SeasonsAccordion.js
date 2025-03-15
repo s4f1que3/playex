@@ -15,6 +15,7 @@ const SeasonsAccordion = ({
   // Add state to track if episodes are expanded or collapsed
   const [isEpisodesExpanded, setIsEpisodesExpanded] = useState(true);
   const [lastWatched, setLastWatched] = useState(null);
+  const [showVideos, setShowVideos] = useState(false);
   
   // Fetch last watched episode info
   useEffect(() => {
@@ -29,6 +30,30 @@ const SeasonsAccordion = ({
     enabled: !!tvId && !!activeSeason,
     staleTime: 300000 // 5 minutes
   });
+
+  // Add videos query
+  const { data: videosData, isLoading: isLoadingVideos } = useQuery({
+    queryKey: ['seasonVideos', tvId, activeSeason],
+    queryFn: async () => {
+      const seasonVideos = await tmdbApi.get(`/tv/${tvId}/season/${activeSeason}/videos`).then(res => res.data);
+      if (seasonVideos.results?.length > 0) {
+        return {
+          ...seasonVideos,
+          isSeason: true,
+          seasonNumber: activeSeason
+        };
+      }
+      // Fallback to general videos
+      return tmdbApi.get(`/tv/${tvId}/videos`).then(res => ({
+        ...res.data,
+        isSeason: false
+      }));
+    },
+    staleTime: 300000
+  });
+
+  // Filter out specials (season 0) from seasons list
+  const filteredSeasons = seasons.filter(season => season.season_number > 0);
   
   if (!seasons || seasons.length === 0) {
     return (
@@ -68,7 +93,16 @@ const SeasonsAccordion = ({
       {/* Season Tabs - Always visible regardless of expanded state */}
       <div className="flex overflow-x-auto pb-2 mb-4 scrollbar-hide">
         <div className="flex space-x-2">
-          {seasons.map((season) => (
+          <button
+            onClick={() => setShowVideos(true)}
+            className="px-4 py-2 rounded-lg whitespace-nowrap transition duration-300 bg-gray-800 text-white hover:bg-gray-700 flex items-center gap-2"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+            </svg>
+            Videos
+          </button>
+          {filteredSeasons.map((season) => (
             <button
               key={season.id}
               onClick={() => setActiveSeason(season.season_number)}
@@ -211,6 +245,60 @@ const SeasonsAccordion = ({
             </div>
           )}
         </>
+      )}
+      
+      {/* Videos Modal */}
+      {showVideos && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+              <h2 className="text-xl font-bold text-white">
+                {videosData?.isSeason ? `Season ${videosData.seasonNumber} Videos` : 'Videos'}
+              </h2>
+              <button
+                onClick={() => setShowVideos(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="p-4">
+              {isLoadingVideos ? (
+                <div className="flex justify-center py-8">
+                  <Spinner />
+                </div>
+              ) : videosData?.results?.length > 0 ? (
+                <>
+                  {!videosData.isSeason && (
+                    <div className="mb-4 text-gray-400 text-sm">
+                      No season-specific videos available. Showing general videos.
+                    </div>
+                  )}
+                  <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+                    {videosData.results.map(video => (
+                      <div key={video.key} className="aspect-video">
+                        <iframe
+                          className="w-full h-full rounded"
+                          src={`https://www.youtube.com/embed/${video.key}`}
+                          title={video.name}
+                          frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        ></iframe>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <p className="text-gray-400 text-center py-8">
+                  No videos available{videosData?.isSeason ? ` for Season ${activeSeason}` : ''}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

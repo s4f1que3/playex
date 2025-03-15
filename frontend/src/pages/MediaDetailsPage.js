@@ -17,8 +17,6 @@ const MediaDetailsPage = ({ mediaType }) => {
     isInWatchlist: false,
     isInFavorites: false
   });
-  
-  // Initialize activeSeason with the value from location state if available
   const [activeSeason, setActiveSeason] = useState(() => {
     if (location.state && location.state.activeSeason) {
       return location.state.activeSeason;
@@ -26,11 +24,9 @@ const MediaDetailsPage = ({ mediaType }) => {
     return 1;
   });
 
-  // Main media details query
   const { data: mediaData, isLoading: isLoadingMedia, error: mediaError } = useQuery({
     queryKey: ['mediaDetails', mediaType, id],
     queryFn: () => tmdbApi.get(`/${mediaType}/${id}`).then(res => {
-      // Initialize user actions from API if available
       if (res.data.user_data) {
         setUserActions({
           isInWatchlist: res.data.user_data.in_watchlist,
@@ -39,33 +35,30 @@ const MediaDetailsPage = ({ mediaType }) => {
       }
       return res.data;
     }),
-    staleTime: 300000 // 5 minutes
+    staleTime: 300000
   });
 
-  // Separate query for credits
   const { data: creditsData, isLoading: isLoadingCredits } = useQuery({
     queryKey: ['mediaCredits', mediaType, id],
     queryFn: () => tmdbApi.get(`/${mediaType}/${id}/credits`).then(res => res.data),
     staleTime: 300000,
-    enabled: !!mediaData // Only run if media data loaded
+    enabled: !!mediaData
   });
 
-  // Separate query for similar content
   const { data: similarData, isLoading: isLoadingSimilar } = useQuery({
     queryKey: ['mediaSimilar', mediaType, id],
     queryFn: () => tmdbApi.get(`/${mediaType}/${id}/similar`).then(res => res.data),
     staleTime: 300000,
-    enabled: !!mediaData // Only run if media data loaded
+    enabled: !!mediaData
   });
 
-  // Separate query for recommendations
   const { data: recommendationsData, isLoading: isLoadingRecommendations } = useQuery({
     queryKey: ['mediaRecommendations', mediaType, id],
     queryFn: () => tmdbApi.get(`/${mediaType}/${id}/recommendations`).then(res => res.data),
     staleTime: 300000,
-    enabled: !!mediaData // Only run if media data loaded
+    enabled: !!mediaData
   });
-  
+
   const handleActionComplete = (actionType, value) => {
     setUserActions(prev => ({
       ...prev,
@@ -99,31 +92,26 @@ const MediaDetailsPage = ({ mediaType }) => {
     );
   }
   
-  // Check if we have cast data
   const hasCast = creditsData?.cast && creditsData.cast.length > 0;
-  
-  // Check if we have similar content
   const hasSimilar = similarData?.results && similarData.results.length > 0;
-  
-  // Check if we have recommendations
   const hasRecommendations = recommendationsData?.results && recommendationsData.results.length > 0;
   
   return (
-    <div className="-mx-4 -mt-6"> {/* Extend content to full width */}
+    <div className="-mx-4 -mt-6">
       <MediaInfo media={mediaData} mediaType={mediaType} />
       
       <div className="container mx-auto px-4">
-        {/* Media Actions */}
-        <MediaActions
-          media={mediaData}
-          mediaType={mediaType}
-          isInWatchlist={userActions.isInWatchlist}
-          isInFavorites={userActions.isInFavorites}
-          onActionComplete={handleActionComplete}
-          activeSeason={activeSeason}
-        />
-        
-        {/* Seasons and Episodes (TV Shows only) */}
+        <div className="flex items-center gap-4 py-6">
+          <MediaActions
+            media={mediaData}
+            mediaType={mediaType}
+            isInWatchlist={userActions.isInWatchlist}
+            isInFavorites={userActions.isInFavorites}
+            onActionComplete={handleActionComplete}
+            activeSeason={activeSeason}
+          />
+        </div>
+
         {mediaType === 'tv' && mediaData.seasons && (
           <SeasonsAccordion 
             tvId={id} 
@@ -133,7 +121,6 @@ const MediaDetailsPage = ({ mediaType }) => {
           />
         )}
 
-        {/* Cast List with loading state */}
         {isLoadingCredits ? (
           <div className="py-8">
             <div className="flex justify-between items-center mb-6">
@@ -150,7 +137,6 @@ const MediaDetailsPage = ({ mediaType }) => {
           <CastList cast={creditsData.cast} />
         ) : null}
 
-        {/* Similar Content section */}
         {isLoadingRecommendations ? (
           <div className="py-8">
             <h2 className="text-2xl font-bold text-white mb-6">Similar Content</h2>
@@ -179,7 +165,6 @@ const MediaDetailsPage = ({ mediaType }) => {
           </div>
         ) : null}
         
-        {/* Recommended Content section */}
         {isLoadingSimilar ? (
           <div className="py-8">
             <h2 className="text-2xl font-bold text-white mb-6">Recommended For You</h2>
