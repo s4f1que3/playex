@@ -169,7 +169,7 @@ const MediaDetailsPage = ({ mediaType }) => {
         
         {isLoadingSimilar ? (
           <div className="py-8">
-            <h2 className="text-2xl font-bold text-white mb-6">Recommended For You</h2>
+            <h2 className="text-2xl font-bold text-white mb-6">You May Also Like</h2>
             <div className="flex justify-center">
               <Spinner size="medium" />
             </div>
@@ -179,7 +179,7 @@ const MediaDetailsPage = ({ mediaType }) => {
             <MediaCarousel
               title={
                 <div className="w-full px-4 flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-white">Recommended For You</h2>
+                  <h2 className="text-2xl font-bold text-white">You May Also Like</h2>
                   <Link 
                     to={`/${mediaType}/${id}/recommended`}
                     className="text-[#E4D981] hover:text-[#c7bd6a] transition-colors text-sm pl-[1100px]"
