@@ -128,7 +128,7 @@ const SystemAnnouncement = () => {
                                          text-white font-medium shadow-lg shadow-[#82BC87]/20 
                                          hover:shadow-[#82BC87]/30 transition-all duration-300"
                               >
-                                Learn More
+                                Welcome!
                               </motion.button>
                             </div>
                           </div>
