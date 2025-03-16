@@ -182,7 +182,7 @@ const MediaDetailsPage = ({ mediaType }) => {
                   <h2 className="text-2xl font-bold text-white">You May Also Like</h2>
                   <Link 
                     to={`/${mediaType}/${id}/recommended`}
-                    className="text-[#E4D981] hover:text-[#c7bd6a] transition-colors text-sm pl-[1100px]"
+                    className="text-[#E4D981] hover:text-[#c7bd6a] transition-colors text-sm pl-[1150px]"
                   >
                     View All
                   </Link>
