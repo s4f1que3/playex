@@ -100,39 +100,58 @@ const { data, isLoading, error } = useQuery({
         />
       </div>
       
-      {/* Player selection buttons - centered below player */}
-      <div className="bg-gray-900 py-3 border-b border-gray-800">
-        <div className="container mx-auto px-4 flex justify-center space-x-3">
-          <button
-            onClick={() => handlePlayerChange('vidlink')}
-            className={`px-4 py-2 rounded font-medium ${
-              playerType === 'vidlink' 
-                ? 'bg-[#82BC87] text-white' 
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            } transition duration-200`}
-          >
-            VidLink
-          </button>
-          <button
-            onClick={() => handlePlayerChange('embedsu')}
-            className={`px-4 py-2 rounded font-medium ${
-              playerType === 'embedsu' 
-                ? 'bg-[#82BC87] text-white' 
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            } transition duration-200`}
-          >
-            EmbedSu
-          </button>
-          <button
-            onClick={() => handlePlayerChange('vidsrc')}
-            className={`px-4 py-2 rounded font-medium ${
-              playerType === 'vidsrc' 
-                ? 'bg-[#82BC87] text-white' 
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            } transition duration-200`}
-          >
-            VidSrc
-          </button>
+      {/* Enhanced player selection buttons */}
+      <div className="bg-gradient-to-b from-gray-900 to-gray-800 py-6 border-b border-gray-800/50 shadow-lg">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center">
+            <div className="bg-gray-800/50 backdrop-blur-sm p-1.5 rounded-xl inline-flex gap-1.5 shadow-xl">
+              <button
+                onClick={() => handlePlayerChange('vidlink')}
+                className={`relative px-8 py-2.5 rounded-lg font-medium transition-all duration-300 overflow-hidden group ${
+                  playerType === 'vidlink'
+                    ? 'bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white shadow-lg shadow-[#82BC87]/25'
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span className="relative flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform duration-300 ${playerType === 'vidlink' ? 'scale-110' : 'group-hover:scale-110'}`} viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                  </svg>
+                  <span className={`transition-all duration-300 ${playerType === 'vidlink' ? 'transform translate-x-0.5' : ''}`}>VidLink</span>
+                </span>
+              </button>
+              <button
+                onClick={() => handlePlayerChange('embedsu')}
+                className={`relative px-8 py-2.5 rounded-lg font-medium transition-all duration-300 overflow-hidden group ${
+                  playerType === 'embedsu'
+                    ? 'bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white shadow-lg shadow-[#82BC87]/25'
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span className="relative flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform duration-300 ${playerType === 'embedsu' ? 'scale-110' : 'group-hover:scale-110'}`} viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
+                  </svg>
+                  <span className={`transition-all duration-300 ${playerType === 'embedsu' ? 'transform translate-x-0.5' : ''}`}>EmbedSu</span>
+                </span>
+              </button>
+              <button
+                onClick={() => handlePlayerChange('vidsrc')}
+                className={`relative px-8 py-2.5 rounded-lg font-medium transition-all duration-300 overflow-hidden group ${
+                  playerType === 'vidsrc'
+                    ? 'bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white shadow-lg shadow-[#82BC87]/25'
+                    : 'text-gray-300 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span className="relative flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 transition-transform duration-300 ${playerType === 'vidsrc' ? 'scale-110' : 'group-hover:scale-110'}`} viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
+                  </svg>
+                  <span className={`transition-all duration-300 ${playerType === 'vidsrc' ? 'transform translate-x-0.5' : ''}`}>VidSrc</span>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       
