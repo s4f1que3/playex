@@ -167,7 +167,6 @@ const { data, isLoading, error } = useQuery({
       
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row md:items-start gap-6">
-          {/* Media Info */}
           <div className="md:w-3/4">
             <h1 className="text-2xl md:text-3xl font-bold text-white">
               {title}
@@ -178,23 +177,47 @@ const { data, isLoading, error } = useQuery({
             
             <div className="flex items-center flex-wrap gap-2 mt-2 mb-4">
               {releaseYear && (
-                <span className="text-gray-400 bg-gray-800 px-3 py-1 rounded-full text-sm">
+                <Link
+                  to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?${
+                    mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year'
+                  }=${releaseYear}`}
+                  className="text-[#E6C6BB] bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded-full text-sm transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                  </svg>
                   {releaseYear}
-                </span>
+                </Link>
               )}
               
-              <span className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm">
+              <Link
+                to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}`}
+                className="text-[#E6C6BB] bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded-full text-sm transition-colors duration-300 flex items-center gap-1"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  {mediaType === 'movie' ? (
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                  ) : (
+                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
+                  )}
+                </svg>
                 {mediaType === 'movie' ? 'Movie' : 'TV Series'}
-              </span>
+              </Link>
               
               {data.runtime && (
-                <span className="text-gray-400 bg-gray-800 px-3 py-1 rounded-full text-sm">
+                <span className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                  </svg>
                   {tmdbHelpers.formatRuntime(data.runtime)}
                 </span>
               )}
               
               {mediaType === 'tv' && data.episode && data.episode.runtime && (
-                <span className="text-gray-400 bg-gray-800 px-3 py-1 rounded-full text-sm">
+                <span className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                  </svg>
                   {tmdbHelpers.formatRuntime(data.episode.runtime)}
                 </span>
               )}

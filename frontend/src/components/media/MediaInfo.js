@@ -70,8 +70,8 @@ const MediaInfo = ({ media, mediaType }) => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 pt-12">
-        <div className="flex flex-col md:flex-row gap-8">
+      <div className="relative z-10 container mx-auto px-4 py-6">
+        <div className="flex flex-col md:flex-row gap-6">
           {/* Poster */}
           <div className="md:w-1/3 lg:w-1/4 flex-shrink-0">
             <div className="aspect-[2/3] rounded-lg overflow-hidden shadow-xl">
@@ -84,51 +84,49 @@ const MediaInfo = ({ media, mediaType }) => {
           </div>
           
           {/* Info */}
-          <div className="md:w-2/3 lg:w-3/4">
+          <div className="flex-1">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-2">
               {title || name}
             </h1>
             
-            <div className="flex items-center flex-wrap gap-2 mb-4">
-              {/* Display each tag with appropriate links */}
-              {mediaTag.map((tag, index) => {
-                // Handle year tag
-                if (tag.match(/^\d{4}$/)) {
-                  return (
-                    <Link
-                      key={index}
-                      to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?${
-                        mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year'
-                      }=${tag}`}
-                      className="text-[#E6C6BB] hover:bg-gray-700 bg-gray-800 px-3 py-1 rounded-full text-sm transition-colors"
-                    >
-                      {tag}
-                    </Link>
-                  );
-                }
-                // Handle Movie/TV tag
-                else if (tag === 'Movie' || tag === 'TV') {
-                  return (
-                    <Link
-                      key={index}
-                      to={`/${tag === 'Movie' ? 'movies' : 'tv-shows'}`}
-                      className="text-[#E6C6BB] hover:bg-gray-700 bg-gray-800 px-3 py-1 rounded-full text-sm transition-colors"
-                    >
-                      {tag}
-                    </Link>
-                  );
-                }
-                // Other tags remain non-clickable
-                return (
-                  <span 
-                    key={index} 
-                    className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm"
-                  >
-                    {tag}
-                  </span>
-                );
-              })}
-
+            <div className="flex flex-wrap items-center gap-2 mt-3">
+              {releaseYear && (
+                <Link
+                  to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?${
+                    mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year'
+                  }=${releaseYear}`}
+                  className="text-[#E6C6BB] bg-gray-800/60 hover:bg-gray-700/60 px-3 py-1 rounded-full text-sm transition-colors duration-300 flex items-center gap-1"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                  </svg>
+                  {releaseYear}
+                </Link>
+              )}
+              
+              <Link
+                to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}`}
+                className="text-[#E6C6BB] bg-gray-800/60 hover:bg-gray-700/60 px-3 py-1 rounded-full text-sm transition-colors duration-300 flex items-center gap-1"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  {mediaType === 'movie' ? (
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                  ) : (
+                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
+                  )}
+                </svg>
+                {mediaType === 'movie' ? 'Movie' : 'TV Series'}
+              </Link>
+              
+              {runtime && (
+                <span className="text-[#E6C6BB] bg-gray-800/60 px-3 py-1 rounded-full text-sm flex items-center gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                  </svg>
+                  {tmdbHelpers.formatRuntime(runtime)}
+                </span>
+              )}
+              
               {status && (
                 <span className="text-gray-400 bg-gray-800 px-3 py-1 rounded-full text-sm">
                   {status}
@@ -159,7 +157,7 @@ const MediaInfo = ({ media, mediaType }) => {
             
             {/* Genres */}
             {genres && genres.length > 0 && (
-              <div className="mb-6">
+              <div className="mt-8 mb-6">
                 <div className="flex flex-wrap gap-2">
                   {genres.map((genre) => (
                     <Link
