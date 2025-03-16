@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import MediaCard from '../common/MediaCard';
 import Spinner from '../common/Spinner';
 import { useMediaQueries } from '../../hooks/useMediaQueries';
+import ActorCard from '../common/ActorCard';
 
 const MediaGrid = ({
   items,
@@ -56,7 +57,7 @@ const MediaGrid = ({
   }
   
   return (
-    <div className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-${cols} gap-4 md:gap-6`}>
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
       {items.map((item) => {
         // If mediaType prop is provided, use it to override the item's media_type
         const itemMediaType = mediaType || item.media_type || 'movie';
@@ -66,7 +67,7 @@ const MediaGrid = ({
         };
         
         return (
-          <div key={`${item.media_type}-${item.id}`} className="relative">
+          <div key={`${item.media_type}-${item.id}`} className="relative h-full">
             {selectionMode && (
               <div 
                 onClick={() => onSelectItem(item.id, item.media_type)}
@@ -87,16 +88,17 @@ const MediaGrid = ({
                 </div>
               </div>
             )}
-            <Link 
-              to={`/player/${itemMediaType}/${item.id}`}
-              className="media-card"
-            >
-              <MediaCard
-                media={enhancedItem}
-                onRemove={selectionMode ? null : onRemove ? (() => onRemove(item.id, itemMediaType)) : undefined}
-                showType={showType}
-              />
-            </Link>
+            <div className="h-full">
+              {mediaType === 'person' ? (
+                <ActorCard actor={item} />
+              ) : (
+                <MediaCard
+                  media={enhancedItem}
+                  onRemove={selectionMode ? null : onRemove ? (() => onRemove(item.id, itemMediaType)) : undefined}
+                  showType={showType}
+                />
+              )}
+            </div>
           </div>
         );
       })}

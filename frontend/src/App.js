@@ -9,7 +9,7 @@ import MainLayout from './Layouts/MainLayout';
 
 // Components
 import TermsPage from './components/common/legal/TermsPage';
-import FAQ from './components/common/FAQ';
+import FAQ from './components/common/legal/FAQ';
 import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
 import CookiesPolicyPage from './components/common/legal/CookiePolicyPage';
 import CookieConsent from './components/common/legal/CookiesConsent';
@@ -32,6 +32,7 @@ import ActorsPersonal from './pages/ActorsPersonal';
 import ActorCreditsPage from './pages/ActorCreditsPage';
 import RecommendedContentPage from './pages/RecommendedContentPage';
 import SimilarContentPage from './pages/SimilarContentPage';
+import EpisodesPage from './pages/EpisodesPage';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -66,7 +67,7 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div className="min-h-screen bg-[#161616] text-white overflow-x-hidden">
       {loading && <LoadingScreen finishLoading={finishLoading} />}
       
       <QueryClientProvider client={queryClient}>
@@ -94,6 +95,7 @@ function App() {
                   <Route path="player/tv/:id/:season/:episode" element={<PlayerPage mediaType="tv" />} />
                   <Route path=":mediaType/:id/similar" element={<SimilarContentPage />} />
                   <Route path=":mediaType/:id/recommended" element={<RecommendedContentPage />} />
+                  <Route path="/tv/:id/episodes/:season" element={<EpisodesPage />} />
                   
                   {/* Actor routes */}
                   <Route path="/actors" element={<ActorsPage />} />
@@ -115,7 +117,7 @@ function App() {
           </Router>
         </AuthProvider>
       </QueryClientProvider>
-    </>
+    </div>
   );
 }
 

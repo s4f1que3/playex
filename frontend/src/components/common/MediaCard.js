@@ -41,64 +41,41 @@ const MediaCard = ({ media, showType = true }) => {
   const rating = !isPerson && vote_average ? (vote_average / 10) * 5 : 0;
   
   return (
-    <div className="card group h-full flex flex-col relative">
-      <Link to={route} className="block flex-grow">
-        <div className="relative overflow-hidden rounded-t-lg">
-          {/* Poster/Profile image */}
+    <Link to={route} className="block h-full group">
+      <div className="relative h-full overflow-hidden rounded-xl backdrop-blur-sm border border-white/5 transition-all duration-500 hover:scale-[1.02] bg-gradient-to-b from-gray-800/50 to-gray-900/50">
+        {/* Image Container - Fixed aspect ratio */}
+        <div className="aspect-[2/3] relative overflow-hidden">
           <img
             src={tmdbHelpers.getImageUrl(imagePath) || 'https://via.placeholder.com/300x450?text=No+Image'}
             alt={displayTitle}
-            className="w-full h-auto object-cover transition-transform duration-500 transform group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             loading="lazy"
           />
           
-          {/* Rating badge - only for movies and TV shows */}
-          {!isPerson && (
-            <div className="absolute top-2 right-2 bg-[#161616] bg-opacity-80 rounded-full p-1 flex items-center">
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <svg
-                    key={star}
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill={star <= Math.round(rating) ? '#E4D981' : 'none'}
-                    stroke={star <= Math.round(rating) ? '#E4D981' : '#6B7280'}
-                    className="w-3 h-3"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                ))}
+          {/* Rating Badge */}
+          {!isPerson && vote_average > 0 && (
+            <div className="absolute top-2 right-2 bg-black/70 backdrop-blur-sm rounded-lg px-2 py-1 z-10">
+              <div className="flex items-center gap-1">
+                <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="text-white text-sm font-medium">{vote_average?.toFixed(1)}</span>
               </div>
             </div>
           )}
-          
-          {/* Hover overlay */}
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-            <div className="btn-primary transform scale-90 group-hover:scale-100 transition-transform duration-300">
-              {isPerson ? 'View Profile' : 'View Details'}
+
+          {/* Hover Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <h3 className="text-white font-bold text-lg line-clamp-2">{displayTitle}</h3>
+              {subInfo && (
+                <span className="text-gray-300 text-sm">{subInfo}</span>
+              )}
             </div>
           </div>
         </div>
-      </Link>
-      
-      <div className="p-4 flex-grow">
-        <Link to={route} className="block">
-          <h3 className="font-bold text-white text-lg truncate">
-            {displayTitle}
-          </h3>
-        </Link>
-        <div className="flex justify-between items-center mt-1">
-          <span className="text-gray-400 text-sm">
-            {subInfo}
-          </span>
-          {showType && (
-            <span className="text-[#E6C6BB] text-xs px-2 py-0.5 bg-gray-800 rounded-full">
-              {isPerson ? 'Actor' : type === 'movie' ? 'Movie' : 'TV Show'}
-            </span>
-          )}
-        </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

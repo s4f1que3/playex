@@ -5,6 +5,8 @@ import { tmdbApi, tmdbHelpers } from '../utils/api';
 import VideoPlayer from '../components/media/VideoPlayer';
 import Spinner from '../components/common/Spinner';
 import { setLastWatchedEpisode } from '../utils/LocalStorage';
+import { motion, AnimatePresence } from 'framer-motion';
+import PremiumLoader from '../components/common/PremiumLoader';
 
 const PlayerPage = ({ mediaType }) => {
   const { id, season, episode } = useParams();
@@ -56,11 +58,7 @@ const { data, isLoading, error } = useQuery({
   }, [mediaType, id, season, episode]);
   
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Spinner size="large" />
-      </div>
-    );
+    return <PremiumLoader size="large" text="Preparing Content" overlay={true} />;
   }
   
   if (error) {
@@ -89,8 +87,14 @@ const { data, isLoading, error } = useQuery({
     : (data.first_air_date ? new Date(data.first_air_date).getFullYear() : '');
   
   return (
-    <div className="-mx-4 -mt-6"> {/* Extend content to full width */}
-      <div className="bg-black">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="-mx-4 -mt-6"
+    >
+      {/* Enhanced Video Player Container */}
+      <div className="relative bg-black">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#161616]/50 to-transparent z-10 pointer-events-none" />
         <VideoPlayer 
           tmdbId={id} 
           mediaType={mediaType} 
@@ -99,8 +103,8 @@ const { data, isLoading, error } = useQuery({
           playerType={playerType}
         />
       </div>
-      
-      {/* New Player Selection UI */}
+
+      {/* Keep existing player selection UI */}
       <div className="relative bg-gradient-to-b from-black via-gray-900 to-transparent">
         <div className="container mx-auto px-4 py-6">
           <div className="flex justify-center">
@@ -164,124 +168,182 @@ const { data, isLoading, error } = useQuery({
           </div>
         </div>
       </div>
-      
+
+      {/* Enhanced Content Section */}
       <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col md:flex-row md:items-start gap-6">
-          <div className="md:w-3/4">
-            <h1 className="text-2xl md:text-3xl font-bold text-white">
-              {title}
-              {episodeTitle && (
-                <> - <span className="text-[#E4D981]">S{season} E{episode}: {episodeTitle}</span></>
-              )}
-            </h1>
-            
-            <div className="flex items-center flex-wrap gap-2 mt-2 mb-4">
-              {releaseYear && (
-                <Link
-                  to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?${
-                    mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year'
-                  }=${releaseYear}`}
-                  className="text-[#E6C6BB] bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded-full text-sm transition-colors duration-300 flex items-center gap-1"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-                  </svg>
-                  {releaseYear}
-                </Link>
-              )}
-              
-              <Link
-                to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}`}
-                className="text-[#E6C6BB] bg-gray-800 hover:bg-gray-700 px-3 py-1 rounded-full text-sm transition-colors duration-300 flex items-center gap-1"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  {mediaType === 'movie' ? (
-                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-                  ) : (
-                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
-                  )}
-                </svg>
-                {mediaType === 'movie' ? 'Movie' : 'TV Series'}
-              </Link>
-              
-              {data.runtime && (
-                <span className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                  </svg>
-                  {tmdbHelpers.formatRuntime(data.runtime)}
-                </span>
-              )}
-              
-              {mediaType === 'tv' && data.episode && data.episode.runtime && (
-                <span className="text-[#E6C6BB] bg-gray-800 px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                  </svg>
-                  {tmdbHelpers.formatRuntime(data.episode.runtime)}
-                </span>
-              )}
-            </div>
-            
-            <p className="text-gray-300 mt-4">
-              {mediaType === 'tv' && data.episode ? data.episode.overview : data.overview}
-            </p>
-
-                {/* Player page announcment */}
-
-            <p className="text-gray-300 mt-4 bg-gray-800 p-4 rounded-lg">
-              We Recommend Getting An Ad-Blocker To Ehance Your Streaming Experience.
-            </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="relative"
+        >
+          {/* Background Effects */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute -top-20 left-1/4 w-96 h-96 bg-[#82BC87]/20 rounded-full filter blur-[100px] animate-pulse" />
+            <div className="absolute -bottom-20 right-1/4 w-96 h-96 bg-[#E4D981]/20 rounded-full filter blur-[100px] animate-pulse" />
           </div>
-          
-          {/* Next/Previous Episode for TV Shows */}
-          {mediaType === 'tv' && (
-            <div className="md:w-1/4 bg-gray-800 rounded-lg p-4">
-              <h3 className="text-lg font-bold text-white mb-4">Episodes</h3>
 
-              <div className="space-y-2">
-                {/* Modified Link - using state to pass the active season */}
-                <Link 
-                  to={`/tv/${id}`}
-                  state={{ activeSeason: parseInt(season) }}
-                  className="flex items-center justify-center w-full bg-[#82BC87] hover:bg-opacity-80 text-white font-medium py-2 px-4 rounded transition duration-300"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10.293 15.707a1 1 0 010-1.414L14.586 10l-4.293-4.293a1 1 0 111.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                    <path fillRule="evenodd" d="M4.293 15.707a1 1 0 010-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0z" clipRule="evenodd" />
+          {/* Content Container */}
+          <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden shadow-2xl">
+            {/* Media Info Header */}
+            <div className="p-6 border-b border-white/10">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="flex items-center gap-4"
+              >
+                <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
                   </svg>
-                  All Episodes For Season {season}
-                </Link>
-                
-                {data.episode && data.episode.episode_number > 1 && (
-                  <Link 
-                    to={`/player/tv/${id}/${season}/${parseInt(episode) - 1}`}
-                    className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition duration-300"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                    </svg>
-                    Previous Episode
-                  </Link>
-                )}
-                
-                {data.episode && data.episode.season_number && data.episode.episode_number < (data.seasons.find(s => s.season_number === parseInt(season))?.episode_count || 0) && (
-                  <Link 
-                    to={`/player/tv/${id}/${season}/${parseInt(episode) + 1}`}
-                    className="flex items-center justify-center w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded transition duration-300"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                    Next Episode
-                  </Link>
-                )}
-              </div>
+                </div>
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-white">
+                    {title}
+                    {episodeTitle && (
+                      <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-2">
+                        S{season} E{episode}: {episodeTitle}
+                      </span>
+                    )}
+                  </h1>
+                </div>
+              </motion.div>
             </div>
-          )}
-        </div>
+
+            {/* Enhanced Media Details */}
+            <div className="p-6">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="flex flex-wrap items-center gap-3"
+              >
+                {releaseYear && (
+                  <Link
+                    to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?${
+                      mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year'
+                    }=${releaseYear}`}
+                    className="group px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#E4D981] group-hover:scale-110 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-gray-300 group-hover:text-white transition-colors duration-300">{releaseYear}</span>
+                  </Link>
+                )}
+
+                {/* Enhanced Media Type Badge */}
+                <div className="px-4 py-2 rounded-xl bg-white/5 flex items-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                    {mediaType === 'movie' ? (
+                      <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                    ) : (
+                      <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
+                    )}
+                  </svg>
+                  <span className="text-gray-300">{mediaType === 'movie' ? 'Movie' : 'TV Series'}</span>
+                </div>
+              </motion.div>
+
+              {/* Enhanced Overview Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="mt-6 prose prose-invert max-w-none"
+              >
+                <p className="text-gray-300 leading-relaxed">
+                  {mediaType === 'tv' && data.episode ? data.episode.overview : data.overview}
+                </p>
+              </motion.div>
+
+              {/* Enhanced Episode Navigation for TV Shows */}
+              {mediaType === 'tv' && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
+                  className="mt-8"
+                >
+                  <div className="relative bg-gray-900/80 backdrop-blur-sm rounded-xl border border-white/10 overflow-hidden">
+                    <div className="p-4 border-b border-white/10 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-[#82BC87]/10 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                          <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">Episode Navigation</h3>
+                        <p className="text-sm text-gray-400">Season {season}, Episode {episode}</p>
+                      </div>
+                    </div>
+
+                    <div className="p-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        {/* Previous Episode */}
+                        {data.episode && data.episode.episode_number > 1 && (
+                          <Link 
+                            to={`/player/tv/${id}/${season}/${parseInt(episode) - 1}`}
+                            className="group relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm border border-white/5 transition-all duration-300 hover:border-[#82BC87]/20"
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                            <div className="relative p-4 flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#82BC87]/10 transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87] transition-colors duration-300" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                              <span className="text-gray-400 group-hover:text-white transition-colors duration-300">Previous Episode</span>
+                            </div>
+                          </Link>
+                        )}
+
+                        {/* All Episodes */}
+                        <Link 
+                          to={`/tv/${id}/episodes/${season}`}
+                          className="group relative overflow-hidden rounded-xl bg-[#82BC87]/10 backdrop-blur-sm border border-[#82BC87]/20 transition-all duration-300 hover:bg-[#82BC87]/20"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                          <div className="relative p-4 flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-lg bg-[#82BC87]/10 flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
+                              </svg>
+                            </div>
+                            <span className="text-white font-medium">All Episodes</span>
+                          </div>
+                        </Link>
+
+                        {/* Next Episode */}
+                        {data.episode && data.episode.season_number && 
+                        data.episode.episode_number < (data.seasons.find(s => s.season_number === parseInt(season))?.episode_count || 0) && (
+                          <Link 
+                            to={`/player/tv/${id}/${season}/${parseInt(episode) + 1}`}
+                            className="group relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm border border-white/5 transition-all duration-300 hover:border-[#82BC87]/20"
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
+                            <div className="relative p-4 flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#82BC87]/10 transition-all duration-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87] transition-colors duration-300" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                              <span className="text-gray-400 group-hover:text-white transition-colors duration-300">Next Episode</span>
+                            </div>
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </div>
+          </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

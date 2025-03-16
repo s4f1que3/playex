@@ -1,25 +1,31 @@
 import { useSearchParams } from 'react-router-dom';
-import { useCallback } from 'react';
 
 export const useFilterParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const updateFilter = useCallback((key, value) => {
-    setSearchParams(prev => {
-      if (!value || (Array.isArray(value) && value.length === 0)) {
-        prev.delete(key);
+  const filters = {
+    sort_by: searchParams.get('sort_by') || 'popularity.desc',
+    primary_release_year: searchParams.get('primary_release_year') || '',
+    with_genres: searchParams.get('with_genres') 
+      ? searchParams.get('with_genres').split(',').map(Number) 
+      : []
+  };
+
+  const updateFilters = (newFilters) => {
+    const updatedParams = new URLSearchParams(searchParams);
+    
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (value === '' || value === null || (Array.isArray(value) && value.length === 0)) {
+        updatedParams.delete(key);
+      } else if (Array.isArray(value)) {
+        updatedParams.set(key, value.join(','));
       } else {
-        prev.set(key, Array.isArray(value) ? value.join(',') : value);
+        updatedParams.set(key, value);
       }
-      return prev;
-    }, { replace: true });
-  }, [setSearchParams]);
+    });
 
-  const getFilter = useCallback((key) => {
-    const value = searchParams.get(key);
-    if (!value) return key === 'genres' ? [] : '';
-    return key === 'genres' ? value.split(',').map(Number) : value;
-  }, [searchParams]);
+    setSearchParams(updatedParams);
+  };
 
-  return { updateFilter, getFilter };
+  return { filters, updateFilters };
 };

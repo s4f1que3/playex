@@ -1,10 +1,12 @@
 // File: frontend/src/pages/WatchlistPage.js
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';  // Add this import
 import MediaGrid from '../components/media/MediaGrid';
 import Spinner from '../components/common/Spinner';
 import ConfirmationDialog from '../components/common/ConfirmationDialog';
 import { getWatchlist, removeFromWatchlist } from '../utils/LocalStorage';
-import AlertOverlay from '../components/common/AlertOverlay';
+import AlertDialog from '../components/common/AlertDialog';
+import FilterPanel from '../components/common/FilterPanel';
 
 const WatchlistPage = () => {
   const [mediaType, setMediaType] = useState('all');
@@ -13,7 +15,7 @@ const WatchlistPage = () => {
   const [selectedItems, setSelectedItems] = useState({});
   const [selectionMode, setSelectionMode] = useState(false);
   const [dialog, setDialog] = useState({ isOpen: false, type: null });
-  const [alert, setAlert] = useState({ isOpen: false, title: '', message: '' });
+  const [alertDialog, setAlertDialog] = useState({ isOpen: false, message: '' });
   
   // Load watchlist from localStorage
   useEffect(() => {
@@ -87,9 +89,8 @@ const WatchlistPage = () => {
     const selectedCount = Object.values(selectedItems).filter(Boolean).length;
     
     if (selectedCount === 0) {
-      setAlert({
+      setAlertDialog({
         isOpen: true,
-        title: 'No Items Selected',
         message: 'Please select at least one item to remove.'
       });
       return;
@@ -134,98 +135,152 @@ const WatchlistPage = () => {
   }
   
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-white">My Watchlist</h1>
-        
-        <div className="flex space-x-2">
-          {/* Media Type Filter */}
-          <button
-            onClick={() => setMediaType('all')}
-            className={`px-4 py-2 rounded-lg transition duration-300 ${
-              mediaType === 'all' 
-                ? 'bg-[#82BC87] text-white' 
-                : 'bg-gray-800 text-white hover:bg-gray-700'
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setMediaType('movie')}
-            className={`px-4 py-2 rounded-lg transition duration-300 ${
-              mediaType === 'movie' 
-                ? 'bg-[#82BC87] text-white' 
-                : 'bg-gray-800 text-white hover:bg-gray-700'
-            }`}
-          >
-            Movies
-          </button>
-          <button
-            onClick={() => setMediaType('tv')}
-            className={`px-4 py-2 rounded-lg transition duration-300 ${
-              mediaType === 'tv' 
-                ? 'bg-[#82BC87] text-white' 
-                : 'bg-gray-800 text-white hover:bg-gray-700'
-            }`}
-          >
-            TV Shows
-          </button>
-        </div>
-      </div>
-      
-      {transformedData.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="text-[#E4D981] mb-4">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-            </svg>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <div className="relative -mx-4 mb-8 overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="relative h-[30vh] bg-gradient-to-b from-gray-900/90 via-gray-900/50 to-[#161616]"
+        >
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-pattern-grid opacity-5 animate-pulse transform rotate-45 scale-150" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#161616] via-transparent to-transparent" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Your watchlist is empty</h2>
-          <p className="text-gray-400 mb-6">
-            Add movies and TV shows to your watchlist to keep track of what you want to watch.
-          </p>
-          <a href="/" className="btn-primary inline-block">
-            Browse Content
-          </a>
-        </div>
-      ) : (
-        <>
-          {/* Watchlist Management Buttons */}
-          <div className="flex space-x-3 mb-4">
-            <button
-              onClick={toggleSelectionMode}
-              className="px-4 py-2 rounded-lg bg-gray-700 text-white hover:bg-gray-600 transition duration-300"
+
+          <div className="container relative mx-auto px-4 h-full flex items-center">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="max-w-4xl"
             >
-              {selectionMode ? 'Cancel Selection' : 'Select Items'}
-            </button>
-            
-            {selectionMode && (
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                </span>
+                <span className="text-[#82BC87] font-medium">My Collection</span>
+              </div>
+
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Watchlist
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+                  ({transformedData.length})
+                </span>
+              </h1>
+            </motion.div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Enhanced Content Section */}
+      <div className="container mx-auto px-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl"
+        >
+          {/* Enhanced Filter Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div className="flex items-center gap-4">
+              <div className="inline-flex p-1 bg-gray-800/50 backdrop-blur-sm rounded-xl">
+                {[
+                  { value: 'all', label: 'All' },
+                  { value: 'movie', label: 'Movies' },
+                  { value: 'tv', label: 'TV Shows' }
+                ].map(({ value, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => setMediaType(value)}
+                    className={`relative px-6 py-2 rounded-lg font-medium transition-all duration-500 ${
+                      mediaType === value 
+                        ? 'text-white' 
+                        : 'text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {mediaType === value && (
+                      <motion.div
+                        layoutId="mediaType"
+                        className="absolute inset-0 bg-gradient-to-r from-[#82BC87] to-[#6da972] rounded-lg"
+                        transition={{ type: "spring", duration: 0.6 }}
+                      />
+                    )}
+                    <span className="relative z-10">{label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Enhanced Action Buttons */}
+            <div className="flex items-center gap-3">
+              <FilterPanel mediaType={mediaType} />
+              <button
+                onClick={toggleSelectionMode}
+                className="px-4 py-2 rounded-lg bg-gray-800/50 backdrop-blur-sm border border-white/5 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
+                </svg>
+                {selectionMode ? 'Cancel' : 'Select'}
+              </button>
+
               <button
                 onClick={clearSelectedItems}
                 className="px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-500 transition duration-300"
               >
                 Clear Selected
               </button>
-            )}
             
-            <button
-              onClick={clearWatchlist}
-              className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition duration-300"
-            >
-              Clear Watchlist
-            </button>
+              <button
+                onClick={clearWatchlist}
+                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition duration-300"
+              >
+                Clear Watchlist
+              </button>
+            </div>
           </div>
-          
-          <MediaGrid 
-            items={transformedData}
-            selectionMode={selectionMode}
-            onSelectItem={toggleSelectItem}
-            onRemove={handleRemoveItem}
-            selectedItems={selectedItems}
-          />
-        </>
-      )}
-      
+
+          {transformedData.length === 0 ? (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-center py-12"
+            >
+              <div className="text-[#E4D981] mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">Your watchlist is empty</h2>
+              <p className="text-gray-400 mb-6">
+                Add movies and TV shows to your watchlist to keep track of what you want to watch.
+              </p>
+              <a href="/" className="btn-primary inline-block">
+                Browse Content
+              </a>
+            </motion.div>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
+              <MediaGrid 
+                items={transformedData}
+                selectionMode={selectionMode}
+                onSelectItem={toggleSelectItem}
+                onRemove={handleRemoveItem}
+                selectedItems={selectedItems}
+              />
+            </motion.div>
+          )}
+        </motion.div>
+      </div>
+
       <ConfirmationDialog
         isOpen={dialog.isOpen}
         title={dialog.title}
@@ -233,14 +288,13 @@ const WatchlistPage = () => {
         onConfirm={dialog.onConfirm}
         onCancel={() => setDialog({ isOpen: false })}
       />
-      
-      {alert.isOpen && (
-        <AlertOverlay
-          title={alert.title}
-          message={alert.message}
-          onClose={() => setAlert({ isOpen: false })}
-        />
-      )}
+
+      <AlertDialog
+        isOpen={alertDialog.isOpen}
+        title="No Items Selected"
+        message={alertDialog.message}
+        onClose={() => setAlertDialog({ ...alertDialog, isOpen: false })}
+      />
     </div>
   );
 };
