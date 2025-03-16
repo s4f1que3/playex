@@ -6,7 +6,7 @@ import Spinner from '../components/common/Spinner';
 import ConfirmationDialog from '../components/common/ConfirmationDialog';
 import { getWatchlist, removeFromWatchlist } from '../utils/LocalStorage';
 import AlertDialog from '../components/common/AlertDialog';
-import FilterPanel from '../components/common/FilterPanel';
+import { Link } from 'react-router-dom'; // Add this import if not already present
 
 const WatchlistPage = () => {
   const [mediaType, setMediaType] = useState('all');
@@ -135,13 +135,24 @@ const WatchlistPage = () => {
   }
   
   return (
-    <div className="min-h-screen">
+    <div className="-mt-[72px]">
+      {/* Breadcrumbs - Add this section */}
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex items-center gap-2 text-sm">
+          <Link to="/" className="text-gray-400 hover:text-white transition-colors">
+            Home
+          </Link>
+          <span className="text-gray-600">/</span>
+          <span className="text-white">Watchlist</span>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <div className="relative -mx-4 mb-8 overflow-hidden">
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="relative h-[30vh] bg-gradient-to-b from-gray-900/90 via-gray-900/50 to-[#161616]"
+          className="relative h-[40vh] bg-gradient-to-b from-gray-900/90 via-gray-900/50 to-[#161616]"
         >
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-pattern-grid opacity-5 animate-pulse transform rotate-45 scale-150" />
@@ -164,85 +175,111 @@ const WatchlistPage = () => {
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Watchlist
+                My Watchlist
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
                   ({transformedData.length})
                 </span>
               </h1>
+              <p className="text-gray-400 text-lg max-w-2xl">
+                Keep track of movies and TV shows you want to watch later.
+              </p>
             </motion.div>
           </div>
         </motion.div>
       </div>
 
-      {/* Enhanced Content Section */}
+      {/* Content Section */}
       <div className="container mx-auto px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl"
+          className="relative mb-8"
         >
-          {/* Enhanced Filter Controls */}
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-            <div className="flex items-center gap-4">
-              <div className="inline-flex p-1 bg-gray-800/50 backdrop-blur-sm rounded-xl">
-                {[
-                  { value: 'all', label: 'All' },
-                  { value: 'movie', label: 'Movies' },
-                  { value: 'tv', label: 'TV Shows' }
-                ].map(({ value, label }) => (
-                  <button
-                    key={value}
-                    onClick={() => setMediaType(value)}
-                    className={`relative px-6 py-2 rounded-lg font-medium transition-all duration-500 ${
-                      mediaType === value 
-                        ? 'text-white' 
-                        : 'text-gray-400 hover:text-white'
-                    }`}
-                  >
-                    {mediaType === value && (
-                      <motion.div
-                        layoutId="mediaType"
-                        className="absolute inset-0 bg-gradient-to-r from-[#82BC87] to-[#6da972] rounded-lg"
-                        transition={{ type: "spring", duration: 0.6 }}
-                      />
-                    )}
-                    <span className="relative z-10">{label}</span>
-                  </button>
-                ))}
-              </div>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            {/* Media Type Filter */}
+            <div className="inline-flex p-1 bg-gray-800/50 backdrop-blur-sm rounded-xl">
+              {[
+                { value: 'all', label: 'All' },
+                { value: 'movie', label: 'Movies' },
+                { value: 'tv', label: 'TV Shows' }
+              ].map(({ value, label }) => (
+                <button
+                  key={value}
+                  onClick={() => setMediaType(value)}
+                  className={`relative px-6 py-2 rounded-lg font-medium transition-all duration-500 ${
+                    mediaType === value 
+                      ? 'text-white' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  {mediaType === value && (
+                    <motion.div
+                      layoutId="mediaType"
+                      className="absolute inset-0 bg-gradient-to-r from-[#E4D981] to-[#d4c86e] rounded-lg"
+                      transition={{ type: "spring", duration: 0.6 }}
+                    />
+                  )}
+                  <span className="relative z-10">{label}</span>
+                </button>
+              ))}
             </div>
 
-            {/* Enhanced Action Buttons */}
+            {/* Action Buttons */}
             <div className="flex items-center gap-3">
-              <FilterPanel mediaType={mediaType} />
               <button
                 onClick={toggleSelectionMode}
                 className="px-4 py-2 rounded-lg bg-gray-800/50 backdrop-blur-sm border border-white/5 text-white hover:bg-gray-700/50 transition-all duration-300 flex items-center gap-2"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                  <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
-                </svg>
-                {selectionMode ? 'Cancel' : 'Select'}
+                {selectionMode ? (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                    <span>Cancel Selection</span>
+                  </>
+                ) : (
+                  <>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                    <span>Select Items</span>
+                  </>
+                )}
               </button>
 
-              <button
-                onClick={clearSelectedItems}
-                className="px-4 py-2 rounded-lg bg-amber-600 text-white hover:bg-amber-500 transition duration-300"
-              >
-                Clear Selected
-              </button>
-            
+              {selectionMode && (
+                <button
+                  onClick={clearSelectedItems}
+                  className="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white transition-colors duration-300 flex items-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <span>Remove Selected</span>
+                </button>
+              )}
+
               <button
                 onClick={clearWatchlist}
-                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition duration-300"
+                className="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white transition-colors duration-300 flex items-center gap-2"
               >
-                Clear Watchlist
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>Clear All</span>
               </button>
             </div>
           </div>
+        </motion.div>
 
+        {/* Content Display */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl"
+        >
           {transformedData.length === 0 ? (
             <motion.div 
               initial={{ opacity: 0 }}
@@ -264,19 +301,13 @@ const WatchlistPage = () => {
               </a>
             </motion.div>
           ) : (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              <MediaGrid 
-                items={transformedData}
-                selectionMode={selectionMode}
-                onSelectItem={toggleSelectItem}
-                onRemove={handleRemoveItem}
-                selectedItems={selectedItems}
-              />
-            </motion.div>
+            <MediaGrid 
+              items={transformedData}
+              selectionMode={selectionMode}
+              onSelectItem={toggleSelectItem}
+              onRemove={handleRemoveItem}
+              selectedItems={selectedItems}
+            />
           )}
         </motion.div>
       </div>
