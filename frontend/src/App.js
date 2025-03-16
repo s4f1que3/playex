@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import PremiumLoader from './components/common/PremiumLoader';  // Add this import
 
 // Layouts
 import MainLayout from './Layouts/MainLayout';
@@ -14,7 +15,6 @@ import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
 import CookiesPolicyPage from './components/common/legal/CookiePolicyPage';
 import CookieConsent from './components/common/legal/CookiesConsent';
 import SystemAnnouncement from './components/common/SystemAnnouncement';
-import LoadingScreen from './components/common/LoadingScreen';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -63,12 +63,14 @@ function App() {
     } else {
       // Mark that the site has loaded once in this session
       sessionStorage.setItem('hasLoaded', 'true');
+      // Add a small delay to show the loader animation
+      setTimeout(() => setLoading(false), 2000);
     }
   }, []);
 
   return (
     <div className="min-h-screen bg-[#161616] text-white overflow-x-hidden">
-      {loading && <LoadingScreen finishLoading={finishLoading} />}
+      {loading && <PremiumLoader overlay={true} text="Welcome to Playex" size="large" />}
       
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
