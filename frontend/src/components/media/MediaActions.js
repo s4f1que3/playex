@@ -235,11 +235,12 @@ const MediaActions = ({
             )}
           </button>
 
+          {/* Videos Button */}
           {showVideosButton && (
             <VideosButton 
               mediaType={mediaType} 
-              mediaId={media.id} 
-              className="flex items-center gap-2 px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-all duration-300"
+              mediaId={media.id}
+              className={`flex-grow md:flex-grow-0 bg-gray-700 text-white hover:bg-gray-600 hover:translate-y-[-2px] hover:shadow-[0_4px_12px_rgba(55,65,81,0.35)] font-medium py-2 px-4 rounded transition-all duration-300 ease-out transform flex items-center justify-center`}
             />
           )}
         </div>

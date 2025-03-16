@@ -110,14 +110,8 @@ const MediaDetailsPage = ({ mediaType }) => {
             isInFavorites={userActions.isInFavorites}
             onActionComplete={handleActionComplete}
             activeSeason={activeSeason}
+            showVideosButton={mediaType === 'movie'} // Add this prop
           />
-          {mediaType === 'movie' && (
-            <VideosButton 
-              mediaType={mediaType} 
-              mediaId={id}
-              className="px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white transition-all duration-300"
-            />
-          )}
         </div>
 
         {mediaType === 'tv' && mediaData.seasons && (
