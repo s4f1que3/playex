@@ -1,31 +1,55 @@
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-export const useFilterParams = () => {
+const useFilterParams = (initialFilters = {}) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState(() => {
+    // Initialize filters from URL params
+    const params = Object.fromEntries(searchParams.entries());
+    return {
+      ...initialFilters,
+      ...params,
+      with_genres: params.with_genres ? params.with_genres.split(',').map(Number) : initialFilters.with_genres || [],
+      primary_release_year: params.primary_release_year || initialFilters.primary_release_year || '',
+      sort_by: params.sort_by || initialFilters.sort_by || 'popularity.desc'
+    };
+  });
 
-  const filters = {
-    sort_by: searchParams.get('sort_by') || 'popularity.desc',
-    primary_release_year: searchParams.get('primary_release_year') || '',
-    with_genres: searchParams.get('with_genres') 
-      ? searchParams.get('with_genres').split(',').map(Number) 
-      : []
-  };
-
-  const updateFilters = (newFilters) => {
-    const updatedParams = new URLSearchParams(searchParams);
-    
-    Object.entries(newFilters).forEach(([key, value]) => {
-      if (value === '' || value === null || (Array.isArray(value) && value.length === 0)) {
-        updatedParams.delete(key);
-      } else if (Array.isArray(value)) {
-        updatedParams.set(key, value.join(','));
-      } else {
-        updatedParams.set(key, value);
+  // Update URL when filters change
+  useEffect(() => {
+    const newParams = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        if (Array.isArray(value)) {
+          if (value.length > 0) {
+            newParams.set(key, value.join(','));
+          }
+        } else {
+          newParams.set(key, value);
+        }
       }
     });
+    setSearchParams(newParams);
+  }, [filters, setSearchParams]);
 
-    setSearchParams(updatedParams);
+  // Update filters when URL params change
+  useEffect(() => {
+    const params = Object.fromEntries(searchParams.entries());
+    setFilters(current => ({
+      ...current,
+      ...params,
+      with_genres: params.with_genres ? params.with_genres.split(',').map(Number) : current.with_genres,
+      primary_release_year: params.primary_release_year || current.primary_release_year,
+      sort_by: params.sort_by || current.sort_by
+    }));
+  }, [searchParams]);
+
+  const updateFilter = (key, value) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
   };
 
-  return { filters, updateFilters };
+  return [filters, updateFilter];
 };
+
+// Change to named export
+export { useFilterParams };

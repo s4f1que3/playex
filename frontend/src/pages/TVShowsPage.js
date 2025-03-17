@@ -1,6 +1,6 @@
 // File: frontend/src/pages/TVShowsPage.js
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { tmdbApi } from '../utils/api';
@@ -12,81 +12,54 @@ import FilterPanel from '../components/common/FilterPanel';
 const TVShowsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  
+  // Parse query parameters from URL
   const queryParams = new URLSearchParams(location.search);
-  
-  // Get filter values from URL query params
-  const initialPage = parseInt(queryParams.get('page')) || 1;
-  const initialFilters = {
-    sort_by: queryParams.get('sort_by') || 'popularity.desc',
-    with_genres: queryParams.get('with_genres') ? queryParams.get('with_genres').split(',').map(Number) : [],
-    first_air_date_year: queryParams.get('first_air_date_year') || ''
-  };
-  
-  const [page, setPage] = useState(initialPage);
-  const [filters, setFilters] = useState(initialFilters);
-  
-  // Update URL when filters or page changes
-  useEffect(() => {
-    const params = new URLSearchParams();
-    
-    if (page > 1) {
-      params.set('page', page.toString());
-    }
-    
-    if (filters.sort_by && filters.sort_by !== 'popularity.desc') {
-      params.set('sort_by', filters.sort_by);
-    }
-    
-    if (filters.with_genres && filters.with_genres.length > 0) {
-      params.set('with_genres', filters.with_genres.toString());
-    }
-    
-    if (filters.first_air_date_year) {
-      params.set('first_air_date_year', filters.first_air_date_year);
-    }
-    
-    const queryString = params.toString();
-    navigate(`/tv-shows${queryString ? `?${queryString}` : ''}`, { replace: true });
-  }, [page, filters, navigate]);
-  
-  // Fetch TV shows with current filters
-const { data, isLoading, error } = useQuery({
-  queryKey: ['discoverTVShows', page, filters],
-  queryFn: () => {
-    // Convert filters object to API params
-    const params = {
-      page,
-      sort_by: filters.sort_by || 'popularity.desc',
-      'vote_count.gte': 100,
-      include_null_first_air_dates: false,
-      with_genres: filters.with_genres?.length > 0 ? filters.with_genres.join(',') : undefined,
-      first_air_date_year: filters.first_air_date_year || undefined
-    };
+  const with_genres = queryParams.get('with_genres') ? queryParams.get('with_genres').split(',').map(Number) : [];
+  const primary_release_year = queryParams.get('primary_release_year') || '';
+  const sort_by = queryParams.get('sort_by') || 'popularity.desc';
+  const currentPage = parseInt(queryParams.get('page')) || 1;
 
-    // For vote average sorting, ensure we have a minimum threshold
-    if (filters.sort_by === 'vote_average.desc') {
-      params['vote_count.gte'] = 200;
+  // Use URL parameters directly in the query
+  const { data: tvShowsData, isLoading, error, isFetchingNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ['tvShows', { with_genres, primary_release_year, sort_by, currentPage }],
+    queryFn: ({ pageParam = currentPage }) => {
+      return tmdbApi.get('/discover/tv', {  // Changed from tv/top_rated to discover/tv
+        params: {
+          page: pageParam,
+          with_genres: with_genres.length > 0 ? with_genres.join(',') : undefined,
+          first_air_date_year: primary_release_year || undefined,  // Changed to first_air_date_year for TV shows
+          sort_by: sort_by || 'popularity.desc',
+          language: 'en-US'
+        }
+      }).then(res => res.data);
+    },
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.page + 1;
+      return nextPage <= lastPage.total_pages ? nextPage : undefined;
+    },
+    staleTime: 300000
+  });
+
+  // Update filters when URL changes
+  useEffect(() => {
+    if (location.search) {
+      queryClient.invalidateQueries(['tvShows']);
     }
-    
-    return tmdbApi.get('/discover/tv', { params }).then(res => res.data);
-  },
-  keepPreviousData: false, // Changed to false to ensure fresh data on filter change
-  staleTime: 300000
-});
-  
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-    setPage(1); // Reset to first page when filters change
-  };
-  
-  const handlePageChange = (newPage) => {
-    setPage(newPage);
-    window.scrollTo(0, 0); // Scroll to top when page changes
-  };
+  }, [location.search]);
 
   // Add scroll to top functionality
   const handleScrollTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Add missing handlePageChange function
+  const handlePageChange = (newPage) => {
+    const params = new URLSearchParams(location.search);
+    params.set('page', newPage.toString());
+    navigate(`/tv-shows?${params.toString()}`, { replace: true });
+    window.scrollTo(0, 0);
   };
 
   return (
@@ -158,13 +131,13 @@ const { data, isLoading, error } = useQuery({
             layout
             className="flex flex-wrap items-center gap-4"
           >
-            {data && (
+            {tvShowsData && (
               <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-black/20 mb-6">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
                 </svg>
                 <span className="text-gray-400">
-                  Found <span className="text-[#82BC87] font-medium">{data.total_results.toLocaleString()}</span> TV shows
+                  Found <span className="text-[#82BC87] font-medium">{tvShowsData.pages[0].total_results.toLocaleString()}</span> TV shows
                 </span>
               </div>
             )}
@@ -176,7 +149,7 @@ const { data, isLoading, error } = useQuery({
             className="mt-8"
           >
             <MediaGrid 
-              items={data?.results?.map(item => ({ ...item, media_type: 'tv' }))}
+              items={tvShowsData?.pages.flatMap(page => page.results).map(item => ({ ...item, media_type: 'tv' }))}
               loading={isLoading} 
               error={error}
               showType={false}
@@ -184,7 +157,7 @@ const { data, isLoading, error } = useQuery({
           </motion.div>
 
           {/* Enhanced Pagination */}
-          {data && data.total_pages > 1 && (
+          {tvShowsData && tvShowsData.pages[0].total_pages > 1 && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -192,9 +165,9 @@ const { data, isLoading, error } = useQuery({
               className="mt-12 mb-8"
             >
               <Pagination
-                currentPage={page}
-                totalPages={data.total_pages > 500 ? 500 : data.total_pages}
-                onPageChange={handlePageChange}
+                currentPage={currentPage}
+                totalPages={tvShowsData.pages[0].total_pages > 500 ? 500 : tvShowsData.pages[0].total_pages}
+                onPageChange={handlePageChange}  // Replace fetchNextPage with handlePageChange
               />
             </motion.div>
           )}

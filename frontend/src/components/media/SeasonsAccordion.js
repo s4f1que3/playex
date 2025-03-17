@@ -96,7 +96,7 @@ const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
         className="relative"
       >
         <div className="absolute inset-y-0 right-0 w-24 pointer-events-none bg-gradient-to-l from-[#161616] to-transparent z-10" />
-        <div className="flex overflow-x-auto scrollbar-hide pb-2 mb-6 -mx-2 px-2">
+        <div className="flex overflow-x-auto pb-2 mb-6 -mx-2 px-2">
           <div className="flex gap-2">
             {seasons
               .filter(season => season.season_number > 0)

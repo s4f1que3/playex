@@ -209,7 +209,7 @@ const Breadcrumbs = () => {
       </div>
 
       <div className="container relative mx-auto px-4 py-3">
-        <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide">
+        <div className="flex items-center gap-2 overflow-x-auto">
           <BreadcrumbItem to="/">
             <motion.div
               whileHover={{ scale: 1.1 }}

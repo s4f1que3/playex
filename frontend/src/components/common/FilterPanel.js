@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { useFilterParams } from '../../hooks/useFilterParams';
 import { tmdbApi, movieGenres, tvGenres } from '../../utils/api';
 
 const FilterButton = ({ isOpen, onClick, filterCount }) => (
@@ -38,9 +37,105 @@ const FilterButton = ({ isOpen, onClick, filterCount }) => (
 const FilterPanel = ({ mediaType }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [yearInput, setYearInput] = useState('');
-  const { filters, updateFilters } = useFilterParams();
+  
+  // Create a local state for managing filters before applying them
+  const [localFilters, setLocalFilters] = useState({
+    with_genres: [],
+    primary_release_year: '',
+    sort_by: 'popularity.desc'
+  });
+
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Initialize local filters from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    setLocalFilters({
+      with_genres: params.get('with_genres') ? params.get('with_genres').split(',').map(Number) : [],
+      primary_release_year: params.get('primary_release_year') || '',
+      sort_by: params.get('sort_by') || 'popularity.desc'
+    });
+  }, [location.search]);
+
+  // Simple toggle for genres
+  const toggleGenre = (genreId) => {
+    setLocalFilters(prev => {
+      const currentGenres = [...(prev.with_genres || [])];
+      const index = currentGenres.indexOf(genreId);
+      
+      if (index > -1) {
+        currentGenres.splice(index, 1);
+      } else {
+        currentGenres.push(genreId);
+      }
+      
+      return {
+        ...prev,
+        with_genres: currentGenres
+      };
+    });
+  };
+
+  // Handle year input
+  const handleYearSubmit = (e) => {
+    e.preventDefault();
+    if (yearInput && /^\d{4}$/.test(yearInput)) {
+      const year = parseInt(yearInput);
+      const currentYear = new Date().getFullYear();
+      if (year >= 1900 && year <= currentYear) {
+        setLocalFilters(prev => ({
+          ...prev,
+          primary_release_year: yearInput
+        }));
+        setYearInput('');
+      }
+    }
+  };
+
+  // Remove year filter
+  const removeYear = () => {
+    setLocalFilters(prev => ({
+      ...prev,
+      primary_release_year: ''
+    }));
+  };
+
+  // Apply filters to URL
+  const applyFilters = () => {
+    const params = new URLSearchParams();
+
+    if (localFilters.sort_by && localFilters.sort_by !== 'popularity.desc') {
+      params.set('sort_by', localFilters.sort_by);
+    }
+
+    if (localFilters.with_genres?.length > 0) {
+      params.set('with_genres', localFilters.with_genres.join(','));
+    }
+
+    if (localFilters.primary_release_year) {
+      params.set('primary_release_year', localFilters.primary_release_year);
+    }
+
+    navigate(`${location.pathname}?${params.toString()}`);
+    setIsOpen(false);
+  };
+
+  // Reset all filters
+  const handleReset = () => {
+    setLocalFilters({
+      with_genres: [],
+      primary_release_year: '',
+      sort_by: 'popularity.desc'
+    });
+    navigate(location.pathname);
+    setIsOpen(false);
+  };
+
+  // Count active filters
+  const filterCount = Object.values(localFilters).filter(value => 
+    Array.isArray(value) ? value.length > 0 : Boolean(value)
+  ).length;
 
   // Fetch genres
   const { data: genresData } = useQuery({
@@ -50,38 +145,6 @@ const FilterPanel = ({ mediaType }) => {
     enabled: mediaType !== 'all',
     staleTime: Infinity
   });
-
-  // Handle year input
-  const handleYearSubmit = (e) => {
-    e.preventDefault();
-    if (yearInput && /^\d{4}$/.test(yearInput)) {
-      const year = parseInt(yearInput);
-      const currentYear = new Date().getFullYear();
-      if (year >= 1900 && year <= currentYear) {
-        updateFilters({ primary_release_year: yearInput });
-        setYearInput('');
-      }
-    }
-  };
-
-  const handleYearInputChange = (e) => {
-    const value = e.target.value.replace(/\D/g, '').slice(0, 4);
-    setYearInput(value);
-  };
-
-  // Toggle genre selection
-  const toggleGenre = (genreId) => {
-    const currentGenres = filters.with_genres || [];
-    const newGenres = currentGenres.includes(genreId)
-      ? currentGenres.filter(id => id !== genreId)
-      : [...currentGenres, genreId];
-    updateFilters({ with_genres: newGenres });
-  };
-
-  // Calculate active filter count
-  const filterCount = Object.values(filters).filter(value => 
-    Array.isArray(value) ? value.length > 0 : Boolean(value)
-  ).length;
 
   const sortOptions = [
     { value: 'popularity.desc', label: 'Most Popular' },
@@ -101,6 +164,11 @@ const FilterPanel = ({ mediaType }) => {
     }
     return [];
   }, [mediaType]);
+
+  // Helper function to check if a genre is selected
+  const isGenreSelected = (genreId) => {
+    return localFilters.with_genres?.includes(genreId);
+  };
 
   return (
     <div className="relative z-[9999]">
@@ -139,21 +207,42 @@ const FilterPanel = ({ mediaType }) => {
               <div className="p-6 space-y-6">
                 {/* Sort By */}
                 <div className="space-y-3">
-                  <label className="text-white font-medium">Sort By</label>
+                  <label className="text-white font-medium flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3z" />
+                    </svg>
+                    Sort By
+                  </label>
                   <div className="grid grid-cols-2 gap-2">
                     {sortOptions.map(option => (
                       <motion.button
                         key={option.value}
-                        onClick={() => updateFilters({ sort_by: option.value })}
-                        className={`px-4 py-2 rounded-xl text-sm transition-all duration-300
-                          ${filters.sort_by === option.value
-                            ? 'bg-[#82BC87] text-white'
+                        onClick={() => setLocalFilters(prev => ({ ...prev, sort_by: option.value }))}
+                        className={`px-4 py-2.5 rounded-xl text-sm transition-all duration-300 relative group overflow-hidden
+                          ${localFilters.sort_by === option.value
+                            ? 'bg-[#82BC87] text-white shadow-lg shadow-[#82BC87]/20'
                             : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                           }`}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        {option.label}
+                        <div className={`absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 transition-opacity duration-300 ${
+                          localFilters.sort_by === option.value ? 'opacity-100' : 'group-hover:opacity-100'
+                        }`} />
+                        <span className="relative flex items-center justify-center gap-2">
+                          {option.label}
+                          {localFilters.sort_by === option.value && (
+                            <motion.svg
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              className="w-4 h-4"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </motion.svg>
+                          )}
+                        </span>
                       </motion.button>
                     ))}
                   </div>
@@ -166,20 +255,20 @@ const FilterPanel = ({ mediaType }) => {
                     <input
                       type="text"
                       value={yearInput}
-                      onChange={handleYearInputChange}
+                      onChange={(e) => setYearInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
                       placeholder="Search year... (e.g., 2024)"
                       className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 
                                text-white outline-none focus:border-[#82BC87] transition-all duration-300
                                placeholder-gray-500"
                     />
-                    {filters.primary_release_year && (
+                    {localFilters.primary_release_year && (
                       <div className="mt-2 flex items-center gap-2">
                         <span className="px-3 py-1 rounded-lg bg-[#82BC87]/20 text-[#82BC87] text-sm">
-                          {filters.primary_release_year}
+                          {localFilters.primary_release_year}
                         </span>
                         <button
                           type="button"
-                          onClick={() => updateFilters({ primary_release_year: '' })}
+                          onClick={removeYear}
                           className="text-gray-400 hover:text-white"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -201,7 +290,7 @@ const FilterPanel = ({ mediaType }) => {
                           key={genre.id}
                           onClick={() => toggleGenre(genre.id)}
                           className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-300 
-                            ${filters.with_genres?.includes(genre.id)
+                            ${isGenreSelected(genre.id)
                               ? 'bg-[#82BC87] text-white shadow-lg shadow-[#82BC87]/20'
                               : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                             }`}
@@ -210,7 +299,7 @@ const FilterPanel = ({ mediaType }) => {
                         >
                           <span className="flex items-center gap-2">
                             {genre.name}
-                            {filters.with_genres?.includes(genre.id) && (
+                            {isGenreSelected(genre.id) && (
                               <motion.svg
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
@@ -232,15 +321,7 @@ const FilterPanel = ({ mediaType }) => {
               {/* Action Buttons */}
               <div className="p-6 bg-black/20 border-t border-white/5 flex justify-end gap-3">
                 <motion.button
-                  onClick={() => {
-                    // Reset filters logic
-                    const baseParams = new URLSearchParams(location.search);
-                    ['sort_by', 'primary_release_year', 'with_genres'].forEach(param => 
-                      baseParams.delete(param)
-                    );
-                    navigate(`${location.pathname}?${baseParams.toString()}`);
-                    setIsOpen(false);
-                  }}
+                  onClick={handleReset}
                   className="px-6 py-2 rounded-xl bg-white/5 text-white hover:bg-white/10 
                            transition-all duration-300"
                   whileHover={{ scale: 1.02 }}
@@ -249,7 +330,7 @@ const FilterPanel = ({ mediaType }) => {
                   Reset
                 </motion.button>
                 <motion.button
-                  onClick={() => setIsOpen(false)}
+                  onClick={applyFilters}
                   className="px-6 py-2 rounded-xl bg-[#82BC87] text-white 
                            hover:bg-[#6da972] transition-all duration-300"
                   whileHover={{ scale: 1.02 }}

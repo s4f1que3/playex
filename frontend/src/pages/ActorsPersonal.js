@@ -1,14 +1,15 @@
 // File: frontend/src/pages/ActorsPersonal.js
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
 import Spinner from '../components/common/Spinner';
 import MediaCarousel from '../components/media/MediaCarousel';
 
 const ActorsPersonal = () => {
   const { id } = useParams();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Fetch actor details
   const { data: actor, isLoading: actorLoading, error: actorError } = useQuery({
@@ -55,6 +56,19 @@ const ActorsPersonal = () => {
   const tvCredits = actor.combined_credits?.cast
     ?.filter(credit => credit.media_type === 'tv')
     ?.sort((a, b) => b.popularity - a.popularity) || [];
+
+  // Helper function to determine if text needs expansion
+  const shouldShowExpand = (text) => {
+    const wordCount = text?.split(/\s+/).length || 0;
+    return wordCount > 100; // Show expand button if more than 100 words
+  };
+
+  // Function to get truncated text
+  const getTruncatedText = (text) => {
+    const words = text?.split(/\s+/) || [];
+    if (words.length <= 100) return text;
+    return words.slice(0, 100).join(' ') + '...';
+  };
 
   return (
     <div className="-mx-4 -mt-6">
@@ -202,10 +216,35 @@ const ActorsPersonal = () => {
               </svg>
               Biography
             </h2>
-            <div className="prose prose-lg prose-invert max-w-none">
-              {actor.biography.split('\n\n').map((paragraph, index) => (
-                <p key={index} className="text-gray-300 leading-relaxed">{paragraph}</p>
-              ))}
+            <div className="relative">
+              <motion.div
+                initial={false}
+                animate={{ height: isExpanded ? "auto" : "auto" }}
+                className="text-gray-300 leading-relaxed space-y-4"
+              >
+                {isExpanded ? actor.biography : getTruncatedText(actor.biography)}
+              </motion.div>
+
+              {shouldShowExpand(actor.biography) && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="mt-4 text-[#82BC87] hover:text-[#6da972] transition-colors duration-300 flex items-center gap-2 group"
+                >
+                  <span>{isExpanded ? 'Show Less' : 'Show More'}</span>
+                  <motion.svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    animate={{ rotate: isExpanded ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </motion.svg>
+                </motion.button>
+              )}
             </div>
           </motion.div>
         )}

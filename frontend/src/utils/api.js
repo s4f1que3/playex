@@ -202,8 +202,9 @@ export const authApi = {
 // TMDB API client
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
-  params: {
-    api_key: '879a60fbe7c4e5877279cae559d9cf5c'
+  headers: {
+    'accept': 'application/json',
+    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NzlhNjBmYmU3YzRlNTg3NzI3OWNhZTU1OWQ5Y2Y1YyIsIm5iZiI6MTczODQ3NTAzNS4xOTcsInN1YiI6IjY3OWYwNjFiYWM1YTc5NTFiOWNiNWNhYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.w0q9fpYLs93YSUdkNENpaR3kWjfk27kFhQj6ypEkrzE'
   }
 });
 
@@ -250,4 +251,48 @@ export const tmdbHelpers = {
     
     return tags;
   }
+};
+
+const getFanFavorites = async () => {
+  try {
+    // First fetch to get total pages
+    const firstResponse = await tmdbApi.get('/account/679f061bac5a7951b9cb5caa/watchlist/tv', {
+      params: {
+        language: 'en-US',
+        page: 1,
+        sort_by: 'created_at.asc'
+      }
+    });
+
+    const totalPages = firstResponse.data.total_pages;
+    let allResults = [...firstResponse.data.results];
+
+    // Fetch remaining pages if any
+    if (totalPages > 1) {
+      const remainingPages = Array.from({ length: totalPages - 1 }, (_, i) => i + 2);
+      const pagePromises = remainingPages.map(page =>
+        tmdbApi.get('/account/679f061bac5a7951b9cb5caa/watchlist/tv', {
+          params: {
+            language: 'en-US',
+            page: page,
+            sort_by: 'created_at.asc'
+          }
+        })
+      );
+
+      const responses = await Promise.all(pagePromises);
+      const additionalResults = responses.flatMap(response => response.data.results);
+      allResults = [...allResults, ...additionalResults];
+    }
+
+    return allResults;
+  } catch (error) {
+    console.error('Error fetching fan favorites:', error);
+    return [];
+  }
+};
+
+// Add to exports
+export {
+  getFanFavorites
 };

@@ -87,7 +87,7 @@ const MediaCarousel = ({ items, loading, error, showType = false }) => {
       <div
         ref={containerRef}
         onScroll={checkScroll}
-        className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+        className="flex gap-4 overflow-x-auto scroll-smooth pb-4"
       >
         {items?.map((item, index) => (
           <motion.div

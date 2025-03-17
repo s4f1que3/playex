@@ -33,6 +33,7 @@ import ActorCreditsPage from './pages/ActorCreditsPage';
 import RecommendedContentPage from './pages/RecommendedContentPage';
 import SimilarContentPage from './pages/SimilarContentPage';
 import EpisodesPage from './pages/EpisodesPage';
+import FanFavoritesPage from './pages/FanFavoritesPage';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -98,6 +99,7 @@ function App() {
                   <Route path=":mediaType/:id/similar" element={<SimilarContentPage />} />
                   <Route path=":mediaType/:id/recommended" element={<RecommendedContentPage />} />
                   <Route path="/tv/:id/episodes/:season" element={<EpisodesPage />} />
+                  <Route path="/fan-favorites" element={<FanFavoritesPage />} /> {/* Move this inside MainLayout */}
                   
                   {/* Actor routes */}
                   <Route path="/actors" element={<ActorsPage />} />

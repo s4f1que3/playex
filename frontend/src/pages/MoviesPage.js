@@ -1,6 +1,6 @@
 // File: frontend/src/pages/MoviesPage.js
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { tmdbApi } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
@@ -12,75 +12,65 @@ import FilterPanel from '../components/common/FilterPanel';
 const MoviesPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  
+  // Parse query parameters from URL
   const queryParams = new URLSearchParams(location.search);
-  
-  // Get filter values from URL query params
-  const initialPage = parseInt(queryParams.get('page')) || 1;
-  const initialFilters = {
-    sort_by: queryParams.get('sort_by') || 'popularity.desc',
-    with_genres: queryParams.get('with_genres') ? queryParams.get('with_genres').split(',').map(Number) : [],
-    primary_release_year: queryParams.get('primary_release_year') || ''
-  };
-  
-  const [page, setPage] = useState(initialPage);
-  const [filters, setFilters] = useState(initialFilters);
-  
-  // Update URL when filters or page changes
+  const with_genres = queryParams.get('with_genres') ? queryParams.get('with_genres').split(',').map(Number) : [];
+  const primary_release_year = queryParams.get('primary_release_year') || '';
+  const sort_by = queryParams.get('sort_by') || 'popularity.desc';
+  const currentPage = parseInt(queryParams.get('page')) || 1;
+
+  // Use URL parameters directly in the query
+  const { data: moviesData, isLoading, error, isFetchingNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ['movies', { with_genres, primary_release_year, sort_by, currentPage }],
+    queryFn: ({ pageParam = currentPage }) => {
+      return tmdbApi.get('/discover/movie', {
+        params: {
+          page: pageParam,
+          with_genres: with_genres.join(','),
+          primary_release_year,
+          sort_by
+        }
+      }).then(res => res.data);
+    },
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.page + 1;
+      return nextPage <= lastPage.total_pages ? nextPage : undefined;
+    },
+    staleTime: 300000
+  });
+
+  // Update filters when URL changes
   useEffect(() => {
+    if (location.search) {
+      // Trigger a refetch when URL parameters change
+      queryClient.invalidateQueries(['movies']);
+    }
+  }, [location.search]);
+
+  const handleFilterChange = (newFilters) => {
     const params = new URLSearchParams();
     
-    if (page > 1) {
-      params.set('page', page.toString());
+    if (newFilters.sort_by && newFilters.sort_by !== 'popularity.desc') {
+      params.set('sort_by', newFilters.sort_by);
     }
     
-    if (filters.sort_by && filters.sort_by !== 'popularity.desc') {
-      params.set('sort_by', filters.sort_by);
+    if (newFilters.with_genres && newFilters.with_genres.length > 0) {
+      params.set('with_genres', newFilters.with_genres.toString());
     }
     
-    if (filters.with_genres && filters.with_genres.length > 0) {
-      params.set('with_genres', filters.with_genres.toString());
+    if (newFilters.primary_release_year) {
+      params.set('primary_release_year', newFilters.primary_release_year);
     }
     
-    if (filters.primary_release_year) {
-      params.set('primary_release_year', filters.primary_release_year);
-    }
-    
-    const queryString = params.toString();
-    navigate(`/movies${queryString ? `?${queryString}` : ''}`, { replace: true });
-  }, [page, filters, navigate]);
-  
-  // Fetch movies with current filters
-const { data, isLoading, error } = useQuery({
-  queryKey: ['discoverMovies', page, filters],
-  queryFn: () => {
-    // Convert filters object to API params
-    const params = {
-      page,
-      sort_by: filters.sort_by || 'popularity.desc',
-      'vote_count.gte': 100,
-      include_adult: false,
-      with_genres: filters.with_genres?.length > 0 ? filters.with_genres.join(',') : undefined,
-      primary_release_year: filters.primary_release_year || undefined
-    };
-
-    // For vote average sorting, ensure we have a minimum threshold
-    if (filters.sort_by === 'vote_average.desc') {
-      params['vote_count.gte'] = 200;
-    }
-    
-    return tmdbApi.get('/discover/movie', { params }).then(res => res.data);
-  },
-  keepPreviousData: false, // Changed to false to ensure fresh data on filter change
-  staleTime: 300000
-});
-  
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-    setPage(1); // Reset to first page when filters change
+    navigate(`/movies?${params.toString()}`, { replace: true });
   };
   
   const handlePageChange = (newPage) => {
-    setPage(newPage);
+    const params = new URLSearchParams(location.search);
+    params.set('page', newPage.toString());
+    navigate(`/movies?${params.toString()}`, { replace: true });
     window.scrollTo(0, 0); // Scroll to top when page changes
   };
 
@@ -156,7 +146,7 @@ const { data, isLoading, error } = useQuery({
           <MediaFilters 
             mediaType="movie" 
             onFilterChange={handleFilterChange}
-            initialFilters={filters}
+            initialFilters={{ with_genres, primary_release_year, sort_by }}
           />
           
           {/* Results Counter */}
@@ -164,13 +154,13 @@ const { data, isLoading, error } = useQuery({
             layout
             className="mt-6 flex flex-wrap items-center gap-4 border-t border-white/5 pt-6"
           >
-            {data && (
+            {moviesData && (
               <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-black/20">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
                 </svg>
                 <span className="text-gray-400">
-                  Found <span className="text-[#82BC87] font-medium">{data.total_results.toLocaleString()}</span> movies
+                  Found <span className="text-[#82BC87] font-medium">{moviesData.pages[0].total_results.toLocaleString()}</span> movies
                 </span>
               </div>
             )}
@@ -188,7 +178,7 @@ const { data, isLoading, error } = useQuery({
             className="mt-8"
           >
             <MediaGrid 
-              items={data?.results?.map(item => ({ ...item, media_type: 'movie' }))}
+              items={moviesData?.pages.flatMap(page => page.results).map(item => ({ ...item, media_type: 'movie' }))}
               loading={isLoading} 
               error={error}
               showType={false}
@@ -196,7 +186,7 @@ const { data, isLoading, error } = useQuery({
           </motion.div>
 
           {/* Enhanced Pagination */}
-          {data && data.total_pages > 1 && (
+          {moviesData && moviesData.pages[0].total_pages > 1 && (
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -204,8 +194,8 @@ const { data, isLoading, error } = useQuery({
               className="mt-12 mb-8"
             >
               <Pagination
-                currentPage={page}
-                totalPages={data.total_pages > 500 ? 500 : data.total_pages}
+                currentPage={currentPage}
+                totalPages={moviesData.pages[0].total_pages > 500 ? 500 : moviesData.pages[0].total_pages}
                 onPageChange={handlePageChange}
               />
             </motion.div>

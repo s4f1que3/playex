@@ -51,19 +51,6 @@ const MediaDetailsPage = ({ mediaType }) => {
     enabled: !!mediaData
   });
 
-  const { data: similarData, isLoading: isLoadingSimilar, isFetchingNextPage: isFetchingMoreSimilar, fetchNextPage: fetchNextSimilar } = useInfiniteQuery({
-    queryKey: ['mediaSimilar', mediaType, id],
-    queryFn: ({ pageParam = similarPage }) => 
-      tmdbApi.get(`/${mediaType}/${id}/similar`, {
-        params: { page: pageParam }
-      }).then(res => res.data),
-    getNextPageParam: (lastPage) => {
-      const nextPage = lastPage.page + 1;
-      return nextPage <= lastPage.total_pages ? nextPage : undefined;
-    },
-    enabled: !!mediaData,
-    staleTime: 300000
-  });
 
   const { data: recommendationsData, isLoading: isLoadingRecommendations, isFetchingNextPage: isFetchingMoreRecommendations, fetchNextPage: fetchNextRecommendations } = useInfiniteQuery({
     queryKey: ['mediaRecommendations', mediaType, id],
@@ -78,6 +65,21 @@ const MediaDetailsPage = ({ mediaType }) => {
     enabled: !!mediaData,
     staleTime: 300000
   });
+
+  const { data: similarData, isLoading: isLoadingSimilar, isFetchingNextPage: isFetchingMoreSimilar, fetchNextPage: fetchNextSimilar } = useInfiniteQuery({
+    queryKey: ['mediaSimilar', mediaType, id],
+    queryFn: ({ pageParam = similarPage }) => 
+      tmdbApi.get(`/${mediaType}/${id}/similar`, {
+        params: { page: pageParam }
+      }).then(res => res.data),
+    getNextPageParam: (lastPage) => {
+      const nextPage = lastPage.page + 1;
+      return nextPage <= lastPage.total_pages ? nextPage : undefined;
+    },
+    enabled: !!mediaData,
+    staleTime: 300000
+  });
+
 
   const handleActionComplete = (actionType, value) => {
     setUserActions(prev => ({
@@ -185,112 +187,8 @@ const MediaDetailsPage = ({ mediaType }) => {
           <CastList cast={creditsData.cast} />
         ) : null}
 
-        {/* Similar Content Section */}
-        {similarResults.length > 0 && (
-          <motion.div className="relative mt-12 pb-8">
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#E4D981]/20 rounded-full filter blur-[100px]" />
-              <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[120px]" />
-            </div>
 
-            <div className="container mx-auto px-4">
-              <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden">
-                <div className="p-6 border-b border-white/5">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#E4D981]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
-                      </svg>
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-white">Similar Content</h2>
-                      <p className="text-gray-400 text-sm">More titles like this</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-6">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                    <AnimatePresence mode="popLayout">
-                      {displaySimilar.map((item, index) => (
-                        <motion.div
-                          key={`${item.id}-${index}`}
-                          layout
-                          initial={{ opacity: 0, scale: 0.8 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          exit={{ opacity: 0, scale: 0.8 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <MediaCard media={{ ...item, media_type: mediaType }} />
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Button Group */}
-                  <div className="flex gap-3 mt-6">
-                    {/* Show Initial Load More Button or Hide Button */}
-                    {similarResults.length > initialItems && (
-                      <motion.button
-                        layout
-                        onClick={() => setExpandedSimilar(!expandedSimilar)}
-                        className="flex-1 px-4 py-3 rounded-xl bg-[#E4D981]/10 hover:bg-[#E4D981]/20 
-                                   text-[#E4D981] transition-all duration-300 flex items-center justify-center gap-2"
-                      >
-                        {expandedSimilar ? (
-                          <>
-                            <span>Show Less</span>
-                            <motion.svg 
-                              animate={{ rotate: 180 }}
-                              transition={{ duration: 0.3 }}
-                              xmlns="http://www.w3.org/2000/svg" 
-                              className="h-5 w-5" 
-                              viewBox="0 0 20 20" 
-                              fill="currentColor"
-                            >
-                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                            </motion.svg>
-                          </>
-                        ) : (
-                          <>
-                            <span>Show All {similarResults.length} Items</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                            </svg>
-                          </>
-                        )}
-                      </motion.button>
-                    )}
-
-                    {/* Load More Button - Only show when expanded and more pages available */}
-                    {expandedSimilar && similarData?.pages[0]?.total_pages > similarPage && (
-                      <motion.button
-                        layout
-                        onClick={handleLoadMoreSimilar}
-                        disabled={isFetchingMoreSimilar}
-                        className="flex-1 px-4 py-3 rounded-xl bg-[#E4D981]/10 hover:bg-[#E4D981]/20 
-                                   text-[#E4D981] transition-all duration-300 flex items-center justify-center gap-2"
-                      >
-                        {isFetchingMoreSimilar ? (
-                          <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                          <>
-                            <span>Load More</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                            </svg>
-                          </>
-                        )}
-                      </motion.button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Recommendations Section */}
+        {/* Similar Section */}
         {recommendedResults.length > 0 && (
           <motion.div className="relative mt-20 pb-8">
             <div className="absolute inset-0 pointer-events-none">
@@ -308,8 +206,8 @@ const MediaDetailsPage = ({ mediaType }) => {
                       </svg>
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-white">Recommended For You</h2>
-                      <p className="text-gray-400 text-sm">Based on your interests</p>
+                      <h2 className="text-2xl font-bold text-white">Similar Content</h2>
+                      <p className="text-gray-400 text-sm">More titles likes this</p>
                     </div>
                   </div>
                 </div>
@@ -377,6 +275,111 @@ const MediaDetailsPage = ({ mediaType }) => {
                                    text-[#82BC87] transition-all duration-300 flex items-center justify-center gap-2"
                       >
                         {isFetchingMoreRecommendations ? (
+                          <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <>
+                            <span>Load More</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </>
+                        )}
+                      </motion.button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* recommended Section */}
+        {similarResults.length > 0 && (
+          <motion.div className="relative mt-12 pb-8">
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#E4D981]/20 rounded-full filter blur-[100px]" />
+              <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[120px]" />
+            </div>
+
+            <div className="container mx-auto px-4">
+              <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden">
+                <div className="p-6 border-b border-white/5">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-[#E4D981]/10 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-white">You May Also Like</h2>
+                      <p className="text-gray-400 text-sm">Some popular titles</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <AnimatePresence mode="popLayout">
+                      {displaySimilar.map((item, index) => (
+                        <motion.div
+                          key={`${item.id}-${index}`}
+                          layout
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <MediaCard media={{ ...item, media_type: mediaType }} />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Button Group */}
+                  <div className="flex gap-3 mt-6">
+                    {/* Show Initial Load More Button or Hide Button */}
+                    {similarResults.length > initialItems && (
+                      <motion.button
+                        layout
+                        onClick={() => setExpandedSimilar(!expandedSimilar)}
+                        className="flex-1 px-4 py-3 rounded-xl bg-[#E4D981]/10 hover:bg-[#E4D981]/20 
+                                   text-[#E4D981] transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        {expandedSimilar ? (
+                          <>
+                            <span>Show Less</span>
+                            <motion.svg 
+                              animate={{ rotate: 180 }}
+                              transition={{ duration: 0.3 }}
+                              xmlns="http://www.w3.org/2000/svg" 
+                              className="h-5 w-5" 
+                              viewBox="0 0 20 20" 
+                              fill="currentColor"
+                            >
+                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </motion.svg>
+                          </>
+                        ) : (
+                          <>
+                            <span>Show All {similarResults.length} Items</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </>
+                        )}
+                      </motion.button>
+                    )}
+
+                    {/* Load More Button - Only show when expanded and more pages available */}
+                    {expandedSimilar && similarData?.pages[0]?.total_pages > similarPage && (
+                      <motion.button
+                        layout
+                        onClick={handleLoadMoreSimilar}
+                        disabled={isFetchingMoreSimilar}
+                        className="flex-1 px-4 py-3 rounded-xl bg-[#E4D981]/10 hover:bg-[#E4D981]/20 
+                                   text-[#E4D981] transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        {isFetchingMoreSimilar ? (
                           <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
                         ) : (
                           <>
