@@ -101,6 +101,10 @@ const Breadcrumbs = () => {
         return 'Recommended';
       case 'episodes':
         return 'Episodes';
+      case 'collections':
+        return 'Collections';
+      case 'collection':
+        return 'Collection';
       default:
         return pathname;
     }
