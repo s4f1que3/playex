@@ -114,10 +114,10 @@ const SystemAnnouncement = () => {
                           <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
                             <div className="flex-1">
                               <p className="text-white mb-2">
-                                🎬 <span className="font-medium">Welcome to the Early Access!</span>
+                                🎬 <span className="font-medium">Welcome to Playex!</span>
                               </p>
                               <p className="text-gray-300 text-sm leading-relaxed">
-                                We're thrilled to have you join us during our development phase. The official domain will be launching soon with even more exciting features and content.
+                                We're thrilled to have you join us. Feel free to share the link with your friends. The official domain will be here soon.
                               </p>
                             </div>
                             <div className="flex-shrink-0">
