@@ -117,7 +117,7 @@ const SystemAnnouncement = () => {
                                 🎬 <span className="font-medium">Welcome to Playex!</span>
                               </p>
                               <p className="text-gray-300 text-sm leading-relaxed">
-                                We're thrilled to have you join us. Feel free to share the link with your friends. The official domain will be here soon.
+                                We're thrilled to have you join us! Feel free to share the link with your friends; the official domain will be here soon.
                               </p>
                             </div>
                             <div className="flex-shrink-0">
