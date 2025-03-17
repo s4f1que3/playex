@@ -25,7 +25,7 @@ const BreadcrumbItem = ({ children, to, isLast }) => {
             {children}
             <div className="ml-2 transform transition-transform duration-300 group-hover:translate-x-1">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a 1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
               </svg>
             </div>
           </Link>
@@ -108,6 +108,32 @@ const Breadcrumbs = () => {
   
   // Generate proper routes for breadcrumb navigation
   const getProperRoute = (pathname, index, pathnames) => {
+    // Add debug console log
+    console.log('Debug:', {
+      pathname,
+      index,
+      pathnames,
+      condition: {
+        isPlayer: pathnames[0] === 'player',
+        isTv: pathnames[1] === 'tv',
+        isNumber: /^\d+$/.test(pathname),
+        isIndex4: index === 4,
+        fullPath: pathnames.join('/')
+      }
+    });
+
+    // Update the condition to correctly identify the season number
+    if (
+      pathnames[0] === 'player' && 
+      pathnames[1] === 'tv' && 
+      /^\d+$/.test(pathname) &&
+      index === 3  // Changed from 4 to 3 since season number is at index 3 in player/tv/[id]/[season]/[episode]
+    ) {
+      const showId = pathnames[2];
+      const seasonNumber = pathname;
+      return `/tv/${showId}/episodes/${seasonNumber}`;
+    }
+
     // Special handling for player routes
     if (pathname === 'player') {
       return '/'; // Redirect to home since we don't have a dedicated player page
@@ -129,6 +155,18 @@ const Breadcrumbs = () => {
          return `/tv/${pathname}`;
        }
     
+    // Update this specific section for season numbers in player paths
+    if (
+      pathnames[0] === 'player' && 
+      pathnames[1] === 'tv' && 
+      /^\d+$/.test(pathname) &&
+      index === 4  // This matches the season number position
+    ) {
+      const showId = pathnames[2];
+      const seasonNumber = pathname;
+      return `/tv/${showId}/episodes/${seasonNumber}`; // Ensure correct URL format
+    }
+
     // For movie/tv/actor as first segment, this is already correct
     if ((pathname === 'movie' || pathname === 'tv' || pathname === 'actor') && index === 0) {
       return `/${pathname}/${pathnames[1]}`;
