@@ -137,12 +137,8 @@ const MoviesPage = () => {
 
           {/* Content Section - Updated spacing */}
           <div className="container mx-auto px-4 -mt-20 relative z-30">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <div className="flex items-center gap-4">
-                {/* Empty div to maintain spacing */}
-              </div>
-
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="flex flex-wrap items-center justify-end gap-4 mb-6"> {/* Changed justify-between to justify-end */}
+              <div className="flex items-center gap-3">
                 <FilterPanel mediaType="movie" />
               </div>
             </div>
