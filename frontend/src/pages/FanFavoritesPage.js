@@ -132,7 +132,7 @@ const FanFavoritesPage = () => {
 
       {/* Content Section */}
       <div className="container mx-auto px-4 -mt-20 relative z-30">
-        <div className="flex flex-wrap items-center justify-end gap-4 mb-6"> {/* Changed justify-between to justify-end */}
+        <div className="flex flex-wrap items-center justify-end gap-4 mb-8 mt-12"> {/* Added mt-12 and increased mb-8 */}
           <div className="flex items-center gap-3">
             <FilterPanel mediaType="tv" />
           </div>
