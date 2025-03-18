@@ -40,10 +40,8 @@ const menuItems = {
 };
 
 const NavigationDropdown = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
-    <Menu as="div" className="relative md:hidden"> {/* Add md:hidden to only show on mobile */}
+    <Menu as="div" className="relative block md:hidden"> {/* Changed to block and hidden */}
       {({ open }) => (
         <div>
           <Menu.Button className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white hover:text-gray-200 focus:outline-none">
@@ -67,11 +65,10 @@ const NavigationDropdown = () => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="absolute right-0 mt-2 w-screen origin-top-right bg-gray-900/95 backdrop-blur-xl border-t border-white/10 shadow-xl focus:outline-none divide-y divide-white/10"
+                className="fixed left-0 right-0 top-[72px] mt-0 bg-gray-900/95 backdrop-blur-xl border-t border-white/10 shadow-xl focus:outline-none divide-y divide-white/10"
               >
                 {/* Quick Actions Section */}
-                {/* ...Copy sections from DropdownMenu.jsx... */}
-                <div className="px-4 py-2">
+                <div className="px-4 py-4 space-y-1">
                   <div className="px-3 py-2">
                     <p className="text-xs font-medium text-gray-400">Quick Actions</p>
                   </div>
@@ -95,7 +92,7 @@ const NavigationDropdown = () => {
                 </div>
 
                 {/* Featured Section */}
-                <div className="px-4 py-2 space-y-1">
+                <div className="px-4 py-4 space-y-1">
                   {menuItems.featured.map((item) => (
                     <Menu.Item key={item.name}>
                       {({ active }) => (
@@ -115,9 +112,8 @@ const NavigationDropdown = () => {
                   ))}
                 </div>
 
-                {/* Rest of the sections */}
-                {/* ... Main Navigation Section ... */}
-                <div className="px-4 py-2">
+                {/* Main Navigation */}
+                <div className="px-4 py-4 space-y-1">
                   <div className="px-3 py-2">
                     <p className="text-xs font-medium text-gray-400">Navigation</p>
                   </div>
@@ -143,7 +139,7 @@ const NavigationDropdown = () => {
                 </div>
 
                 {/* Personal Section */}
-                <div className="px-4 py-2">
+                <div className="px-4 py-4 space-y-1">
                   <div className="px-3 py-2">
                     <p className="text-xs font-medium text-gray-400">Personal</p>
                   </div>
