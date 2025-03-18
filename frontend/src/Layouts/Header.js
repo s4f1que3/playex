@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import SearchBar from '../components/common/SearchBar';
 import DropdownMenu from '../components/navigation/DropdownMenu';
+import NavigationDropdown from '../components/navigation/NavigationDropdown';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
   const desktopMenuRef = useRef(null);
   const timeoutRef = useRef(null);
@@ -50,7 +50,6 @@ const Header = () => {
   }, []);
 
   const handleNavLinkClick = () => {
-    setIsMobileMenuOpen(false);
     setIsDesktopMenuOpen(false);
   };
 
@@ -113,59 +112,12 @@ const Header = () => {
             <DropdownMenu key={Date.now()} /> {/* Force remount with unique key */}
           </div>
 
-          {/* Mobile Menu Button with Animation */}
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            className="md:hidden text-white p-2"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            <motion.div
-              animate={isMobileMenuOpen ? "open" : "closed"}
-              variants={{
-                open: { rotate: 180 },
-                closed: { rotate: 0 }
-              }}
-            >
-              {isMobileMenuOpen ? (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </motion.div>
-          </motion.button>
+          {/* Mobile Navigation - Replace old mobile menu with NavigationDropdown */}
+          <div className="md:hidden flex items-center gap-3">
+            <SearchBar isMobile />
+            <NavigationDropdown />
+          </div>
         </nav>
-
-        {/* Enhanced Mobile Menu */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-white/10 bg-[#161616]/95 backdrop-blur-md"
-            >
-              <SearchBar isMobile />
-              <nav className="flex flex-col space-y-4 mt-4">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`text-white hover:text-[#E4D981] transition duration-300 ${
-                      location.pathname === item.path ? 'text-[#E4D981]' : ''
-                    }`}
-                    onClick={handleNavLinkClick}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </motion.header>
   );

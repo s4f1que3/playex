@@ -41,10 +41,10 @@ const menuItems = {
 
 const NavigationDropdown = () => {
   return (
-    <Menu as="div" className="relative block md:hidden"> {/* Changed to block and hidden */}
+    <Menu as="div" className="relative block md:hidden"> {/* Shows on mobile, hides on desktop */}
       {({ open }) => (
         <div>
-          <Menu.Button className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white hover:text-gray-200 focus:outline-none">
+          <Menu.Button className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium text-white transition-colors duration-200">
             <span>Menu</span>
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
@@ -65,7 +65,7 @@ const NavigationDropdown = () => {
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
-                className="fixed left-0 right-0 top-[72px] mt-0 bg-gray-900/95 backdrop-blur-xl border-t border-white/10 shadow-xl focus:outline-none divide-y divide-white/10"
+                className="fixed left-0 right-0 top-[72px] mt-0 bg-gray-900/95 backdrop-blur-xl border-t border-white/10 shadow-xl focus:outline-none divide-y divide-white/10 max-h-[calc(100vh-72px)] overflow-y-auto"
               >
                 {/* Quick Actions Section */}
                 <div className="px-4 py-4 space-y-1">
