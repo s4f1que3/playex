@@ -115,7 +115,7 @@ const TVShowsPage = () => {
             {/* Empty div to maintain spacing */}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
             <FilterPanel mediaType="tv" />
           </div>
         </div>
@@ -124,7 +124,7 @@ const TVShowsPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl"
+          className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/5 shadow-2xl"
         >
           {/* Results Counter */}
           <motion.div 

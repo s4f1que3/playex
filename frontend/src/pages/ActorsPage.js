@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { tmdbApi } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
 import ActorsFilters from '../components/media/ActorsFilter';
 import Pagination from '../components/common/Pagnation';
-import { motion } from 'framer-motion';
 import { actorCardStyles } from '../styles/actorStyles';
 import ActorsGrid from '../components/actors/ActorsGrid';
 
@@ -69,7 +69,7 @@ const ActorsPage = () => {
   };
   
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
       {/* Hero Section */}
       <div className="relative -mx-4 mb-8 overflow-hidden">
         <motion.div 
@@ -114,15 +114,17 @@ const ActorsPage = () => {
         </motion.div>
       </div>
 
-      {/* Enhanced Content Section */}
-      <div className="container mx-auto px-4 -mt-32 relative z-30">
+      {/* Content Section - Updated spacing */}
+      <div className="container mx-auto px-4 -mt-8 sm:-mt-20 relative z-30">
+        {/* Remove the FilterPanel section entirely */}
+
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="relative bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl rounded-2xl p-8 border border-white/5 shadow-2xl"
+          className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/5 shadow-2xl"
         >
-          {/* Filters Section */}
+          {/* Keep the Filters Section */}
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-4">
               <h2 className="text-2xl font-bold text-white flex items-center gap-3">

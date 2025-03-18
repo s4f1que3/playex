@@ -134,14 +134,16 @@ const FanFavoritesPage = () => {
       <div className="container mx-auto px-4 -mt-20 relative z-30">
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-4" />
-          <FilterPanel mediaType="tv" />
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <FilterPanel mediaType="tv" />
+          </div>
         </div>
 
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl"
+          className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/5 shadow-2xl"
         >
           {/* Add this inside the content section, before the MediaGrid */}
           {isFetching && (

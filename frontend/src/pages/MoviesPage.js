@@ -90,30 +90,6 @@ const MoviesPage = () => {
   return (
     <div className="min-h-screen bg-[#161616] pt-24">
       <div className="container mx-auto px-4">
-        {/* Header Section */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl font-bold text-white mb-2"
-            >
-              Movies
-            </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-gray-400"
-            >
-              {!isLoading && `Found ${movies.length || 0} movies`}
-            </motion.p>
-          </div>
-
-          {/* Remove the simplified filter button that was here */}
-        </div>
-
-        {/* Rest of the component */}
         <div className="relative min-h-screen">
           {/* Parallax Hero Section */}
           <div className="relative -mx-4 overflow-hidden">
@@ -159,15 +135,14 @@ const MoviesPage = () => {
             </motion.div>
           </div>
 
-          {/* Content Section */}
+          {/* Content Section - Updated spacing */}
           <div className="container mx-auto px-4 -mt-20 relative z-30">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-4">
                 {/* Empty div to maintain spacing */}
               </div>
 
-              {/* Keep the FilterPanel component */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 w-full sm:w-auto">
                 <FilterPanel mediaType="movie" />
               </div>
             </div>
@@ -176,7 +151,7 @@ const MoviesPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-6 border border-white/5 shadow-2xl"
+              className="bg-gray-900/90 backdrop-blur-xl rounded-2xl p-4 sm:p-6 border border-white/5 shadow-2xl"
             >
               
               {/* Results Counter */}
