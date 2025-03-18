@@ -61,18 +61,25 @@ const CookieConsent = () => {
             onClick={() => setShowConsent(false)}
           />
 
-          {/* Consent Dialog - Make container scrollable */}
+          {/* Consent Dialog - Make it scrollable on mobile */}
           <motion.div
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 500 }}
-            className="relative w-full max-w-2xl overflow-hidden flex flex-col"
+            className="relative w-full max-w-2xl my-4 sm:my-8 overflow-hidden max-h-[90vh] flex flex-col"
           >
-            <div className="relative bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl">
-              {/* Fixed Header */}
-              <div className="sticky top-0 z-20 bg-gray-900/95 backdrop-blur-xl border-b border-white/10">
-                <div className="p-6">
+            <div className="relative bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-y-auto">
+              {/* Decorative Elements */}
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute -top-32 -left-32 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
+                <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-[#E4D981]/20 rounded-full filter blur-[100px]" />
+              </div>
+
+              {/* Make content area scrollable */}
+              <div className="relative flex flex-col h-full max-h-[calc(90vh-8rem)]">
+                {/* Header - Fixed */}
+                <div className="relative p-6 border-b border-white/10 flex-shrink-0">
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
@@ -85,11 +92,9 @@ const CookieConsent = () => {
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Scrollable Content */}
-              <div className="max-h-[calc(100vh-16rem)] overflow-y-auto">
-                <div className="p-6 space-y-6">
+                {/* Content - Scrollable */}
+                <div className="relative p-6 space-y-6 overflow-y-auto">
                   <p className="text-gray-300 leading-relaxed">
                     We use cookies and local storage to enhance your experience and deliver personalized content. This includes:
                   </p>
@@ -140,11 +145,9 @@ const CookieConsent = () => {
                     </Link>
                   </div>
                 </div>
-              </div>
 
-              {/* Fixed Footer */}
-              <div className="sticky bottom-0 z-20 bg-black/20 backdrop-blur-xl border-t border-white/5">
-                <div className="p-6 flex flex-col sm:flex-row-reverse gap-3">
+                {/* Actions - Fixed */}
+                <div className="relative p-6 bg-black/20 border-t border-white/5 flex flex-col sm:flex-row-reverse gap-3 flex-shrink-0">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
