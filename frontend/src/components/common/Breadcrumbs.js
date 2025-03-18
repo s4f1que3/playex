@@ -196,8 +196,18 @@ const Breadcrumbs = () => {
       return `/tv/${showId}/episodes/${season}`;
     }
     
+    if (pathname === 'collection' && index === 0) {
+      return '/collections'; // When clicking "collection" in breadcrumb, go to collections page
+    }
+    
+    if (pathname === 'collections') {
+      return '/collections';
+    }
+    
     // Default behavior for other routes
     return `/${pathnames.slice(0, index + 1).join('/')}`;
+
+    
   };
   
   return (

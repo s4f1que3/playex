@@ -178,27 +178,6 @@ export const api = {
   }
 };
 
-// Authentication API functions
-export const authApi = {
-  register: (username, email, password) => {
-    console.log('Registering user with API...');
-    return api.post('/api/auth/register', { username, email, password });
-  },
-  
-  login: (email, password) => {
-    console.log('Logging in user with API...');
-    return api.post('/api/auth/login', { email, password });
-  },
-  
-  getCurrentUser: () => {
-    return api.get('/api/auth/me');
-  },
-  
-  resetPassword: (email, newPassword) => {
-    return api.post('/api/auth/reset-password', { email, newPassword });
-  }
-};
-
 // TMDB API client
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
