@@ -9,16 +9,18 @@ import {
   removeFromWatchlist
 } from './LocalStorage';
 
-// Update API URL configuration
-const API_URL = process.env.REACT_APP_API_URL || (
-  process.env.NODE_ENV === 'production'
-    ? 'https://playex-backend-39oxstwrn-s4f1qu3s-projects.vercel.app'
-    : 'http://localhost:5000'
-);
+// Force the API URL to always use Vercel in production
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://playex-backend.vercel.app'
+  : 'http://localhost:5000';
+
+// Remove any cached values that might be using the old URL
+localStorage.removeItem('api_url');
 
 // Add more detailed logging
 console.log('Environment:', process.env.NODE_ENV);
 console.log('API URL:', API_URL);
+console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
 
 // Log the API URL for debugging
 console.log('API connecting to:', API_URL);
