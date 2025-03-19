@@ -146,21 +146,33 @@ const RequestForm = () => {
     setError('');
 
     try {
+      console.log('Sending request to:', `${api.defaults.baseURL}/api/email/send-request`);
+      
       const response = await api.post('/api/email/send-request', { 
         showName: request.trim() 
       });
 
-      console.log('Server response:', response);
-      setShowSuccess(true);
-      setRequest('');
+      console.log('Response received:', response);
       
-      // Increase the timeout to see the animation better
-      setTimeout(() => {
-        setShowSuccess(false);
-      }, 2500);
+      if (response.data.success) {
+        setShowSuccess(true);
+        setRequest('');
+        setTimeout(() => setShowSuccess(false), 2500);
+      } else {
+        throw new Error(response.data.error || 'Failed to send request');
+      }
     } catch (error) {
-      console.error('Error details:', error);
-      setError(error?.response?.data?.error || 'Failed to send request. Please try again later.');
+      console.error('Detailed error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status
+      });
+      
+      setError(
+        error.response?.data?.error || 
+        error.message || 
+        'Failed to send request. Please try again later.'
+      );
     } finally {
       setIsSubmitting(false);
     }

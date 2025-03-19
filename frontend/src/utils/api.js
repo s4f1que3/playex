@@ -9,10 +9,12 @@ import {
   removeFromWatchlist
 } from './LocalStorage';
 
-// Get the API URL from environment variables with fallback
-const API_URL = process.env.NODE_ENV === 'production'
-  ? 'https://playex-backend.onrender.com'
-  : 'http://localhost:5000';
+// Update API URL configuration
+const API_URL = process.env.REACT_APP_API_URL || (
+  process.env.NODE_ENV === 'production'
+    ? 'https://playex-backend.onrender.com'
+    : 'http://localhost:5000'
+);
 
 // Log the API URL for debugging
 console.log('API connecting to:', API_URL);
@@ -34,24 +36,37 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
+    console.log('Request:', {
+      url: config.url,
+      method: config.method,
+      data: config.data,
+      baseURL: config.baseURL
+    });
     return config;
   },
   (error) => {
-    console.error('Request interceptor error:', error);
+    console.error('Request Error:', error);
     return Promise.reject(error);
   }
 );
 
 // Add a response interceptor to handle token expiration
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('Response:', {
+      status: response.status,
+      data: response.data,
+      url: response.config.url
+    });
+    return response;
+  },
   (error) => {
     // Log detailed error information
-    console.error('API Error:', {
-      url: error.config?.url,
-      method: error.config?.method,
+    console.error('Response Error:', {
+      message: error.message,
+      response: error.response?.data,
       status: error.response?.status,
-      message: error.response?.data?.message || error.message
+      url: error.config?.url
     });
     
     if (error.response && error.response.status === 401) {

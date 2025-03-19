@@ -11,10 +11,16 @@ const app = express();
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://playex.onrender.com'],
+  origin: [
+    'http://localhost:3000',
+    'https://playex.onrender.com',
+    'https://playex.vercel.app',
+    'https://playex.netlify.app'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  credentials: true,
+  maxAge: 86400 // 24 hours
 }));
 
 app.use(express.json());
