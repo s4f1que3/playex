@@ -146,33 +146,29 @@ const RequestForm = () => {
     setError('');
 
     try {
-      console.log('Sending request to:', `${api.defaults.baseURL}/api/email/send-request`);
-      
+      // Replace the console.log that was causing the error
       const response = await api.post('/api/email/send-request', { 
         showName: request.trim() 
       });
 
-      console.log('Response received:', response);
-      
-      if (response.data.success) {
+      // Add debug logging
+      console.log('Request response:', response);
+
+      if (response?.data?.success) {
         setShowSuccess(true);
         setRequest('');
         setTimeout(() => setShowSuccess(false), 2500);
       } else {
-        throw new Error(response.data.error || 'Failed to send request');
+        throw new Error('Failed to send request');
       }
     } catch (error) {
-      console.error('Detailed error:', {
+      console.error('Request failed:', {
         message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
+        status: error?.response?.status,
+        data: error?.response?.data
       });
       
-      setError(
-        error.response?.data?.error || 
-        error.message || 
-        'Failed to send request. Please try again later.'
-      );
+      setError(error?.response?.data?.message || 'Failed to send request. Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
@@ -206,22 +202,41 @@ const RequestForm = () => {
 
               <form onSubmit={handleSubmit} className="w-full">
                 <div className="relative">
-                  <input
-                    type="text"
+                  <textarea
                     value={request}
-                    onChange={(e) => setRequest(e.target.value)}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 50) {
+                        setRequest(value);
+                      }
+                    }}
                     placeholder="Enter the name of the TV show you'd like to see..."
-                    className="w-full px-6 py-4 rounded-xl bg-gray-800/50 border border-white/5 
+                    maxLength={50}
+                    rows={1}
+                    className="w-full px-6 py-4 pr-[160px] rounded-xl bg-gray-800/50 border border-white/5 
                              text-white placeholder-gray-400 focus:outline-none focus:ring-2 
-                             focus:ring-[#82BC87]/50 focus:border-transparent transition-all duration-300"
+                             focus:ring-[#82BC87]/50 focus:border-transparent transition-all duration-300
+                             resize-none overflow-hidden leading-relaxed"
+                    style={{
+                      minHeight: '56px',
+                      height: 'auto',
+                      paddingBottom: '3rem', // Increased padding at bottom
+                      lineHeight: '1.5',
+                    }}
+                    onInput={(e) => {
+                      e.target.style.height = 'auto';
+                      e.target.style.height = Math.max(e.target.scrollHeight + 24, 80) + 'px'; // Increased minimum height
+                    }}
                   />
+                  
+                  {/* Submit Button */}
                   <button
                     type="submit"
                     disabled={!request || isSubmitting}
                     className={`absolute right-2 top-2 px-6 py-2 rounded-lg 
                               ${request ? 'bg-[#82BC87] hover:bg-[#6da972]' : 'bg-gray-700'} 
                               text-white transition-all duration-300 flex items-center gap-2
-                              disabled:opacity-50 disabled:cursor-not-allowed`}
+                              disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px]`}
                   >
                     {isSubmitting ? (
                       <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -234,6 +249,19 @@ const RequestForm = () => {
                       </>
                     )}
                   </button>
+
+                  {/* Character Counter - Repositioned lower */}
+                  <div className="absolute left-6 bottom-4 px-2 py-1 rounded-md bg-gray-800/80 
+                                backdrop-blur-sm text-xs font-medium border border-white/5
+                                transition-all duration-300">
+                    <span className={`${
+                      request.length >= 45 ? 'text-yellow-400' : 
+                      request.length >= 40 ? 'text-[#82BC87]' : 'text-gray-400'
+                    } transition-colors duration-300`}>
+                      {request.length}
+                    </span>
+                    <span className="text-gray-500">/50 characters</span>
+                  </div>
                 </div>
               </form>
 
