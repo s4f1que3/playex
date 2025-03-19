@@ -6,6 +6,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const emailRoutes = require('./routes/emailRoutes');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const app = express();
 
 // Middleware
@@ -14,7 +16,7 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://playex.vercel.app',
-    'https://playex-backend.vercel.app', // Add your backend Vercel URL
+    'https://playex-backend-39oxstwrn-s4f1qu3s-projects.vercel.app',
     'https://playex-frontend.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -42,8 +44,13 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Playex API is running',
-    status: 'online'
+    status: 'online',
+    environment: process.env.NODE_ENV
   });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
 });
 
 app.use('/api/email', emailRoutes);
@@ -87,5 +94,11 @@ const startServer = async (initialPort) => {
   }
 };
 
-const PORT = process.env.PORT || 5000;
-startServer(PORT);
+if (isProduction) {
+  // In production (Vercel), export the app
+  module.exports = app;
+} else {
+  // In development, start the server
+  const PORT = process.env.PORT || 5000;
+  startServer(PORT);
+}

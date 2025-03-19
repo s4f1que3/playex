@@ -12,7 +12,7 @@ import {
 // Update API URL configuration
 const API_URL = process.env.REACT_APP_API_URL || (
   process.env.NODE_ENV === 'production'
-    ? 'https://playex-backend.onrender.com'
+    ? 'https://playex-backend-39oxstwrn-s4f1qu3s-projects.vercel.app'
     : 'http://localhost:5000'
 );
 
