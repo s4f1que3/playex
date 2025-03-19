@@ -16,8 +16,8 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://playex.vercel.app',
-    'https://playex-backend-39oxstwrn-s4f1qu3s-projects.vercel.app',
-    'https://playex-frontend.vercel.app'
+    'https://playex-frontend.vercel.app',
+    'https://playex-backend-39oxstwrn-s4f1qu3s-projects.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],

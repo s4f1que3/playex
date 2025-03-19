@@ -16,6 +16,10 @@ const API_URL = process.env.REACT_APP_API_URL || (
     : 'http://localhost:5000'
 );
 
+// Add more detailed logging
+console.log('Environment:', process.env.NODE_ENV);
+console.log('API URL:', API_URL);
+
 // Log the API URL for debugging
 console.log('API connecting to:', API_URL);
 
