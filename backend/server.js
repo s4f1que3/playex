@@ -13,9 +13,9 @@ app.use(helmet());
 app.use(cors({
   origin: [
     'http://localhost:3000',
-    'https://playex.onrender.com',
     'https://playex.vercel.app',
-    'https://playex.netlify.app'
+    'https://playex-backend.vercel.app', // Add your backend Vercel URL
+    'https://playex-frontend.vercel.app'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
