@@ -51,6 +51,7 @@
     "@tailwindcss/line-clamp": "^0.4.4",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.27",
+    "source-map-explorer": "^2.5.3",
     "tailwindcss": "^3.4.17"
   }
 }
