@@ -1,5 +1,7 @@
+//terms page
 import React from 'react';
 import { motion } from 'framer-motion';
+import ContactLink from '../ContactLink';
 
 const Section = ({ title, children }) => (
   <motion.div
@@ -75,7 +77,7 @@ const TermsPage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto space-y-6">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -242,36 +244,29 @@ const TermsPage = () => {
                     supersede and replace any prior agreements we might have between us regarding the Service.
                   </p>
                 </Subsection>
-
-                <Subsection title="9.4 Contact Information">
-                  <p>
-                    If you have any questions about these Terms, please contact us at: <a href="mailto:contact.playex@gmail.com" className="text-[#82BC87] hover:text-[#E4D981]">contact.playex@gmail.com</a> for any further questions.
-                  </p>
-                </Subsection>
               </Section>
+            </div>
+          </motion.div>
 
-              <motion.div
+          {/* Contact Section - Fixed to match other pages */}
+          <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
                 className="mt-12 text-center"
               >
-                <div className="inline-flex flex-col items-center p-6 rounded-2xl bg-gradient-to-r from-[#82BC87]/10 to-transparent backdrop-blur-sm border border-white/5">
-                  <p className="text-gray-300 mb-3">Have questions about our terms?</p>
-                  <a
-                    href="mailto:contact.playex@gmail.com"
-                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#82BC87] text-white font-medium hover:bg-[#6da972] transition-colors duration-300"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                      <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                    </svg>
-                    Contact Legal Team
-                  </a>
-                </div>
+                <ContactLink
+                  buttonStyle={true}
+                  subject="Terms of Service Inquiry"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#82BC87] text-white font-medium hover:bg-[#6da972] transition-colors duration-300"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                  </svg>
+                  Contact Support
+                </ContactLink>
               </motion.div>
-            </div>
-          </motion.div>
         </div>
       </div>
 

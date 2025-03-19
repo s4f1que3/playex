@@ -25,7 +25,7 @@ const TVShowsPage = () => {
   const { data: tvShowsData, isLoading, error, isFetchingNextPage, fetchNextPage } = useInfiniteQuery({
     queryKey: ['tvShows', { with_genres, primary_release_year, sort_by, currentPage }],
     queryFn: ({ pageParam = currentPage }) => {
-      return tmdbApi.get('/discover/tv', {  // Changed from tv/top_rated to discover/tv
+      return tmdbApi.get('/tv/top_rated', {  // Changed from tv/top_rated to discover/tv
         params: {
           page: pageParam,
           with_genres: with_genres.length > 0 ? with_genres.join(',') : undefined,

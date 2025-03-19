@@ -6,6 +6,7 @@ import { tmdbApi, getFanFavorites } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
 import Pagination from '../components/common/Pagnation';
 import FilterPanel from '../components/common/FilterPanel';
+import RequestForm from '../components/requests/RequestForm';
 
 const FanFavoritesPage = () => {
   const location = useLocation();
@@ -188,6 +189,8 @@ const FanFavoritesPage = () => {
           )}
         </motion.div>
       </div>
+
+      <RequestForm />
 
       {/* Grid Pattern Animation */}
       <style jsx>{`

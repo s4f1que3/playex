@@ -75,7 +75,6 @@ const Header = () => {
     { path: '/tv-shows', label: 'TV Shows' },
     { path: '/fan-favorites', label: 'Fan Favorites' },
     { path: '/trending', label: 'Trending' },
-    { path: '/actors', label: 'Actors' },
     { path: '/watchlist', label: 'Watchlist' },
     { path: '/favorites', label: 'Favorites' }
   ];

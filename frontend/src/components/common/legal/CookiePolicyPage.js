@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ContactLink from '../ContactLink';
 
 const PolicySection = ({ title, children, icon, expandedByDefault = false }) => {
   const [isExpanded, setIsExpanded] = useState(expandedByDefault);
@@ -262,7 +263,11 @@ const CookiePolicyPage = () => {
               <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
             </svg>}
           >
-            <p>If you have any questions about this Cookie Policy, please contact us at <a href="mailto:contact.playex@gmail.com" className="text-[#82BC87] hover:text-[#E4D981]">contact.playex@gmail.com</a>.</p>
+            <p>If you have any questions about this Cookie Policy, please contact us at 
+            <ContactLink buttonStyle={true} className="text-[#82BC87] hover:text-[#E4D981]"
+            subject="Cookie Policy Inquires">
+              contact.playex@gmail.com</ContactLink>
+            </p>
           </PolicySection>
 
           <motion.div
@@ -271,19 +276,17 @@ const CookiePolicyPage = () => {
             transition={{ delay: 0.6 }}
             className="mt-12 text-center"
           >
-            <div className="inline-flex flex-col items-center p-6 rounded-2xl bg-gradient-to-r from-[#82BC87]/10 to-transparent backdrop-blur-sm border border-white/5">
-              <p className="text-gray-300 mb-3">Have questions about our cookies?</p>
-              <a
-                href="mailto:contact.playex@gmail.com"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#82BC87] text-white font-medium hover:bg-[#6da972] transition-colors duration-300"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                  <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                </svg>
-                Contact Privacy Team
-              </a>
-            </div>
+            <ContactLink
+              buttonStyle={true}
+              subject="Cookie Policy Inquiries"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#82BC87] text-white font-medium hover:bg-[#6da972] transition-colors duration-300"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+              </svg>
+              Contact Support
+            </ContactLink>
           </motion.div>
         </div>
       </div>

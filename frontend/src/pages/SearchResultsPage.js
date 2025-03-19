@@ -5,6 +5,43 @@ import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
 import Pagination from '../components/common/Pagnation';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu } from '@headlessui/react';
+
+const FilterOption = ({ value, icon, label, current, onClick }) => (
+  <Menu.Item>
+    {({ active }) => (
+      <motion.button
+        whileHover={{ x: 4 }}
+        whileTap={{ scale: 0.98 }}
+        onClick={() => onClick(value)}
+        className={`w-full text-left px-4 py-3 flex items-center gap-3 group transition-all duration-300
+                   ${active ? 'bg-[#82BC87]/10' : 'bg-transparent'}
+                   ${current ? 'text-[#82BC87]' : 'text-gray-400'}`}
+      >
+        <div className={`w-8 h-8 rounded-lg flex items-center justify-center
+                      ${current ? 'bg-[#82BC87]/20' : 'bg-gray-800/50'} 
+                      group-hover:bg-[#82BC87]/20 transition-all duration-300`}>
+          {icon}
+        </div>
+        <span className="font-medium group-hover:text-[#82BC87] transition-colors duration-300">
+          {label}
+        </span>
+        {current && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="ml-auto bg-[#82BC87]/20 rounded-full p-1"
+          >
+            <svg className="w-4 h-4 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          </motion.div>
+        )}
+      </motion.button>
+    )}
+  </Menu.Item>
+);
 
 const SearchResultsPage = () => {
   const location = useLocation();
@@ -94,7 +131,110 @@ const SearchResultsPage = () => {
     }
     return item.media_type === mediaType;
   });
-  
+
+  const filterOptions = [
+    {
+      value: 'all',
+      label: 'All Content',
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      )
+    },
+    {
+      value: 'movie',
+      label: 'Movies Only',
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+        </svg>
+      )
+    },
+    {
+      value: 'tv',
+      label: 'TV Shows Only',
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      )
+    },
+    {
+      value: 'person',
+      label: 'Actors Only',
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      )
+    }
+  ];
+
+  // Replace the existing filter dropdown with this enhanced version
+  const FilterDropdown = () => (
+    <Menu as="div" className="relative z-[60] inline-block">  {/* Added inline-block */}
+      {({ open }) => (
+        <>
+          <Menu.Button className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gray-900/90 
+                                backdrop-blur-xl border border-white/5 hover:border-[#82BC87]/20 
+                                transition-all duration-300 group relative z-[60]">  {/* Added relative and z-[60] */}
+            <div className="w-8 h-8 rounded-lg bg-[#82BC87]/10 flex items-center justify-center">
+              {filterOptions.find(option => option.value === mediaType)?.icon}
+            </div>
+            <span className="text-white font-medium">
+              {filterOptions.find(option => option.value === mediaType)?.label}
+            </span>
+            <motion.svg
+              animate={{ rotate: open ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-5 h-5 text-gray-400 group-hover:text-[#82BC87]"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            </motion.svg>
+          </Menu.Button>
+
+          <AnimatePresence>
+            {open && (
+              <Menu.Items
+                as={motion.div}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.2 }}
+                static
+                className="fixed right-0 mt-2 w-72 rounded-xl bg-gray-900/95 backdrop-blur-xl 
+                         border border-white/5 shadow-lg shadow-black/50 divide-y divide-white/5
+                         focus:outline-none z-[100]"
+                style={{ top: "calc(100% + 8px)" }}
+              >
+                <div className="px-4 py-3 border-b border-white/5">
+                  <p className="text-sm text-gray-400">Filter Content</p>
+                  <p className="text-xs text-gray-500">Show specific content types</p>
+                </div>
+                <div className="py-2">
+                  {filterOptions.map((option) => (
+                    <FilterOption
+                      key={option.value}
+                      current={mediaType === option.value}
+                      onClick={(value) => {
+                        setMediaType(value);
+                        setPage(1);
+                      }}
+                      {...option}
+                    />
+                  ))}
+                </div>
+              </Menu.Items>
+            )}
+          </AnimatePresence>
+        </>
+      )}
+    </Menu>
+  );
+
   return (
     <div className="min-h-screen">
       {/* Hero Section with Search Info */}
@@ -107,7 +247,7 @@ const SearchResultsPage = () => {
             Results for "{searchQuery}"
           </h1>
           
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-4 relative z-50">  {/* Added relative and z-50 */}
             <div className="flex items-center gap-2">
               <div className="bg-gray-800/60 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/5">
                 {isLoading ? (
@@ -125,24 +265,7 @@ const SearchResultsPage = () => {
               </div>
             </div>
 
-            {/* Enhanced Filter Dropdown */}
-            <div className="relative group">
-              <select
-                value={mediaType}
-                onChange={handleMediaTypeChange}
-                className="appearance-none bg-gray-800/60 backdrop-blur-sm text-white border border-white/5 rounded-xl px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-[#82BC87]/50 hover:bg-gray-700/60 transition-all duration-300"
-              >
-                <option value="all">All Content</option>
-                <option value="movie">Movies Only</option>
-                <option value="tv">TV Shows Only</option>
-                <option value="person">Actors Only</option>
-              </select>
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400 group-hover:text-[#82BC87] transition-colors duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </div>
-            </div>
+            <FilterDropdown />
           </div>
         </div>
       </div>

@@ -27,7 +27,6 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import WatchlistPage from './pages/WatchListPage';
 import FavoritesPage from './pages/FavoritesPage';
 import NotFoundPage from './pages/NotFoundPage';
-import ActorsPage from './pages/ActorsPage';
 import ActorsPersonal from './pages/ActorsPersonal';
 import ActorCreditsPage from './pages/ActorCreditsPage';
 import RecommendedContentPage from './pages/RecommendedContentPage';
@@ -106,7 +105,6 @@ function App() {
                   <Route path="/collection/:id" element={<CollectionsPage />} /> {/* Add this route */}
                   
                   {/* Actor routes */}
-                  <Route path="/actors" element={<ActorsPage />} />
                   <Route path="/actor/:id" element={<ActorsPersonal />} />
                   <Route path="/actor/:id/movies" element={<ActorCreditsPage type="movie" />} />
                   <Route path="/actor/:id/tv" element={<ActorCreditsPage type="tv" />} />

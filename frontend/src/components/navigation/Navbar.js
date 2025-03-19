@@ -22,7 +22,6 @@ const Navbar = () => {
             <PrefetchLink to="/movies" className="nav-link">Movies</PrefetchLink>
             <PrefetchLink to="/tv" className="nav-link">TV Shows</PrefetchLink>
             <PrefetchLink to="/fan-favorites" className="nav-link text-[#E4D981] font-medium">Fan Favorites</PrefetchLink>
-            <PrefetchLink to="/actors" className="nav-link">Actors</PrefetchLink>
           </div>
 
           {/* Right Section */}

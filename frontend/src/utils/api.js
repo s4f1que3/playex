@@ -10,7 +10,9 @@ import {
 } from './LocalStorage';
 
 // Get the API URL from environment variables with fallback
-const API_URL = process.env.REACT_APP_API_URL || 'https://playex-backend.onrender.com';
+const API_URL = process.env.NODE_ENV === 'production'
+  ? 'https://playex-backend.onrender.com'
+  : 'http://localhost:5000';
 
 // Log the API URL for debugging
 console.log('API connecting to:', API_URL);
@@ -20,7 +22,8 @@ const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
-  }
+  },
+  withCredentials: true
 });
 
 // Add a request interceptor to dynamically set token for each request

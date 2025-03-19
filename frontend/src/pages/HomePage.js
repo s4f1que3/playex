@@ -141,20 +141,6 @@ const { data: topRatedTVShows, isLoading: topRatedTVLoading, error: topRatedTVEr
   staleTime: 600000 // 10 minutes
 });
 
-// Fetch popular actors/persons
-const { data: popularActors, isLoading: actorsLoading, error: actorsError } = useQuery({
-  queryKey: ['popularActors'],
-  queryFn: () => tmdbApi.get('/person/popular').then(res => {
-    // Add media_type to each person object
-    const actors = res.data.results.map(actor => ({
-      ...actor,
-      media_type: 'person'
-    }));
-    return actors;
-  }),
-  staleTime: 600000 // 10 minutes
-});
-
 // Fetch fan favorites
 const { data: fanFavorites, isLoading: fanFavoritesLoading } = useQuery({
   queryKey: ['fanFavorites'],
@@ -266,10 +252,6 @@ const { data: collections, isLoading: collectionsLoading } = useQuery({
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                       </svg>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-white">{popularActors?.length || 0}</div>
-                      <div className="text-sm text-gray-400">Popular Actors</div>
                     </div>
                   </div>
                 </motion.div>
@@ -660,95 +642,6 @@ const { data: collections, isLoading: collectionsLoading } = useQuery({
                 </div>
               </div>
             </motion.div>
-
-            {/* Popular Actors - Copy the same pattern but with different colors and icon */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
-                <motion.div 
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    rotate: [0, -45, 0] 
-                  }} 
-                  transition={{ 
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  className="absolute inset-0"
-                >
-                  <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
-                </motion.div>
-              </div>
-
-              <div className="container mx-auto px-4">
-                <div className="relative py-12">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-                    <div className="flex items-center gap-6">
-                      <div className="relative">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#E4D981] to-[#d4c86e] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
-                          <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-                            </svg>
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#E4D981] flex items-center justify-center animate-pulse">
-                          <span className="text-xs font-bold text-white">🎭</span>
-                        </div>
-                      </div>
-                      <div>
-                        <motion.h2 
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          className="text-4xl font-bold text-white"
-                        >
-                          Popular
-                          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#E4D981] to-[#d4c86e] ml-3">
-                            Actors
-                          </span>
-                        </motion.h2>
-                        <p className="text-gray-400 mt-2">Discover the most popular actors right now</p>
-                      </div>
-                    </div>
-
-                    <Link
-                      to="/actors"
-                      className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#E4D981]/10 to-transparent 
-                               hover:from-[#E4D981]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
-                    >
-                      <span className="text-[#E4D981] font-medium whitespace-nowrap">Explore Actors</span>
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className="h-5 w-5 text-[#E4D981] transform group-hover:translate-x-1 transition-transform duration-300"
-                        viewBox="0 0 20 20" 
-                        fill="currentColor"
-                      >
-                        <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </Link>
-                  </div>
-
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
-                    <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
-                    
-                    <MediaCarousel
-                      items={popularActors}
-                      loading={actorsLoading}
-                      error={actorsError}
-                      showType={true}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
           </div>
         </div>
       </div>
