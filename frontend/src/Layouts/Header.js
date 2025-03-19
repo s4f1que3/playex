@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import SearchBar from '../components/common/SearchBar';
 import DropdownMenu from '../components/navigation/DropdownMenu';
+import PrefetchLink from '../components/common/PrefetchLink';  // Update import
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -93,7 +94,7 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <nav className="flex items-center justify-between py-4">
           {/* Enhanced Logo with Animation */}
-          <Link to="/" className="group flex items-center space-x-2">
+          <PrefetchLink to="/" className="group flex items-center space-x-2">
             <motion.img 
               src="/logo.png" 
               alt="Playex"
@@ -104,7 +105,7 @@ const Header = () => {
             <span className="text-2xl font-bold bg-gradient-to-r from-[#82BC87] to-[#E4D981] bg-clip-text text-transparent transition-all duration-300 group-hover:from-[#E4D981] group-hover:to-[#82BC87]">
               Playex
             </span>
-          </Link>
+          </PrefetchLink>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">

@@ -1,12 +1,13 @@
 // File: frontend/src/pages/WatchlistPage.js
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';  // Add this import
+import { motion } from 'framer-motion';  
 import MediaGrid from '../components/media/MediaGrid';
 import Spinner from '../components/common/Spinner';
 import ConfirmationDialog from '../components/common/ConfirmationDialog';
 import { getWatchlist, removeFromWatchlist } from '../utils/LocalStorage';
+import PrefetchLink from '../components/common/PrefetchLink';
 import AlertDialog from '../components/common/AlertDialog';
-import { Link } from 'react-router-dom'; // Add this import if not already present
+import { Link } from 'react-router-dom'; 
 
 const WatchlistPage = () => {
   const [mediaType, setMediaType] = useState('all');
@@ -139,9 +140,9 @@ const WatchlistPage = () => {
       {/* Breadcrumbs - Add this section */}
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center gap-2 text-sm">
-          <Link to="/" className="text-gray-400 hover:text-white transition-colors">
+          <PrefetchLink to="/" className="text-gray-400 hover:text-white transition-colors">
             Home
-          </Link>
+          </PrefetchLink>
           <span className="text-gray-600">/</span>
           <span className="text-white">Watchlist</span>
         </div>

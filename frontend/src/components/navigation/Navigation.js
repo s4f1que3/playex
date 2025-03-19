@@ -10,9 +10,9 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-[72px]">
           {/* Logo */}
-          <Link to="/" className="text-white text-2xl font-bold">
+          <PrefetchLink to="/" className="text-white text-2xl font-bold">
             PlayEx
-          </Link>
+          </PrefetchLink>
 
           {/* Menu Button - Always visible */}
           <button

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import PrefetchLink from '../PrefetchLink';
 
 const CookieConsent = () => {
   const [showConsent, setShowConsent] = useState(false);
@@ -136,13 +137,13 @@ const CookieConsent = () => {
 
                   <div className="text-sm text-gray-400">
                     By continuing, you agree to our{' '}
-                    <Link to="/privacy" onClick={handleLearnMore} className="text-[#82BC87] hover:text-[#E4D981] transition-colors duration-300">
+                    <PrefetchLink to="/privacy" onClick={handleLearnMore} className="text-[#82BC87] hover:text-[#E4D981] transition-colors duration-300">
                       Privacy Policy
-                    </Link>
+                    </PrefetchLink>
                     {' '}and{' '}
-                    <Link to="/terms" onClick={handleLearnMore} className="text-[#82BC87] hover:text-[#E4D981] transition-colors duration-300">
+                    <PrefetchLink to="/terms" onClick={handleLearnMore} className="text-[#82BC87] hover:text-[#E4D981] transition-colors duration-300">
                       Terms of Service
-                    </Link>
+                    </PrefetchLink>
                   </div>
                 </div>
 

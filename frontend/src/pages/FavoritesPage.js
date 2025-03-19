@@ -1,4 +1,5 @@
 // File: frontend/src/pages/FavoritesPage.js
+import PrefetchLink from '../components/common/PrefetchLink';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import MediaGrid from '../components/media/MediaGrid';
@@ -139,9 +140,9 @@ const FavoritesPage = () => {
       {/* Breadcrumbs - Add this section */}
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center gap-2 text-sm">
-          <Link to="/" className="text-gray-400 hover:text-white transition-colors">
+          <PrefetchLink to="/" className="text-gray-400 hover:text-white transition-colors">
             Home
-          </Link>
+          </PrefetchLink>
           <span className="text-gray-600">/</span>
           <span className="text-white">Favorites</span>
         </div>

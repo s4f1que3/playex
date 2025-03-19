@@ -2,6 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { tmdbHelpers } from '../../utils/api';
+import PrefetchLink from './PrefetchLink';
+import { commonStyles } from '../../styles/commonStyles';
 
 const MediaCard = ({ media, showType = true }) => {
   const {
@@ -41,8 +43,13 @@ const MediaCard = ({ media, showType = true }) => {
   const rating = !isPerson && vote_average ? (vote_average / 10) * 5 : 0;
   
   return (
-    <Link to={route} className="block h-full group">
-      <div className="relative h-full overflow-hidden rounded-xl backdrop-blur-sm border border-white/5 transition-all duration-500 hover:scale-[1.02] bg-gradient-to-b from-gray-800/50 to-gray-900/50">
+    <PrefetchLink
+      to={route}
+      className="block hover:scale-[1.02] transition-transform duration-300"
+      role="article"
+      aria-label={`${displayTitle} - Click to view details`}
+    >
+      <div className={commonStyles.card}>
         {/* Image Container - Fixed aspect ratio */}
         <div className="aspect-[2/3] relative overflow-hidden">
           <img
@@ -75,7 +82,7 @@ const MediaCard = ({ media, showType = true }) => {
           </div>
         </div>
       </div>
-    </Link>
+    </PrefetchLink>
   );
 };
 

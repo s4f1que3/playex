@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import PrefetchLink from '../components/common/PrefetchLink';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -52,7 +53,7 @@ const Footer = () => {
         >
           {/* Logo and About Section */}
           <div className="space-y-6">
-            <Link to="/" className="group flex items-center">
+            <PrefetchLink to="/" className="group flex items-center">
               <motion.img 
                 whileHover={{ scale: 1.05 }}
                 src="/logo.png" 
@@ -62,7 +63,7 @@ const Footer = () => {
               <span className="ml-2 text-2xl font-bold bg-gradient-to-r from-[#82BC87] to-[#E4D981] bg-clip-text text-transparent group-hover:from-[#E4D981] group-hover:to-[#82BC87] transition-all duration-500">
                 Playex
               </span>
-            </Link>
+            </PrefetchLink>
             <p className="text-gray-400 leading-relaxed">
               Your premier destination for streaming movies and TV shows with an immersive experience.
             </p>
@@ -103,7 +104,7 @@ const Footer = () => {
                     whileHover={{ x: 5 }}
                     className="transform transition-all duration-300"
                   >
-                    <Link 
+                    <PrefetchLink 
                       to={link.to}
                       className="flex items-center gap-2 text-gray-400 hover:text-white group"
                     >
@@ -111,7 +112,7 @@ const Footer = () => {
                         {link.icon}
                       </span>
                       {link.label}
-                    </Link>
+                    </PrefetchLink>
                   </motion.li>
                 ))}
               </ul>

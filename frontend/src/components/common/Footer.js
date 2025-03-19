@@ -37,9 +37,9 @@ const Footer = () => {
             <ul>
               {navigation.discover.map((item) => (
                 <li key={item.name} className="mb-2">
-                  <Link to={item.href} className="hover:text-white transition-colors duration-300">
+                  <PrefetchLink to={item.href} className="hover:text-white transition-colors duration-300">
                     {item.name}
-                  </Link>
+                  </PrefetchLink>
                 </li>
               ))}
             </ul>
@@ -49,9 +49,9 @@ const Footer = () => {
             <ul>
               {navigation.company.map((item) => (
                 <li key={item.name} className="mb-2">
-                  <Link to={item.href} className="hover:text-white transition-colors duration-300">
+                  <PrefetchLink to={item.href} className="hover:text-white transition-colors duration-300">
                     {item.name}
-                  </Link>
+                  </PrefetchLink>
                 </li>
               ))}
             </ul>
@@ -61,9 +61,9 @@ const Footer = () => {
             <ul>
               {navigation.legal.map((item) => (
                 <li key={item.name} className="mb-2">
-                  <Link to={item.href} className="hover:text-white transition-colors duration-300">
+                  <PrefetchLink to={item.href} className="hover:text-white transition-colors duration-300">
                     {item.name}
-                  </Link>
+                  </PrefetchLink>
                 </li>
               ))}
             </ul>
@@ -73,9 +73,9 @@ const Footer = () => {
             <ul>
               {navigation.help.map((item) => (
                 <li key={item.name} className="mb-2">
-                  <Link to={item.href} className="hover:text-white transition-colors duration-300">
+                  <PrefetchLink to={item.href} className="hover:text-white transition-colors duration-300">
                     {item.name}
-                  </Link>
+                  </PrefetchLink>
                 </li>
               ))}
             </ul>

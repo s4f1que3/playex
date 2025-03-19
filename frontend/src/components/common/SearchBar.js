@@ -9,7 +9,8 @@ const SearchBar = ({ isMobile = false }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
   const searchRef = useRef(null);
-  
+  const searchInputRef = useRef(null);
+
   // Search suggestions query - FIXED FOR TANSTACK QUERY V5
   const { data: suggestions, isLoading } = useQuery({
     queryKey: ['searchSuggestions', searchTerm],
@@ -18,7 +19,7 @@ const SearchBar = ({ isMobile = false }) => {
     enabled: searchTerm.length > 2,
     staleTime: 60000 // 1 minute
   });
-  
+
   // Close suggestions when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -26,11 +27,24 @@ const SearchBar = ({ isMobile = false }) => {
         setShowSuggestions(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-  
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      // Check if Ctrl + S is pressed
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault(); // Prevent default save dialog
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -38,7 +52,7 @@ const SearchBar = ({ isMobile = false }) => {
       setShowSuggestions(false);
     }
   };
-  
+
   const handleSuggestionClick = (item) => {
     // Handle different media types
     if (item.media_type === 'movie') {
@@ -48,29 +62,35 @@ const SearchBar = ({ isMobile = false }) => {
     } else if (item.media_type === 'person') {
       navigate(`/actor/${item.id}`);
     }
-    
+
     setShowSuggestions(false);
     setSearchTerm('');
   };
-  
+
   return (
     <div className={`relative ${isMobile ? 'w-full' : 'w-72'}`} ref={searchRef}>
       <form onSubmit={handleSearch} className="flex group">
-        <input
-          type="text"
-          placeholder="Search movies, TV shows, actors..."
-          value={searchTerm}
-          onChange={(e) => {
-            setSearchTerm(e.target.value);
-            if (e.target.value.length > 2) {
-              setShowSuggestions(true);
-            } else {
-              setShowSuggestions(false);
-            }
-          }}
-          onFocus={() => searchTerm.length > 2 && setShowSuggestions(true)}
-          className="bg-gray-900/70 backdrop-blur-xl text-white rounded-l-xl border-l border-t border-b border-gray-700/50 px-5 py-2.5 w-full focus:outline-none focus:ring-2 focus:ring-[#82BC87]/50 transition-all duration-300 placeholder:text-gray-500 group-hover:bg-gray-800/70"
-        />
+        <div className="relative flex-grow">
+          <input
+            ref={searchInputRef}
+            type="text"
+            placeholder="Search..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              if (e.target.value.length > 2) {
+                setShowSuggestions(true);
+              } else {
+                setShowSuggestions(false);
+              }
+            }}
+            onFocus={() => searchTerm.length > 2 && setShowSuggestions(true)}
+            className="bg-gray-900/70 backdrop-blur-xl text-white rounded-l-xl border-l border-t border-b border-gray-700/50 px-5 py-2.5 w-full focus:outline-none focus:ring-2 focus:ring-[#82BC87]/50 transition-all duration-300 placeholder:text-gray-500 group-hover:bg-gray-800/70"
+          />
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none">
+            Ctrl + S
+          </span>
+        </div>
         <button
           type="submit"
           className="bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white rounded-r-xl px-4 hover:opacity-90 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-[#82BC87]/20 relative overflow-hidden"
@@ -81,7 +101,7 @@ const SearchBar = ({ isMobile = false }) => {
           </svg>
         </button>
       </form>
-      
+
       {/* Search suggestions */}
       {showSuggestions && searchTerm.length > 2 && (
         <div className="absolute z-50 mt-2 w-full bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-xl shadow-xl shadow-black/50 max-h-[480px] overflow-y-auto transition-all duration-300 animate-fadeIn">
@@ -94,7 +114,7 @@ const SearchBar = ({ isMobile = false }) => {
             <ul className="divide-y divide-gray-800/50">
               {suggestions.map((item) => {
                 if (!['movie', 'tv', 'person'].includes(item.media_type)) return null;
-                
+
                 return (
                   <li key={`${item.id}-${item.media_type}`}>
                     <button
@@ -104,7 +124,7 @@ const SearchBar = ({ isMobile = false }) => {
                       <div className="relative rounded-lg overflow-hidden flex-shrink-0">
                         <img
                           src={tmdbHelpers.getImageUrl(
-                            item.media_type === 'person' ? item.profile_path : item.poster_path, 
+                            item.media_type === 'person' ? item.profile_path : item.poster_path,
                             'w92'
                           ) || 'https://via.placeholder.com/45x68?text=No+Image'}
                           alt={item.title || item.name}
