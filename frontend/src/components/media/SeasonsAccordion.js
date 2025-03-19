@@ -1,12 +1,181 @@
 // File: frontend/src/components/media/SeasonsAccordion.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Listbox, Transition } from '@headlessui/react';
 import { tmdbApi, tmdbHelpers } from '../../utils/api';
 import { getLastWatchedEpisode } from '../../utils/LocalStorage';
 import Spinner from '../common/Spinner';
 import VideosButton from './VideosButton';
+
+const SeasonPicker = ({ seasons, activeSeason, setActiveSeason }) => {
+  const activeSeasionInfo = seasons.find(s => s.season_number === activeSeason);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const buttonRef = useRef(null);
+
+  const updatePosition = () => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const dropdownHeight = Math.min(window.innerHeight * 0.8, 600); // 80vh or 600px, whichever is smaller
+      
+      // If space below is not enough, position above the button
+      const top = spaceBelow < dropdownHeight 
+        ? Math.max(rect.top - dropdownHeight, 20) // Position above with min 20px from top
+        : rect.bottom + window.scrollY; // Position below
+
+      setDropdownPosition({
+        top,
+        left: rect.left + window.scrollX
+      });
+    }
+  };
+  
+  // Update position on scroll and resize
+  useEffect(() => {
+    const handleScroll = () => {
+      updatePosition();
+    };
+    
+    const handleResize = () => {
+      updatePosition();
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
+  // Adjust the dropdown on open/close
+  useEffect(() => {
+    updatePosition();
+  }, [activeSeason]);
+
+  return (
+    <Listbox value={activeSeason} onChange={setActiveSeason}>
+      <div className="relative mt-1">
+        <Listbox.Button 
+          ref={buttonRef}
+          onClick={updatePosition}
+          className="relative w-full md:w-72 cursor-pointer rounded-xl bg-gray-900/90 backdrop-blur-xl py-4 pl-6 pr-10 text-left border border-white/5 hover:border-[#82BC87]/30 transition-all duration-300 shadow-lg hover:shadow-[#82BC87]/10">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M7 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z"/>
+              </svg>
+            </div>
+            <div>
+              <span className="block text-sm text-[#82BC87]">Currently Selected</span>
+              <span className="block text-lg font-semibold text-white truncate">
+                {activeSeasionInfo?.name || `Season ${activeSeason}`}
+              </span>
+            </div>
+          </div>
+          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4">
+            <motion.svg 
+              animate={{ rotate: 180 }}
+              transition={{ duration: 0.3 }}
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-5 w-5 text-[#82BC87]" 
+              viewBox="0 0 20 20" 
+              fill="currentColor"
+            >
+              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            </motion.svg>
+          </span>
+        </Listbox.Button>
+        <Transition
+          as={Fragment}
+          enter="transition ease-out duration-200"
+          enterFrom="opacity-0 translate-y-1"
+          enterTo="opacity-100 translate-y-0"
+          leave="transition ease-in duration-150"
+          leaveFrom="opacity-100 translate-y-0"
+          leaveTo="opacity-0 translate-y-1"
+        >
+          <Listbox.Options 
+            className="fixed z-[100] w-[95vw] md:w-[600px] overflow-auto rounded-xl bg-gray-900/95 backdrop-blur-xl py-2 border border-white/5 shadow-lg shadow-black/50"
+            style={{
+              left: `${dropdownPosition.left}px`,
+              top: `${dropdownPosition.top}px`,
+              maxHeight: '80vh',
+              overflowY: 'auto',
+              overscrollBehavior: 'contain' // Prevent scroll chaining
+            }}>
+            <div className="px-4 py-2 border-b border-white/5">
+              <div className="text-sm text-gray-400">Select Season</div>
+              <div className="text-xs text-gray-500">{seasons.length} seasons available</div>
+            </div>
+            {seasons.filter(season => season.season_number > 0).map((season, index) => (
+              <Listbox.Option
+                key={season.id}
+                value={season.season_number}
+                className={({ active, selected }) => `
+                  relative cursor-pointer select-none py-4 px-4
+                  ${active ? 'bg-[#82BC87]/10' : ''}
+                  ${selected ? 'bg-[#82BC87]/20' : ''}
+                `}
+              >
+                {({ active, selected }) => (
+                  <motion.div 
+                    initial={false}
+                    animate={{ x: selected ? 10 : 0 }}
+                    className="flex items-center gap-6"
+                  >
+                    {selected && (
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute left-2 w-1 h-8 bg-[#82BC87] rounded-full"
+                      />
+                    )}
+                    <div className="relative">
+                      {season.poster_path ? (
+                        <img
+                          src={tmdbHelpers.getImageUrl(season.poster_path, 'w185')}
+                          alt={season.name}
+                          className="w-24 h-36 rounded-lg object-cover"
+                        />
+                      ) : (
+                        <div className="w-24 h-36 rounded-lg bg-gray-800 flex items-center justify-center">
+                          <span className="text-gray-500 text-3xl font-bold">{season.season_number}</span>
+                        </div>
+                      )}
+                      {selected && (
+                        <div className="absolute -top-2 -right-2 w-6 h-6 bg-[#82BC87] rounded-full flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-xl font-semibold text-white">{season.name}</div>
+                      <div className="text-sm text-gray-400 mt-1">
+                        {season.episode_count} Episodes
+                        {season.air_date && ` • ${new Date(season.air_date).getFullYear()}`}
+                      </div>
+                      {season.overview && (
+                        <div className="text-sm text-gray-500 mt-2 line-clamp-2">
+                          {season.overview}
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </Listbox.Option>
+            ))}
+          </Listbox.Options>
+        </Transition>
+      </div>
+    </Listbox>
+  );
+};
 
 const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
   const [isEpisodesExpanded, setIsEpisodesExpanded] = useState(true);
@@ -41,26 +210,11 @@ const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
       className="py-8"
     >
       <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex items-center gap-4"
-        >
-          <div className="relative">
-            <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M7 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z"/>
-              </svg>
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-[#E4D981] flex items-center justify-center text-xs font-bold">
-              {seasons.length}
-            </div>
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-white">Seasons & Episodes</h2>
-            <p className="text-gray-400 text-sm">Browse all available content</p>
-          </div>
-        </motion.div>
+        <SeasonPicker 
+          seasons={seasons} 
+          activeSeason={activeSeason} 
+          setActiveSeason={setActiveSeason}
+        />
 
         <motion.div
           initial={{ opacity: 0, x: 20 }}
@@ -89,38 +243,6 @@ const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
         </motion.div>
       </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="relative"
-      >
-        <div className="absolute inset-y-0 right-0 w-24 pointer-events-none bg-gradient-to-l from-[#161616] to-transparent z-10" />
-        <div className="flex overflow-x-auto pb-2 mb-6 -mx-2 px-2">
-          <div className="flex gap-2">
-            {seasons
-              .filter(season => season.season_number > 0)
-              .map((season) => (
-                <motion.button
-                  key={season.id}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setActiveSeason(season.season_number)}
-                  className={`relative group px-4 py-2 rounded-xl transition-all duration-300 ${
-                    activeSeason === season.season_number
-                      ? 'bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white shadow-lg'
-                      : 'bg-gray-800/50 hover:bg-gray-700/50 text-gray-300 hover:text-white'
-                  }`}
-                >
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#82BC87]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <span className="relative font-medium">{season.name}</span>
-                </motion.button>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Episodes Container - Modified for horizontal layout */}
       <AnimatePresence mode="wait">
         {isEpisodesExpanded && (
           <motion.div
@@ -140,7 +262,7 @@ const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M7 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z"/>
+                      <path d="M7 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z"/>
                     </svg>
                   </div>
                   <div>
@@ -188,7 +310,7 @@ const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
                               <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <div className="bg-[#82BC87] rounded-full p-3 transform group-hover:scale-110 transition-transform duration-300">
                                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                                   </svg>
                                 </div>
                               </div>
