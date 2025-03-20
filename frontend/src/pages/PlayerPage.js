@@ -186,7 +186,7 @@ const { data, isLoading, error } = useQuery({
                       If {playerType} isn't working, try our most reliable player: 
                       <span className="text-[#82BC87] font-medium ml-1 hover:text-[#6da972] cursor-pointer transition-colors duration-300" 
                             onClick={() => handlePlayerChange('vidsrc')}>
-                        Vidsrc
+                        Vidsrc. Ensure you have a pop-up ad blocker,
                       </span>
                     </span>
                   </div>
