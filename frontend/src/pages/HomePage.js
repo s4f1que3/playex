@@ -123,7 +123,7 @@ const { data: popularMovies, isLoading: moviesLoading, error: moviesError } = us
 // Fetch popular TV shows
 const { data: popularTVShows, isLoading: tvLoading, error: tvError } = useQuery({
   queryKey: ['popularTVShows'],
-  queryFn: () => tmdbApi.get('/tv/popular').then(res => res.data.results),
+  queryFn: () => tmdbApi.get('/tv/top_rated').then(res => res.data.results),
   staleTime: 600000 // 10 minutes
 });
   
@@ -244,14 +244,18 @@ const { data: collections, isLoading: collectionsLoading } = useQuery({
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
+                  transition={{ delay: 0.3 }}
                   className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-[#E4D981]/10 flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                        <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                       </svg>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-white">{fanFavorites?.length || 0}</div>
+                      <div className="text-sm text-gray-400">Fan Favorites</div>
                     </div>
                   </div>
                 </motion.div>
