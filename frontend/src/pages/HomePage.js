@@ -333,7 +333,7 @@ const continueWatchingData = getContinueWatching();
                       <motion.h2 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="text-4xl font-bold text-white flex flex-wrap items-center gap-1 mb-6 relative"
+                        className="text-4xl font-bold text-white flex flex-wrap items-center gap-1 mb-1 relative"
                       >
                         <span>Continue</span>
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#6da972] relative z-10">
