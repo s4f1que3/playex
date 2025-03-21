@@ -107,7 +107,7 @@ const SearchBar = ({ isMobile = false }) => {
             <input
               ref={searchInputRef}
               type="text"
-              placeholder="Search movies, shows, actors..."
+              placeholder={isMobile ? "Search..." : "Search movies, shows, actors..."}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -117,18 +117,18 @@ const SearchBar = ({ isMobile = false }) => {
               onFocus={() => searchTerm.length > 2 && setShowSuggestions(true)}
               className="w-full bg-gray-900/90 text-white placeholder-gray-400 
                          focus:placeholder-gray-200 placeholder-opacity-60 focus:placeholder-opacity-100
-                         px-12 py-3 rounded-xl border border-white/5 focus:border-[#82BC87]/20
+                         px-10 py-2 md:px-12 md:py-3 rounded-xl border border-white/5 focus:border-[#82BC87]/20
                          focus:outline-none focus:ring-2 focus:ring-[#82BC87]/20
-                         text-base font-medium tracking-normal
+                         text-sm md:text-base font-medium tracking-normal
                          transition-all duration-300"
             />
             
             {/* Search Icon */}
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 
+            <div className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-gray-400 
                           group-hover:text-[#82BC87] transition-colors duration-300">
               <motion.svg 
                 xmlns="http://www.w3.org/2000/svg" 
-                className="h-5 w-5"
+                className="h-4 w-4 md:h-5 md:w-5"
                 animate={{ rotate: showSuggestions ? 90 : 0 }}
                 transition={{ duration: 0.3 }}
                 fill="none" 
@@ -140,8 +140,8 @@ const SearchBar = ({ isMobile = false }) => {
               </motion.svg>
             </div>
 
-            {/* Keyboard Shortcut Badge */}
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 
+            {/* Keyboard Shortcut Badge - Hidden on Mobile */}
+            <div className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 
                           bg-gray-800/50 rounded-lg px-2 py-1
                           border border-white/5 opacity-50 group-hover:opacity-100
                           transition-all duration-300">
@@ -151,7 +151,7 @@ const SearchBar = ({ isMobile = false }) => {
         </div>
       </form>
 
-      {/* Enhanced Search Suggestions */}
+      {/* Enhanced Search Suggestions - Adjusted for Mobile */}
       <AnimatePresence>
         {showSuggestions && searchTerm.length > 2 && (
           <motion.div
@@ -159,26 +159,29 @@ const SearchBar = ({ isMobile = false }) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute z-50 w-full mt-4"
+            className={`fixed md:absolute z-50 ${isMobile ? 'left-0 right-0 mx-4' : 'w-full'} mt-2 md:mt-4`}
+            style={{
+              top: isMobile ? (searchRef.current?.getBoundingClientRect().bottom + 10) + 'px' : 'auto'
+            }}
           >
             <div className="relative overflow-hidden rounded-2xl">
-              {/* Backdrop Blur & Gradient - Now wraps all content */}
+              {/* Backdrop Blur & Gradient */}
               <div className="bg-gray-900/95 border border-white/5 shadow-[0_20px_70px_-10px_rgba(0,0,0,0.3)]">
                 {/* Loading State */}
                 {isLoading && (
-                  <div className="relative p-8 flex items-center justify-center">
-                    <div className="flex items-center gap-3 bg-[#82BC87]/10 px-4 py-2 rounded-xl">
+                  <div className="relative p-4 md:p-8 flex items-center justify-center">
+                    <div className="flex items-center gap-3 bg-[#82BC87]/10 px-3 py-2 rounded-xl">
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        className="w-5 h-5"
+                        className="w-4 h-4 md:w-5 md:h-5"
                       >
                         <svg className="text-[#82BC87]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                         </svg>
                       </motion.div>
-                      <span className="text-[#82BC87] font-medium">Searching...</span>
+                      <span className="text-[#82BC87] text-sm md:text-base font-medium">Searching...</span>
                     </div>
                   </div>
                 )}
@@ -187,33 +190,37 @@ const SearchBar = ({ isMobile = false }) => {
                 {!isLoading && suggestions && suggestions.length > 0 && (
                   <div className="relative divide-y divide-white/5">
                     {/* Category Labels */}
-                    <div className="px-6 py-4">
-                      <div className="flex items-center gap-2 text-sm text-gray-400">
-                        <span className="px-3 py-1 rounded-full bg-[#82BC87]/10 text-[#82BC87]">
+                    <div className="px-4 md:px-6 py-3 md:py-4">
+                      <div className="flex items-center gap-2 text-xs md:text-sm text-gray-400">
+                        <span className="px-2 py-1 rounded-full bg-[#82BC87]/10 text-[#82BC87]">
                           {suggestions.length} results
                         </span>
-                        <span className="text-gray-500">•</span>
-                        <span>Press <kbd className="px-2 py-0.5 rounded-md bg-gray-800 text-gray-400 text-xs">↑</kbd> <kbd className="px-2 py-0.5 rounded-md bg-gray-800 text-gray-400 text-xs">↓</kbd> to navigate</span>
+                        {!isMobile && (
+                          <>
+                            <span className="text-gray-500">•</span>
+                            <span>Press <kbd className="px-2 py-0.5 rounded-md bg-gray-800 text-gray-400 text-xs">↑</kbd> <kbd className="px-2 py-0.5 rounded-md bg-gray-800 text-gray-400 text-xs">↓</kbd> to navigate</span>
+                          </>
+                        )}
                       </div>
                     </div>
 
-                    {/* Results Grid */}
-                    <div className="max-h-[60vh] overflow-y-auto">
-                      <div className="p-4 grid grid-cols-1 gap-2">
+                    {/* Results Grid - Adjusted Heights for Mobile */}
+                    <div className="max-h-[40vh] md:max-h-[60vh] overflow-y-auto overscroll-contain">
+                      <div className="p-2 md:p-4 grid grid-cols-1 gap-2">
                         {suggestions.map((item, index) => (
                           <motion.button
                             key={`${item.id}-${item.media_type}`}
                             onClick={() => handleSuggestionClick(item)}
-                            className="w-full text-left flex items-start gap-4 p-4 rounded-xl 
+                            className="w-full text-left flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl 
                                      bg-gray-800/30 border border-white/5
-                                     hover:bg-gray-800/50 hover:border-[#82BC87]/20
+                                     hover:bg-gray-800/50 hover:border-[#82BC87]/20 active:bg-gray-800/60
                                      transition-all duration-300 group"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.05 }}
                           >
                             {/* Thumbnail */}
-                            <div className="relative h-16 w-12 rounded-lg overflow-hidden flex-shrink-0">
+                            <div className="relative h-14 w-10 md:h-16 md:w-12 rounded-lg overflow-hidden flex-shrink-0">
                               <img
                                 src={tmdbHelpers.getImageUrl(
                                   item.media_type === 'person' ? item.profile_path : item.poster_path,
@@ -227,21 +234,21 @@ const SearchBar = ({ isMobile = false }) => {
 
                             {/* Content */}
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium text-white group-hover:text-[#82BC87] transition-colors duration-300 truncate">
+                              <div className="font-medium text-sm md:text-base text-white group-hover:text-[#82BC87] transition-colors duration-300 truncate">
                                 {item.title || item.name}
                               </div>
-                              <div className="mt-1 flex items-center gap-2 text-sm text-gray-400">
+                              <div className="mt-1 flex items-center gap-2 text-xs md:text-sm text-gray-400">
                                 <span className="flex items-center gap-1">
                                   {item.media_type === 'movie' ? (
-                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
                                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13v10l6-5z"/>
                                     </svg>
                                   ) : item.media_type === 'tv' ? (
-                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
                                       <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
                                     </svg>
                                   ) : (
-                                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
                                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                                     </svg>
                                   )}
@@ -257,7 +264,7 @@ const SearchBar = ({ isMobile = false }) => {
                             </div>
 
                             {/* Arrow Icon */}
-                            <svg className="w-5 h-5 text-gray-500 group-hover:text-[#82BC87] transform group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-[#82BC87] transform group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
                             </svg>
                           </motion.button>
@@ -266,11 +273,11 @@ const SearchBar = ({ isMobile = false }) => {
                     </div>
 
                     {/* Footer Action */}
-                    <div className="p-4">
+                    <div className="p-3 md:p-4">
                       <button
                         onClick={handleSearch}
-                        className="w-full py-3 rounded-xl bg-gradient-to-r from-[#82BC87] to-[#6da972]
-                                 text-white font-medium hover:opacity-90 transition-all duration-300
+                        className="w-full py-2 md:py-3 rounded-xl bg-gradient-to-r from-[#82BC87] to-[#6da972]
+                                 text-white text-sm md:text-base font-medium hover:opacity-90 transition-all duration-300
                                  flex items-center justify-center gap-2 group"
                       >
                         <span>See all results for "{searchTerm}"</span>
@@ -278,7 +285,7 @@ const SearchBar = ({ isMobile = false }) => {
                           animate={{ x: [0, 5, 0] }}
                           transition={{ repeat: Infinity, duration: 1.5 }}
                           xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5"
+                          className="h-4 w-4 md:h-5 md:w-5"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
@@ -293,9 +300,9 @@ const SearchBar = ({ isMobile = false }) => {
 
                 {/* No Results State */}
                 {!isLoading && suggestions && suggestions.length === 0 && (
-                  <div className="p-8 text-center text-gray-400">
-                    <svg className="w-16 h-16 mx-auto mb-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <p>No results found for "{searchTerm}"</p>
+                  <div className="p-4 md:p-8 text-center text-gray-400">
+                    <svg className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <p className="text-sm md:text-base">No results found for "{searchTerm}"</p>
                   </div>
                 )}
               </div>
