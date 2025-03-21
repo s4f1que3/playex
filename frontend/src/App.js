@@ -33,8 +33,9 @@ import RecommendedContentPage from './pages/RecommendedContentPage';
 import SimilarContentPage from './pages/SimilarContentPage';
 import EpisodesPage from './pages/EpisodesPage';
 import FanFavoritesPage from './pages/FanFavoritesPage';
-import CollectionsPage from './pages/CollectionsPage'; // Add this import
-import CollectionsIndexPage from './pages/CollectionsIndexPage'; // Add this import
+import CollectionsPage from './pages/CollectionsPage';
+import CollectionsIndexPage from './pages/CollectionsIndexPage'; 
+import ContinueWatchingPage from './pages/ContinueWatchingPage';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -100,9 +101,10 @@ function App() {
                   <Route path=":mediaType/:id/similar" element={<SimilarContentPage />} />
                   <Route path=":mediaType/:id/recommended" element={<RecommendedContentPage />} />
                   <Route path="/tv/:id/episodes/:season" element={<EpisodesPage />} />
-                  <Route path="/fan-favorites" element={<FanFavoritesPage />} /> {/* Move this inside MainLayout */}
-                  <Route path="/collections" element={<CollectionsIndexPage />} /> {/* Add this route */}
-                  <Route path="/collection/:id" element={<CollectionsPage />} /> {/* Add this route */}
+                  <Route path="/fan-favorites" element={<FanFavoritesPage />} /> 
+                  <Route path="/collections" element={<CollectionsIndexPage />} /> 
+                  <Route path="/collection/:id" element={<CollectionsPage />} />
+                  <Route path="/continue-watching" element={<ContinueWatchingPage />} />
                   
                   {/* Actor routes */}
                   <Route path="/actor/:id" element={<ActorsPersonal />} />

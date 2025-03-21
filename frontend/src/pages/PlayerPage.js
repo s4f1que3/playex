@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
 import VideoPlayer from '../components/media/VideoPlayer';
 import Spinner from '../components/common/Spinner';
-import { setLastWatchedEpisode } from '../utils/LocalStorage';
+import { setLastWatchedEpisode, addToContinueWatching } from '../utils/LocalStorage';
 import { motion, AnimatePresence } from 'framer-motion';
 import PremiumLoader from '../components/common/PremiumLoader';
 
@@ -51,11 +51,16 @@ const { data, isLoading, error } = useQuery({
   }, [mediaType, id, season, episode, navigate]);
 
   useEffect(() => {
-    // Update last watched episode when player loads
+    // Update last watched episode or movie when player loads
     if (mediaType === 'tv') {
       setLastWatchedEpisode(id, season, episode);
     }
-  }, [mediaType, id, season, episode]);
+    
+    // Add to continue watching for both movies and TV shows
+    if (data) {
+      addToContinueWatching(id, mediaType, data);
+    }
+  }, [mediaType, id, season, episode, data]);
   
   if (isLoading) {
     return <PremiumLoader size="large" text="Preparing Content" overlay={true} />;
@@ -186,10 +191,17 @@ const { data, isLoading, error } = useQuery({
                       If {playerType} isn't working, try our most reliable player: 
                       <span className="text-[#82BC87] font-medium ml-1 hover:text-[#6da972] cursor-pointer transition-colors duration-300" 
                             onClick={() => handlePlayerChange('vidsrc')}>
-                        Vidsrc;
+                        Vidsrc
                       </span>
-                      Ensure you have a pop-up ad blocker.
                     </span>
+                    <span>Ensure you have an</span>
+                    <span className="
+                    text-[#82BC87] font-medium ml-1 hover:text-[#6da972] 
+                    cursor-pointer transition-colors duration-300"> 
+                        <a href=
+                        "https://chromewebstore.google.com/detail/popup-blocker-strict/aefkmifgmaafnojlojpnekbpbmjiiogg">
+                          ad blocker.</a>
+                      </span>
                   </div>
                 </div>
               </motion.div>

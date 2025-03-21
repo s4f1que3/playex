@@ -7,6 +7,7 @@ import HeroSlider from '../components/media/HeroSlider';
 import MediaCarousel from '../components/media/MediaCarousel';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
+import { getContinueWatching } from '../utils/LocalStorage';
 
 const TrendingSection = ({ items, loading, error }) => {
   return (
@@ -190,6 +191,8 @@ const { data: collections, isLoading: collectionsLoading } = useQuery({
   staleTime: 600000 // 10 minutes
 });
 
+const continueWatchingData = getContinueWatching();
+
   return (
     <div className="-mt-[72px] overflow-hidden">
       {/* Hero Section */}
@@ -282,6 +285,104 @@ const { data: collections, isLoading: collectionsLoading } = useQuery({
           </div>
         </div>
       </motion.div>
+
+      {/* Continue Watching Section */}
+
+      {continueWatchingData.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="relative mb-20"
+          >
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
+              <motion.div 
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  rotate: [0, -45, 0] 
+                }} 
+                transition={{ 
+                  duration: 10,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                className="absolute inset-0"
+              >
+                <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
+              </motion.div>
+            </div>
+
+            <div className="container mx-auto px-4">
+              <div className="relative py-12">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                  <div className="flex items-center gap-6">
+                    <div className="relative">
+                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#82BC87] to-[#6da972] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
+                        <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                      </div>
+                      <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#82BC87] flex items-center justify-center animate-pulse">
+                        <span className="text-xs font-bold text-white">⏱️</span>
+                      </div>
+                    </div>
+                    <div>
+                      <motion.h2 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="text-4xl font-bold text-white"
+                      >
+                        Continue
+                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#6da972] ml-3">
+                          Watching
+                        </span>
+                      </motion.h2>
+                      <p className="text-gray-400 mt-2">Pick up where you left off</p>
+                    </div>
+                  </div>
+
+                  <Link
+                    to="/continue-watching"
+                    className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#82BC87]/10 to-transparent 
+                             hover:from-[#82BC87]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
+                  >
+                    <span className="text-[#82BC87] font-medium whitespace-nowrap">View All</span>
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      className="h-5 w-5 text-[#82BC87] transform group-hover:translate-x-1 transition-transform duration-300"
+                      viewBox="0 0 20 20" 
+                      fill="currentColor"
+                    >
+                      <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </Link>
+                </div>
+
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
+                  <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
+                  
+                  <MediaCarousel
+                    items={continueWatchingData.map(item => ({
+                      ...item.details,
+                      link: item.media_type === 'tv' && item.details.last_episode
+                        ? `/player/tv/${item.media_id}/${item.details.last_episode.season}/${item.details.last_episode.episode}`
+                        : `/player/${item.media_type}/${item.media_id}`
+                    }))}
+                    loading={false}
+                    error={null}
+                    showType={true}
+                  />
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* end of section */}
 
       {/* Main Content Section - Removed padding top since we don't need it anymore */}
       <div className="bg-[#161616] relative z-20">

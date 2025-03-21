@@ -5,6 +5,7 @@ const FAVORITES_KEY = 'user_favorites';
 const WATCHLIST_KEY = 'user_watchlist';
 const PROGRESS_KEY = 'user_watch_progress';
 const LAST_WATCHED_KEY = 'user_last_watched';
+const CONTINUE_WATCHING_KEY = 'user_continue_watching';
 
 // Favorites helper functions
 export const getFavorites = () => {
@@ -137,4 +138,46 @@ export const toggleWatchlist = (mediaId, mediaType, details) => {
     addToWatchlist(mediaId, mediaType, details);
     return true;
   }
+};
+
+// Add new functions for continue watching
+export const addToContinueWatching = (mediaId, mediaType, details) => {
+  const continueWatching = getContinueWatching();
+  
+  // Create new item with timestamp
+  const newItem = {
+    media_id: mediaId,
+    media_type: mediaType,
+    details,
+    last_watched: new Date().toISOString()
+  };
+  
+  // Remove existing entry if present (to update timestamp)
+  const filteredList = continueWatching.filter(
+    item => !(item.media_id === mediaId && item.media_type === mediaType)
+  );
+  
+  // Add new item at the beginning
+  filteredList.unshift(newItem);
+  
+  // Keep only last 20 items
+  const updatedList = filteredList.slice(0, 20);
+  
+  localStorage.setItem(CONTINUE_WATCHING_KEY, JSON.stringify(updatedList));
+  return newItem;
+};
+
+export const getContinueWatching = () => {
+  const data = localStorage.getItem(CONTINUE_WATCHING_KEY);
+  return data ? JSON.parse(data) : [];
+};
+
+export const removeContinueWatching = (mediaId, mediaType) => {
+  const list = getContinueWatching();
+  const filteredList = list.filter(
+    item => !(item.media_id === mediaId && item.media_type === mediaType)
+  );
+  
+  localStorage.setItem(CONTINUE_WATCHING_KEY, JSON.stringify(filteredList));
+  return true;
 };
