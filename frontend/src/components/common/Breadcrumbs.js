@@ -105,8 +105,12 @@ const Breadcrumbs = () => {
         return 'Collections';
       case 'collection':
         return 'Collection';
+      case 'airing-shows':
+        return 'Airing Shows';
       default:
-        return pathname;
+        return pathname.split('-').map(word => 
+          word.charAt(0).toUpperCase() + word.slice(1)
+        ).join(' ');
     }
   };
   

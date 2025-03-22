@@ -39,6 +39,7 @@ import CollectionsPage from './pages/CollectionsPage';
 import CollectionsIndexPage from './pages/CollectionsIndexPage'; 
 import ContinueWatchingPage from './pages/ContinueWatchingPage';
 import SettingsPage from './pages/SettingsPage';
+import AiringShowsPage from './pages/AiringShowsPage';
 
 // Lazy load all routes
 const routes = {
@@ -145,6 +146,7 @@ function App() {
                   <Route path="/collection/:id" element={<CollectionsPage />} />
                   <Route path="/continue-watching" element={<ContinueWatchingPage />} />
                   <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/airing-shows" element={<AiringShowsPage />} />
                   
                   {/* Actor routes */}
                   <Route path="/actor/:slug" element={<ActorsPersonal />} />

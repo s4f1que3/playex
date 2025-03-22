@@ -52,6 +52,12 @@
   background-size: 20px 20px;
 }
 
+.bg-pattern-grid {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
 @keyframes fancy-glow {
   0%, 100% { filter: drop-shadow(0 0 5px rgba(130,188,135,0.5)); }
   50% { filter: drop-shadow(0 0 15px rgba(130,188,135,0.8)); }

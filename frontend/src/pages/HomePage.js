@@ -2,12 +2,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { tmdbApi, getFanFavorites } from '../utils/api';
+import { tmdbApi } from '../utils/api';
 import HeroSlider from '../components/media/HeroSlider';
 import MediaCarousel from '../components/media/MediaCarousel';
 import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { getContinueWatching } from '../utils/LocalStorage';
+import EpisodeGuide from '../components/sections/EpisodeGuide';
 
 const TrendingSection = ({ items, loading, error }) => {
   return (
@@ -146,10 +147,15 @@ const { data: topRatedTVShows, isLoading: topRatedTVLoading, error: topRatedTVEr
 const { data: fanFavorites, isLoading: fanFavoritesLoading } = useQuery({
   queryKey: ['fanFavorites'],
   queryFn: async () => {
-    const data = await getFanFavorites();
-    return data.slice(0, 20); // Limit to 20 items
+    try {
+      const response = await tmdbApi.get('/movie/top_rated');
+      return response.data.results.filter(movie => movie.vote_average >= 7.5).slice(0, 20);
+    } catch (error) {
+      console.error('Error fetching fan favorites:', error);
+      return [];
+    }
   },
-  staleTime: 600000 // 10 minutes
+  staleTime: 600000
 });
 
 // Replace the broken collections query with this fixed version
@@ -193,18 +199,21 @@ const { data: collections, isLoading: collectionsLoading } = useQuery({
 
 const continueWatchingData = getContinueWatching();
 
+// Filter out items with missing images before passing to HeroSlider
+const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [];
+
   return (
     <div className="-mt-[72px] overflow-hidden">
-      {/* Hero Section */}
+      {/* Hero Section - Updated to use filtered items */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="relative"  // Removed min-h-screen to prevent extra space
+        className="relative z-10"
       >
-        <HeroSlider items={trendingData || []} />
+        <HeroSlider items={validTrendingItems} />
         {/* Transitional Stats Section - Adjusted positioning and z-index */}
-        <div className="relative -mt-32 z-20"> {/* Changed from absolute to relative and adjusted margin */}
+        <div className="relative z-20"> {/* Changed from absolute to relative and adjusted margin */}
           <div className="bg-gradient-to-t from-[#161616] via-[#161616]/90 to-transparent pb-12 pt-32">
             <div className="container mx-auto px-4">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -286,9 +295,13 @@ const continueWatchingData = getContinueWatching();
         </div>
       </motion.div>
 
-      {/* Continue Watching Section */}
+      <div className="space-y-12">
+        {/* Insert EpisodeGuide before ContinueWatching */}
+        <EpisodeGuide />
+        
+        {/* Continue Watching Section */}
 
-      {continueWatchingData.length > 0 && (
+        {continueWatchingData.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -511,7 +524,7 @@ const continueWatchingData = getContinueWatching();
               <div className="container mx-auto px-4">
                 <div className="relative py-12">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4"> {/* Changed from gap-8 to gap-6 */}
                       <div className="relative">
                         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FF8E53] to-[#FF6B6B] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
                           <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
@@ -524,14 +537,14 @@ const continueWatchingData = getContinueWatching();
                           <span className="text-xs font-bold text-white">📚</span>
                         </div>
                       </div>
-                      <div>
+                      <div className="mr-4"> {/* Added right margin */}
                         <motion.h2 
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className="text-4xl font-bold text-white"
+                          className="text-4xl font-bold text-white flex flex-col items-start" // Changed to flex-col and items-start
                         >
                           Movie
-                          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF8E53] to-[#FF6B6B] ml-3">
+                          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF8E53] to-[#FF6B6B]">
                             Collections
                           </span>
                         </motion.h2>
@@ -749,7 +762,9 @@ const continueWatchingData = getContinueWatching();
             </motion.div>
           </div>
         </div>
+        </div>
       </div>
+              
     </div>
   );
 };
