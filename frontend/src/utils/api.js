@@ -256,10 +256,10 @@ export const tmdbHelpers = {
   }
 };
 
-const getFanFavorites = async () => {
+const getFanFavorites = async (mediaType = 'tv') => {
   try {
     // First fetch to get total pages
-    const firstResponse = await tmdbApi.get('/account/679f061bac5a7951b9cb5caa/watchlist/tv', {
+    const firstResponse = await tmdbApi.get(`/account/679f061bac5a7951b9cb5caa/watchlist/${mediaType}`, {
       params: {
         language: 'en-US',
         page: 1,
@@ -274,7 +274,7 @@ const getFanFavorites = async () => {
     if (totalPages > 1) {
       const remainingPages = Array.from({ length: totalPages - 1 }, (_, i) => i + 2);
       const pagePromises = remainingPages.map(page =>
-        tmdbApi.get('/account/679f061bac5a7951b9cb5caa/watchlist/tv', {
+        tmdbApi.get(`/account/679f061bac5a7951b9cb5caa/watchlist/${mediaType}`, {
           params: {
             language: 'en-US',
             page: page,
@@ -290,7 +290,7 @@ const getFanFavorites = async () => {
 
     return allResults;
   } catch (error) {
-    console.error('Error fetching fan favorites:', error);
+    console.error(`Error fetching ${mediaType} fan favorites:`, error);
     return [];
   }
 };

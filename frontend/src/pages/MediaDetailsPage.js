@@ -51,6 +51,18 @@ const MediaDetailsPage = ({ mediaType }) => {
     enabled: !!mediaData
   });
 
+  const { data: mediaDetails, isLoading: mediaLoading } = useQuery({
+    queryKey: ['mediaDetails', mediaType, id],
+    queryFn: () => tmdbApi.get(`/${mediaType}/${id}`),
+    select: (res) => res.data
+  });
+
+  const { data: movieDetails } = useQuery({
+    queryKey: ['movieDetails', id],
+    queryFn: () => tmdbApi.get(`/movie/${id}`).then(res => res.data),
+    enabled: mediaType === 'movie', // Only fetch for movies
+    staleTime: 300000
+  });
 
   const { data: recommendationsData, isLoading: isLoadingRecommendations, isFetchingNextPage: isFetchingMoreRecommendations, fetchNextPage: fetchNextRecommendations } = useInfiniteQuery({
     queryKey: ['mediaRecommendations', mediaType, id],
@@ -145,21 +157,85 @@ const MediaDetailsPage = ({ mediaType }) => {
   const hasSimilar = similarData?.pages && similarData.pages.length > 0;
   const hasRecommendations = recommendationsData?.pages && recommendationsData.pages.length > 0;
 
+  const ActionsSection = () => (
+    <div className="flex flex-col gap-6 w-full">
+      {/* Media Actions Container - Made full width on mobile */}
+      <div className="w-full">
+        <MediaActions
+          media={mediaData}
+          mediaType={mediaType}
+          isInWatchlist={userActions.isInWatchlist}
+          isInFavorites={userActions.isInFavorites}
+          onActionComplete={handleActionComplete}
+          activeSeason={activeSeason}
+          showVideosButton={mediaType === 'movie'}
+        />
+      </div>
+
+      {/* Collection Button - Updated responsive styles */}
+      {mediaType === 'movie' && movieDetails?.belongs_to_collection && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="w-full"
+        >
+          <Link
+            to={`/collection/${movieDetails.belongs_to_collection.id}`}
+            className="group relative block p-4 sm:p-6 bg-gradient-to-br from-[#E4D981]/10 to-transparent 
+                       backdrop-blur-sm rounded-xl sm:rounded-2xl border border-[#E4D981]/20 overflow-hidden
+                       transition-all duration-500 hover:border-[#E4D981]/40 w-full"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-[#E4D981]/0 via-[#E4D981]/5 to-[#E4D981]/0 
+                          opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+            
+            <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              {/* Icon container */}
+              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-[#E4D981]/10 
+                            flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                     className="h-5 w-5 sm:h-6 sm:w-6 text-[#E4D981]" 
+                     viewBox="0 0 20 20" 
+                     fill="currentColor"
+                >
+                  <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                </svg>
+              </div>
+
+              {/* Text content */}
+              <div className="flex-grow min-w-0">
+                <h3 className="text-[#E4D981] text-sm sm:text-base font-medium mb-1">Part of the Collection</h3>
+                <p className="text-lg sm:text-xl text-white font-semibold truncate group-hover:text-[#E4D981] transition-colors duration-300">
+                  {movieDetails.belongs_to_collection.name}
+                </p>
+              </div>
+
+              {/* Arrow icon */}
+              <div className="hidden sm:flex flex-shrink-0 items-center">
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  className="h-5 w-5 sm:h-6 sm:w-6 text-[#E4D981] transform group-hover:translate-x-1 transition-transform duration-300"
+                  viewBox="0 0 20 20" 
+                  fill="currentColor"
+                >
+                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </div>
+            </div>
+          </Link>
+        </motion.div>
+      )}
+    </div>
+  );
+
   return (
     <div className="-mx-4 -mt-6">
       <MediaInfo media={mediaData} mediaType={mediaType} />
       
       <div className="container mx-auto px-4">
-        <div className="flex items-center gap-4 py-6">
-          <MediaActions
-            media={mediaData}
-            mediaType={mediaType}
-            isInWatchlist={userActions.isInWatchlist}
-            isInFavorites={userActions.isInFavorites}
-            onActionComplete={handleActionComplete}
-            activeSeason={activeSeason}
-            showVideosButton={mediaType === 'movie'} // Add this prop
-          />
+        {/* Updated container padding for better mobile spacing */}
+        <div className="flex items-stretch gap-4 py-4 sm:py-6">
+          <ActionsSection />
         </div>
 
         {mediaType === 'tv' && mediaData.seasons && (
