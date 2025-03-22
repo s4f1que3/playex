@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbHelpers } from '../../utils/api';
+import { createMediaUrl } from '../../utils/slugify';
 
 const CastList = ({ cast }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -11,6 +12,12 @@ const CastList = ({ cast }) => {
   
   const displayCast = isExpanded ? cast : cast.slice(0, 6);
   
+  const getActorLink = (actor) => {
+    // Create a slug from the actor's name and ID
+    const slug = createMediaUrl('actor', actor.id, actor.name).split('/').pop();
+    return `/actor/${slug}`;
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -80,7 +87,7 @@ const CastList = ({ cast }) => {
                     onHoverEnd={() => setHoveredId(null)}
                   >
                     <Link 
-                      to={`/actor/${actor.id}`}
+                      to={getActorLink(actor)}
                       className="block bg-gradient-to-br from-gray-800/90 to-gray-900/90 rounded-xl 
                                overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-xl 
                                hover:shadow-[#82BC87]/10 relative group"

@@ -178,7 +178,7 @@ const RequestForm = () => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative mt-20 mb-12"
+      className="relative mt-12 sm:mt-20 mb-8 sm:mb-12" // Adjusted margins for mobile
     >
       {/* Decorative Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -187,62 +187,64 @@ const RequestForm = () => {
       </div>
 
       <div className="container mx-auto px-4">
-        <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden">
-          <div className="p-6 md:p-8">
+        <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/5 overflow-hidden">
+          <div className="p-4 sm:p-6 md:p-8"> {/* Adjusted padding for mobile */}
             <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-              <div className="w-16 h-16 rounded-xl bg-[#82BC87]/10 flex items-center justify-center mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-[#82BC87]/10 flex items-center justify-center mb-4 sm:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 sm:h-8 sm:w-8 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h2 className="text-3xl font-bold text-white mb-3">Request a TV Show</h2>
-              <p className="text-gray-400 mb-8">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-3">Request a TV Show</h2>
+              <p className="text-sm sm:text-base text-gray-400 mb-6 sm:mb-8 max-w-lg">
                 Can't find your favorite show? Let us know and we'll add it to our collection!
               </p>
 
-              <form onSubmit={handleSubmit} className="w-full">
+              <form onSubmit={handleSubmit} className="w-full max-w-xl">
                 <div className="relative">
                   <textarea
                     value={request}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value.length <= 50) {
+                      if (value.length <= 200) {
                         setRequest(value);
                       }
                     }}
                     placeholder="Enter the name of the TV show you'd like to see..."
-                    maxLength={50}
-                    rows={1}
-                    className="w-full px-6 py-4 pr-[160px] rounded-xl bg-gray-800/50 border border-white/5 
+                    maxLength={200}
+                    rows={2}
+                    className="w-full px-4 sm:px-6 py-4 sm:py-5 pr-[120px] sm:pr-[160px] rounded-lg sm:rounded-xl 
+                             bg-gray-800/50 border border-white/5 text-sm sm:text-base
                              text-white placeholder-gray-400 focus:outline-none focus:ring-2 
                              focus:ring-[#82BC87]/50 focus:border-transparent transition-all duration-300
                              resize-none overflow-hidden leading-relaxed"
                     style={{
-                      minHeight: '56px',
+                      minHeight: '80px',  // Increased minimum height
                       height: 'auto',
-                      paddingBottom: '3rem', // Increased padding at bottom
+                      paddingBottom: '2.25rem',  // Slightly reduced to bring counter up
                       lineHeight: '1.5',
                     }}
                     onInput={(e) => {
                       e.target.style.height = 'auto';
-                      e.target.style.height = Math.max(e.target.scrollHeight + 24, 80) + 'px'; // Increased minimum height
+                      e.target.style.height = Math.max(e.target.scrollHeight + 16, 80) + 'px';
                     }}
                   />
                   
-                  {/* Submit Button */}
+                  {/* Submit Button - Responsive sizing */}
                   <button
                     type="submit"
                     disabled={!request || isSubmitting}
-                    className={`absolute right-2 top-2 px-6 py-2 rounded-lg 
+                    className={`absolute right-2 top-2 px-3 sm:px-6 py-2 rounded-lg text-sm sm:text-base
                               ${request ? 'bg-[#82BC87] hover:bg-[#6da972]' : 'bg-gray-700'} 
                               text-white transition-all duration-300 flex items-center gap-2
-                              disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px]`}
+                              disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px] sm:min-w-[140px]
+                              justify-center`}
                   >
                     {isSubmitting ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <>
-                        <span>Submit Request</span>
+                        <span>Submit</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                         </svg>
@@ -250,18 +252,19 @@ const RequestForm = () => {
                     )}
                   </button>
 
-                  {/* Character Counter - Repositioned lower */}
-                  <div className="absolute left-6 bottom-4 px-2 py-1 rounded-md bg-gray-800/80 
+                  {/* Adjusted Character Counter Position */}
+                  <div className="absolute left-4 sm:left-6 bottom-3 px-2 py-1 rounded-md bg-gray-800/80 
                                 backdrop-blur-sm text-xs font-medium border border-white/5
                                 transition-all duration-300">
                     <span className={`${
-                      request.length >= 45 ? 'text-yellow-400' : 
-                      request.length >= 40 ? 'text-[#82BC87]' : 'text-gray-400'
+                      request.length >= 190 ? 'text-yellow-400' : 
+                      request.length >= 195 ? 'text-[#82BC87]' : 'text-gray-400'
                     } transition-colors duration-300`}>
                       {request.length}
                     </span>
-                    <span className="text-gray-500">/50 characters</span>
+                    <span className="text-gray-500">/200</span>
                   </div>
+
                 </div>
               </form>
 

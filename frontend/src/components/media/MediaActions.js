@@ -14,6 +14,7 @@ import {
   setLastWatchedEpisode 
 } from '../../utils/LocalStorage';
 import { motion } from 'framer-motion';
+import { createMediaUrl } from '../../utils/slugify';
 
 const ActionButton = ({ onClick, icon, text, isActive, isLoading, variant = 'primary' }) => (
   <motion.button
@@ -193,6 +194,15 @@ const MediaActions = ({
       setLoading({ ...loading, favorites: false });
     }
   };
+
+  const handleWatchClick = () => {
+    const slug = createMediaUrl(mediaType, media.id, media.title || media.name).split('/')[2];
+    if (mediaType === 'movie') {
+      navigate(`/player/movie/${slug}`);
+    } else {
+      navigate(`/player/tv/${slug}/${activeSeason}/1`);
+    }
+  };
   
   return (
     <motion.div 
@@ -222,12 +232,7 @@ const MediaActions = ({
               : mediaType === 'movie' 
                 ? 'Watch Now' 
                 : `Start S${activeSeason} E1`}
-            onClick={() => {
-              const path = mediaType === 'movie'
-                ? `/player/movie/${media.id}`
-                : `/player/tv/${media.id}/${lastWatched?.season || activeSeason}/${lastWatched?.episode || 1}`;
-              navigate(path);
-            }}
+            onClick={handleWatchClick}
           />
 
           <ActionButton

@@ -4,18 +4,40 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { tmdbApi } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
+import { useCollectionResolver } from '../hooks/useCollectionResolver';
+import PremiumLoader from '../components/common/PremiumLoader';
 
 const CollectionsPage = () => {
-  const { id } = useParams();
+  const { id: slugOrId } = useParams();
+  const { id, loading: resolverLoading, error: resolverError } = useCollectionResolver(slugOrId);
 
-  const { data: collection, isLoading } = useQuery({
+  const { data: collection, isLoading: collectionLoading } = useQuery({
     queryKey: ['collection', id],
     queryFn: () => tmdbApi.get(`/collection/${id}`).then(res => res.data),
     enabled: !!id,
     staleTime: 600000 // 10 minutes
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  const isLoading = resolverLoading || collectionLoading;
+
+  if (isLoading) {
+    return <PremiumLoader text="Loading Collection" overlay={true} />;
+  }
+
+  if (resolverError || !collection) {
+    return (
+      <div className="min-h-screen bg-[#161616] pt-24">
+        <div className="container mx-auto px-4">
+          <div className="bg-red-900/20 border border-red-900/50 rounded-xl p-8 text-center">
+            <h2 className="text-2xl font-bold text-red-500 mb-2">Collection Not Found</h2>
+            <p className="text-gray-400">
+              {resolverError || "The requested collection doesn't exist or has been removed."}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#161616]">

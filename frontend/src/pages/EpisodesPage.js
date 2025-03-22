@@ -3,9 +3,12 @@ import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
+import { createMediaUrl } from '../utils/slugify';
+import { useSlugResolver } from '../hooks/useSlugResolver';
 
 const EpisodesPage = () => {
-  const { id, season } = useParams();
+  const { slug, season } = useParams();
+  const { id, loading } = useSlugResolver('tv', slug);
 
   // Fetch TV show details
   const { data: showData } = useQuery({
@@ -20,6 +23,10 @@ const EpisodesPage = () => {
     queryFn: () => tmdbApi.get(`/tv/${id}/season/${season}`).then(res => res.data),
     staleTime: 300000
   });
+
+  const getEpisodeLink = (seasonNumber, episodeNumber) => {
+    return `/player/tv/${slug}/${seasonNumber}/${episodeNumber}`;
+  };
 
   if (isLoading) {
     return (
@@ -89,7 +96,7 @@ const EpisodesPage = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <Link
-                  to={`/player/tv/${id}/${season}/${episode.episode_number}`}
+                  to={getEpisodeLink(season, episode.episode_number)}
                   className="block bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden hover:border-[#82BC87]/20 transition-all duration-500 group"
                 >
                   <div className="flex flex-col md:flex-row">

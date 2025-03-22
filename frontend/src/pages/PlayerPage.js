@@ -3,21 +3,30 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
 import VideoPlayer from '../components/media/VideoPlayer';
-import Spinner from '../components/common/Spinner';
 import { setLastWatchedEpisode, addToContinueWatching } from '../utils/LocalStorage';
 import { motion, AnimatePresence } from 'framer-motion';
 import PremiumLoader from '../components/common/PremiumLoader';
+import { useSlugResolver } from '../hooks/useSlugResolver';
+import { parseMediaUrl, createMediaUrl, getIdFromSlug } from '../utils/slugify';
 
 const PlayerPage = ({ mediaType }) => {
-  const { id, season, episode } = useParams();
+  const { slug, season, episode } = useParams();
+  const { id, loading: slugLoading } = useSlugResolver(mediaType, slug);
   const navigate = useNavigate();
   
-  // Add state for player type
   const [playerType, setPlayerType] = useState(() => {
-    // Get from localStorage or default to 'vidlink'
     return localStorage.getItem('preferredPlayer') || 'vidlink';
   });
-  
+
+  // Combine navigation logic into a single useEffect
+  useEffect(() => {
+    if (mediaType === 'tv') {
+      if (!season || !episode || !slug) {
+        navigate(`/tv/${slug || ''}`);
+      }
+    }
+  }, [mediaType, slug, season, episode, navigate]);
+
   // Function to handle player type change
   const handlePlayerChange = (type) => {
     localStorage.setItem('preferredPlayer', type);
@@ -43,23 +52,14 @@ const { data, isLoading, error } = useQuery({
   staleTime: 300000 // 5 minutes
 });
   
-  // Redirect to details page if missing required params for TV shows
   useEffect(() => {
-    if (mediaType === 'tv' && (!season || !episode)) {
-      navigate(`/tv/${id}`);
-    }
-  }, [mediaType, id, season, episode, navigate]);
-
-  useEffect(() => {
-    // Update last watched episode or movie when player loads
+    if (!data) return;
+    
     if (mediaType === 'tv') {
       setLastWatchedEpisode(id, season, episode);
     }
     
-    // Add to continue watching for both movies and TV shows
-    if (data) {
-      addToContinueWatching(id, mediaType, data);
-    }
+    addToContinueWatching(id, mediaType, data);
   }, [mediaType, id, season, episode, data]);
   
   if (isLoading) {
@@ -91,6 +91,12 @@ const { data, isLoading, error } = useQuery({
     ? (data.release_date ? new Date(data.release_date).getFullYear() : '') 
     : (data.first_air_date ? new Date(data.first_air_date).getFullYear() : '');
   
+  // Update episode navigation links
+  const createEpisodeLink = (seasonNum, episodeNum) => {
+    if (!slug) return '#';
+    return `/player/tv/${slug}/${seasonNum}/${episodeNum}`;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -326,7 +332,7 @@ const { data, isLoading, error } = useQuery({
                         {/* Previous Episode */}
                         {data.episode && data.episode.episode_number > 1 && (
                           <Link 
-                            to={`/player/tv/${id}/${season}/${parseInt(episode) - 1}`}
+                            to={createEpisodeLink(season, parseInt(episode) - 1)}
                             className="group relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm border border-white/5 transition-all duration-300 hover:border-[#82BC87]/20"
                           >
                             <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
@@ -343,7 +349,7 @@ const { data, isLoading, error } = useQuery({
 
                         {/* All Episodes */}
                         <Link 
-                          to={`/tv/${id}/episodes/${season}`}
+                          to={`/tv/${slug}/episodes/${season}`}
                           className="group relative overflow-hidden rounded-xl bg-[#82BC87]/10 backdrop-blur-sm border border-[#82BC87]/20 transition-all duration-300 hover:bg-[#82BC87]/20"
                         >
                           <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
@@ -361,7 +367,7 @@ const { data, isLoading, error } = useQuery({
                         {data.episode && data.episode.season_number && 
                         data.episode.episode_number < (data.seasons.find(s => s.season_number === parseInt(season))?.episode_count || 0) && (
                           <Link 
-                            to={`/player/tv/${id}/${season}/${parseInt(episode) + 1}`}
+                            to={createEpisodeLink(season, parseInt(episode) + 1)}
                             className="group relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm border border-white/5 transition-all duration-300 hover:border-[#82BC87]/20"
                           >
                             <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />

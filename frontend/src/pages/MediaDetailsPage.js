@@ -13,9 +13,12 @@ import VideosButton from '../components/media/VideosButton';
 import { motion, AnimatePresence } from 'framer-motion';
 import MediaCard from '../components/common/MediaCard';  // Add this import
 import PremiumLoader from '../components/common/PremiumLoader';
+import { parseMediaUrl } from '../utils/slugify';
+import { useSlugResolver } from '../hooks/useSlugResolver';
 
 const MediaDetailsPage = ({ mediaType }) => {
-  const { id } = useParams();
+  const { slug } = useParams();
+  const { id, loading: slugLoading } = useSlugResolver(mediaType, slug);
   const location = useLocation();
   const [userActions, setUserActions] = useState({
     isInWatchlist: false,
@@ -131,7 +134,7 @@ const MediaDetailsPage = ({ mediaType }) => {
   const displaySimilar = expandedSimilar ? similarResults : similarResults?.slice(0, initialItems);
   const displayRecommended = expandedRecommended ? recommendedResults : recommendedResults?.slice(0, initialItems);
 
-  if (isLoadingMedia) {
+  if (slugLoading || isLoadingMedia) {
     return <PremiumLoader text="Loading Details" overlay={true} />;
   }
   
@@ -241,6 +244,7 @@ const MediaDetailsPage = ({ mediaType }) => {
         {mediaType === 'tv' && mediaData.seasons && (
           <SeasonsAccordion 
             tvId={id} 
+            tvName={mediaData.name}  // Make sure this is being passed
             seasons={mediaData.seasons} 
             activeSeason={activeSeason}
             setActiveSeason={setActiveSeason}

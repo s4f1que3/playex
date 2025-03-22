@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import SearchBar from '../components/common/SearchBar';
 import DropdownMenu from '../components/navigation/DropdownMenu';
 import PrefetchLink from '../components/common/PrefetchLink';  // Update import
+import HeaderAccountMenu from '../components/navigation/HeaderAccountMenu';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -63,12 +64,13 @@ const Header = () => {
             {/* Enhanced SearchBar */}
             <SearchBar />
             <DropdownMenu key={Date.now()} /> {/* Force remount with unique key */}
+            <HeaderAccountMenu />
           </div>
 
           {/* Mobile Menu Button with Animation */}
           <div className="md:hidden flex items-center">
-            <div className="flex-grow flex items-center justify-end">
-              <div className="w-full max-w-[202px] mr-2">
+            <div className="flex-grow flex items-center justify-end gap-2">
+              <div className="w-full max-w-[202px]">
                 <SearchBar isMobile />
               </div>
               <motion.button
@@ -94,6 +96,7 @@ const Header = () => {
                   )}
                 </motion.div>
               </motion.button>
+              <HeaderAccountMenu />
             </div>
           </div>
         </nav>

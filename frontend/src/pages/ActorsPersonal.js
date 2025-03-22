@@ -6,47 +6,41 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
 import Spinner from '../components/common/Spinner';
 import MediaCarousel from '../components/media/MediaCarousel';
+import { useActorResolver } from '../hooks/useActorResolver';
+import PremiumLoader from '../components/common/PremiumLoader';
 
 const ActorsPersonal = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
+  const { id, loading: resolverLoading, error: resolverError } = useActorResolver(slug);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Fetch actor details
-  const { data: actor, isLoading: actorLoading, error: actorError } = useQuery({
-    queryKey: ['actorDetails', id],
-    queryFn: () => tmdbApi.get(`/person/${id}`, {
-      params: {
-        append_to_response: 'combined_credits,external_ids,images'
-      }
-    }).then(res => res.data),
+  const { data: actorData, isLoading } = useQuery({
+    queryKey: ['actor', id],
+    queryFn: () => tmdbApi.get(`/person/${id}`).then(res => res.data),
+    enabled: !!id,
     staleTime: 300000 // 5 minutes
   });
 
-  if (actorLoading) {
+  if (resolverLoading || isLoading) {
+    return <PremiumLoader text="Loading Actor Details" overlay={true} />;
+  }
+
+  if (resolverError || !actorData) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <Spinner size="large" />
+      <div className="min-h-screen bg-[#161616] pt-24">
+        <div className="container mx-auto px-4">
+          <div className="bg-red-900/20 border border-red-900/50 rounded-xl p-8 text-center">
+            <h2 className="text-2xl font-bold text-red-500 mb-2">Actor Not Found</h2>
+            <p className="text-gray-400">
+              {resolverError || "The requested actor doesn't exist or has been removed."}
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
 
-  if (actorError) {
-    return (
-      <div className="bg-red-900 bg-opacity-20 border border-red-800 text-red-200 px-4 py-3 rounded my-6">
-        <p>Failed to load actor details. Please try again later.</p>
-        <p className="text-sm">{actorError.message}</p>
-      </div>
-    );
-  }
-
-  if (!actor) {
-    return (
-      <div className="text-center py-12 text-gray-400">
-        <p className="text-2xl mb-2">No actor found</p>
-        <p>The requested actor doesn't exist or has been removed.</p>
-      </div>
-    );
-  }
+  const actor = actorData;
 
   // Sort credits by popularity
   const movieCredits = actor.combined_credits?.cast

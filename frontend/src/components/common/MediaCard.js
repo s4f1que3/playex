@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { tmdbHelpers } from '../../utils/api';
 import PrefetchLink from './PrefetchLink';
 import { commonStyles } from '../../styles/commonStyles';
+import { createMediaUrl } from '../../utils/slugify';
 
 const MediaCard = ({ media, showType = true }) => {
   const {
@@ -42,9 +43,15 @@ const MediaCard = ({ media, showType = true }) => {
   // Format rating (only for movies and TV shows)
   const rating = !isPerson && vote_average ? (vote_average / 10) * 5 : 0;
   
+  const mediaUrl = createMediaUrl(
+    type,
+    id,
+    title || name
+  );
+  
   return (
     <PrefetchLink
-      to={route}
+      to={mediaUrl}
       className="block hover:scale-[1.02] transition-transform duration-300"
       role="article"
       aria-label={`${displayTitle} - Click to view details`}

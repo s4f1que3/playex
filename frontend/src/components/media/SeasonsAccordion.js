@@ -1,4 +1,3 @@
-// File: frontend/src/components/media/SeasonsAccordion.js
 import React, { useState, useEffect, Fragment, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -8,6 +7,7 @@ import { tmdbApi, tmdbHelpers } from '../../utils/api';
 import { getLastWatchedEpisode } from '../../utils/LocalStorage';
 import Spinner from '../common/Spinner';
 import VideosButton from './VideosButton';
+import { createMediaUrl } from '../../utils/slugify';
 
 const SeasonPicker = ({ seasons, activeSeason, setActiveSeason }) => {
   const activeSeasionInfo = seasons.find(s => s.season_number === activeSeason);
@@ -177,7 +177,7 @@ const SeasonPicker = ({ seasons, activeSeason, setActiveSeason }) => {
   );
 };
 
-const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
+const SeasonsAccordion = ({ tvId, tvName, seasons, activeSeason, setActiveSeason }) => {
   const [isEpisodesExpanded, setIsEpisodesExpanded] = useState(true);
   const [lastWatched, setLastWatched] = useState(null);
 
@@ -194,6 +194,14 @@ const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
   });
 
   const filteredSeasons = seasons.filter(season => season.season_number > 0);
+
+  const getEpisodeLink = (seasonNumber, episodeNumber) => {
+    console.log('Creating episode link with:', { tvId, tvName, seasonNumber, episodeNumber });
+    const mediaUrl = createMediaUrl('tv', tvId, tvName);
+    const slug = mediaUrl.split('/').pop();
+    console.log('Generated slug:', slug);
+    return `/player/tv/${slug}/${seasonNumber}/${episodeNumber}`;
+  };
 
   if (!seasons || seasons.length === 0) {
     return (
@@ -286,7 +294,7 @@ const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                       >
                         <Link 
-                          to={`/player/tv/${tvId}/${activeSeason}/${episode.episode_number}`}
+                          to={getEpisodeLink(activeSeason, episode.episode_number)}
                           className="block bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-gray-700/50 transition-all duration-300 group h-full"
                         >
                           <div className="flex flex-row h-full">
@@ -367,7 +375,7 @@ const SeasonsAccordion = ({ tvId, seasons, activeSeason, setActiveSeason }) => {
               <span className="text-white font-medium">{seasonDetails.episodes.length}</span> episodes available in {seasonDetails.name || `Season ${activeSeason}`}
             </span>
             <Link 
-              to={`/player/tv/${tvId}/${activeSeason}/1`}
+              to={getEpisodeLink(activeSeason, 1)}
               className="bg-[#82BC87] hover:bg-[#6da972] text-white px-4 py-2 rounded-lg transition duration-300 flex items-center gap-2"
             >
               Play Episode 1

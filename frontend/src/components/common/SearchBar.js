@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../../utils/api';
+import { createMediaUrl } from '../../utils/slugify';
 
 const SearchBar = ({ isMobile = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -54,13 +55,15 @@ const SearchBar = ({ isMobile = false }) => {
   };
 
   const handleSuggestionClick = (item) => {
-    // Handle different media types
-    if (item.media_type === 'movie') {
-      navigate(`/movie/${item.id}`);
-    } else if (item.media_type === 'tv') {
-      navigate(`/tv/${item.id}`);
-    } else if (item.media_type === 'person') {
-      navigate(`/actor/${item.id}`);
+    const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+    const title = item.title || item.name;
+    
+    if (item.media_type === 'person') {
+      const actorUrl = createMediaUrl('person', item.id, item.name);
+      navigate(actorUrl);
+    } else {
+      const mediaUrl = createMediaUrl(mediaType, item.id, title);
+      navigate(mediaUrl);
     }
 
     setShowSuggestions(false);
@@ -207,68 +210,75 @@ const SearchBar = ({ isMobile = false }) => {
                     {/* Results Grid - Adjusted Heights for Mobile */}
                     <div className="max-h-[40vh] md:max-h-[60vh] overflow-y-auto overscroll-contain">
                       <div className="p-2 md:p-4 grid grid-cols-1 gap-2">
-                        {suggestions.map((item, index) => (
-                          <motion.button
-                            key={`${item.id}-${item.media_type}`}
-                            onClick={() => handleSuggestionClick(item)}
-                            className="w-full text-left flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl 
-                                     bg-gray-800/30 border border-white/5
-                                     hover:bg-gray-800/50 hover:border-[#82BC87]/20 active:bg-gray-800/60
-                                     transition-all duration-300 group"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                          >
-                            {/* Thumbnail */}
-                            <div className="relative h-14 w-10 md:h-16 md:w-12 rounded-lg overflow-hidden flex-shrink-0">
-                              <img
-                                src={tmdbHelpers.getImageUrl(
-                                  item.media_type === 'person' ? item.profile_path : item.poster_path,
-                                  'w92'
-                                ) || 'https://via.placeholder.com/45x68?text=No+Image'}
-                                alt={item.title || item.name}
-                                className="h-full w-full object-cover transform group-hover:scale-105 transition-transform duration-300"
-                              />
-                              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            </div>
+                        {suggestions.map((item, index) => {
+                          const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+                          const title = item.title || item.name;
+                          const year = item.release_date || item.first_air_date;
+                          const mediaUrl = createMediaUrl(mediaType, item.id, title);
 
-                            {/* Content */}
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-sm md:text-base text-white group-hover:text-[#82BC87] transition-colors duration-300 truncate">
-                                {item.title || item.name}
+                          return (
+                            <motion.button
+                              key={`${item.id}-${item.media_type}`}
+                              onClick={() => handleSuggestionClick(item)}
+                              className="w-full text-left flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl 
+                                       bg-gray-800/30 border border-white/5
+                                       hover:bg-gray-800/50 hover:border-[#82BC87]/20 active:bg-gray-800/60
+                                       transition-all duration-300 group"
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: index * 0.05 }}
+                            >
+                              {/* Thumbnail */}
+                              <div className="relative h-14 w-10 md:h-16 md:w-12 rounded-lg overflow-hidden flex-shrink-0">
+                                <img
+                                  src={tmdbHelpers.getImageUrl(
+                                    item.media_type === 'person' ? item.profile_path : item.poster_path,
+                                    'w92'
+                                  ) || 'https://via.placeholder.com/45x68?text=No+Image'}
+                                  alt={item.title || item.name}
+                                  className="h-full w-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                               </div>
-                              <div className="mt-1 flex items-center gap-2 text-xs md:text-sm text-gray-400">
-                                <span className="flex items-center gap-1">
-                                  {item.media_type === 'movie' ? (
-                                    <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
-                                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13v10l6-5z"/>
-                                    </svg>
-                                  ) : item.media_type === 'tv' ? (
-                                    <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
-                                      <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
-                                    </svg>
-                                  ) : (
-                                    <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
-                                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                                    </svg>
+
+                              {/* Content */}
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-sm md:text-base text-white group-hover:text-[#82BC87] transition-colors duration-300 truncate">
+                                  {item.title || item.name}
+                                </div>
+                                <div className="mt-1 flex items-center gap-2 text-xs md:text-sm text-gray-400">
+                                  <span className="flex items-center gap-1">
+                                    {item.media_type === 'movie' ? (
+                                      <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-2-13v10l6-5z"/>
+                                      </svg>
+                                    ) : item.media_type === 'tv' ? (
+                                      <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
+                                      </svg>
+                                    ) : (
+                                      <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                      </svg>
+                                    )}
+                                    <span>{item.media_type === 'movie' ? 'Movie' : item.media_type === 'tv' ? 'TV Show' : 'Actor'}</span>
+                                  </span>
+                                  {item.media_type !== 'person' && (item.release_date || item.first_air_date) && (
+                                    <>
+                                      <span className="text-gray-600">•</span>
+                                      <span>{new Date(item.release_date || item.first_air_date).getFullYear()}</span>
+                                    </>
                                   )}
-                                  <span>{item.media_type === 'movie' ? 'Movie' : item.media_type === 'tv' ? 'TV Show' : 'Actor'}</span>
-                                </span>
-                                {item.media_type !== 'person' && (item.release_date || item.first_air_date) && (
-                                  <>
-                                    <span className="text-gray-600">•</span>
-                                    <span>{new Date(item.release_date || item.first_air_date).getFullYear()}</span>
-                                  </>
-                                )}
+                                </div>
                               </div>
-                            </div>
 
-                            {/* Arrow Icon */}
-                            <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-[#82BC87] transform group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
-                            </svg>
-                          </motion.button>
-                        ))}
+                              {/* Arrow Icon */}
+                              <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-[#82BC87] transform group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
+                              </svg>
+                            </motion.button>
+                          );
+                        })}
                       </div>
                     </div>
 

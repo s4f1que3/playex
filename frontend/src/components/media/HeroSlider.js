@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { tmdbHelpers } from '../../utils/api';
+import { createMediaUrl } from '../../utils/slugify';
 
 const RatingBadge = ({ rating }) => (
   <div className="flex items-center gap-1 bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full">
@@ -21,6 +22,13 @@ const SlideContent = ({ item, isActive }) => {
   const releaseYear = item.release_date || item.first_air_date 
     ? new Date(item.release_date || item.first_air_date).getFullYear() 
     : '';
+
+  const getMediaLink = (type) => {
+    const slug = createMediaUrl(mediaType, item.id, item.title || item.name).split('/').pop();
+    return type === 'info' 
+      ? `/${mediaType}/${slug}`
+      : `/player/${mediaType}${mediaType === 'tv' ? `/${slug}/1/1` : `/${slug}`}`;
+  };
 
   return (
     <motion.div 
@@ -86,7 +94,7 @@ const SlideContent = ({ item, isActive }) => {
           className="flex flex-wrap gap-4"
         >
           <Link
-            to={`/${mediaType}/${item.id}`}
+            to={getMediaLink('info')}
             className="group relative overflow-hidden px-8 py-4 rounded-xl bg-[#82BC87] hover:bg-[#6da972] 
                      transition-all duration-500 flex items-center gap-2"
           >
@@ -105,7 +113,7 @@ const SlideContent = ({ item, isActive }) => {
           </Link>
 
           <Link
-            to={mediaType === 'movie' ? `/player/movie/${item.id}` : `/tv/${item.id}`}
+            to={getMediaLink('watch')}
             className="group relative overflow-hidden px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 
                      backdrop-blur-sm transition-all duration-500 flex items-center gap-2"
           >

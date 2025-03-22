@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
-import PremiumLoader from './components/common/PremiumLoader';  // Add this import
+import PremiumLoader from './components/common/PremiumLoader';
+import { lazyLoadRoute, routeConfig } from './utils/lazyLoad';
+import { prefetchRoute } from './utils/prefetchRoutes';
 
 // Layouts
 import MainLayout from './Layouts/MainLayout';
@@ -36,6 +38,16 @@ import FanFavoritesPage from './pages/FanFavoritesPage';
 import CollectionsPage from './pages/CollectionsPage';
 import CollectionsIndexPage from './pages/CollectionsIndexPage'; 
 import ContinueWatchingPage from './pages/ContinueWatchingPage';
+import SettingsPage from './pages/SettingsPage';
+
+// Lazy load all routes
+const routes = {
+  Home: lazyLoadRoute(routeConfig.home, 'home'),
+  Movies: lazyLoadRoute(routeConfig.movies, 'movies'),
+  TVShows: lazyLoadRoute(routeConfig.tvShows, 'tv'),
+  MediaDetails: lazyLoadRoute(routeConfig.mediaDetails, 'media-details'),
+  // ...etc for other routes
+};
 
 // Create a client
 const queryClient = new QueryClient({
@@ -71,6 +83,31 @@ function App() {
     }
   }, []);
 
+  // Add prefetching effect
+  useEffect(() => {
+    // Start prefetching after initial load
+    if (!loading) {
+      // Prefetch main routes
+      const mainRoutes = ['home', 'movies', 'tvShows', 'trending'];
+      mainRoutes.forEach(route => prefetchRoute(route));
+      
+      // Listen for route changes to trigger prefetching
+      const handleRouteChange = () => {
+        const currentPath = window.location.pathname;
+        if (currentPath.includes('/movie/') || currentPath.includes('/tv/')) {
+          prefetchRoute('player');
+          prefetchRoute('similar');
+          prefetchRoute('recommended');
+        } else if (currentPath.includes('/actor/')) {
+          prefetchRoute('actorCredits');
+        }
+      };
+
+      window.addEventListener('popstate', handleRouteChange);
+      return () => window.removeEventListener('popstate', handleRouteChange);
+    }
+  }, [loading]);
+
   return (
     <div className="min-h-screen bg-[#161616] text-white overflow-x-hidden">
       {loading && <PremiumLoader overlay={true} text="Welcome to Playex" size="large" />}
@@ -85,7 +122,11 @@ function App() {
               <Routes>
                 {/* general routes */}
                 <Route path="/" element={<MainLayout />}>
-                  <Route index element={<HomePage />} />
+                  <Route index element={
+                    <Suspense fallback={<PremiumLoader />}>
+                      <routes.Home />
+                    </Suspense>
+                  } />
                   <Route path="movies" element={<MoviesPage />} />
                   <Route path="tv-shows" element={<TVShowsPage />} />
                   <Route path="Trending" element={<TrendingPage />} />
@@ -94,22 +135,21 @@ function App() {
                   <Route path="/FAQ" element={<FAQ />} />
                   <Route path="/privacy" element={<PrivacyPolicyPage />} />
                   <Route path="/cookies" element={<CookiesPolicyPage />} />
-                  <Route path="movie/:id" element={<MediaDetailsPage mediaType="movie" />} />
-                  <Route path="tv/:id" element={<MediaDetailsPage mediaType="tv" />} />
-                  <Route path="player/movie/:id" element={<PlayerPage mediaType="movie" />} />
-                  <Route path="player/tv/:id/:season/:episode" element={<PlayerPage mediaType="tv" />} />
-                  <Route path=":mediaType/:id/similar" element={<SimilarContentPage />} />
-                  <Route path=":mediaType/:id/recommended" element={<RecommendedContentPage />} />
-                  <Route path="/tv/:id/episodes/:season" element={<EpisodesPage />} />
+                  <Route path="movie/:slug" element={<MediaDetailsPage mediaType="movie" />} />
+                  <Route path="tv/:slug" element={<MediaDetailsPage mediaType="tv" />} />
+                  <Route path="player/movie/:slug" element={<PlayerPage mediaType="movie" />} />
+                  <Route path="player/tv/:slug/:season/:episode" element={<PlayerPage mediaType="tv" />} />
+                  <Route path="/tv/:slug/episodes/:season" element={<EpisodesPage />} />
                   <Route path="/fan-favorites" element={<FanFavoritesPage />} /> 
                   <Route path="/collections" element={<CollectionsIndexPage />} /> 
                   <Route path="/collection/:id" element={<CollectionsPage />} />
                   <Route path="/continue-watching" element={<ContinueWatchingPage />} />
+                  <Route path="/settings" element={<SettingsPage />} />
                   
                   {/* Actor routes */}
-                  <Route path="/actor/:id" element={<ActorsPersonal />} />
-                  <Route path="/actor/:id/movies" element={<ActorCreditsPage type="movie" />} />
-                  <Route path="/actor/:id/tv" element={<ActorCreditsPage type="tv" />} />
+                  <Route path="/actor/:slug" element={<ActorsPersonal />} />
+                  <Route path="/actor/:slug/movies" element={<ActorCreditsPage type="movie" />} />
+                  <Route path="/actor/:slug/tv" element={<ActorCreditsPage type="tv" />} />
                   
                   {/* Protected routes */}
                   <Route element={<ProtectedRoute />}>
