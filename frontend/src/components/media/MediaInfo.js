@@ -102,6 +102,19 @@ const MediaInfo = ({ media, mediaType }) => {
     number_of_seasons,
     number_of_episodes
   );
+
+  // Add content rating parsing
+  const getContentRating = (media) => {
+    if (mediaType === 'movie') {
+      // Use US rating from release_dates
+      const usRating = media.release_dates?.results?.find(r => r.iso_3166_1 === 'US');
+      return usRating?.release_dates[0]?.certification || 'NR';
+    } else {
+      // Use US rating from content_ratings
+      const usRating = media.content_ratings?.results?.find(r => r.iso_3166_1 === 'US');
+      return usRating?.rating || 'NR';
+    }
+  };
   
   return (
     <div className="relative min-h-[70vh] flex items-end">
@@ -206,6 +219,15 @@ const MediaInfo = ({ media, mediaType }) => {
                 transition={{ delay: 0.9 }}
                 className="flex flex-wrap items-center gap-3 mt-4"
               >
+                {/* Add this before other tags */}
+                {getContentRating(media) && (
+                  <div className="px-3 py-1 rounded-lg bg-black/30 backdrop-blur-sm text-sm flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#FF6B6B]" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-white font-medium">{getContentRating(media)}</span>
+                  </div>
+                )}
                 {releaseYear && (
                   <Link
                     to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?${

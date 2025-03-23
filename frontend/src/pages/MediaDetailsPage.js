@@ -36,7 +36,11 @@ const MediaDetailsPage = ({ mediaType }) => {
 
   const { data: mediaData, isLoading: isLoadingMedia, error: mediaError } = useQuery({
     queryKey: ['mediaDetails', mediaType, id],
-    queryFn: () => tmdbApi.get(`/${mediaType}/${id}`).then(res => {
+    queryFn: () => tmdbApi.get(`/${mediaType}/${id}`, {
+      params: {
+        append_to_response: mediaType === 'movie' ? 'release_dates' : 'content_ratings'
+      }
+    }).then(res => {
       if (res.data.user_data) {
         setUserActions({
           isInWatchlist: res.data.user_data.in_watchlist,

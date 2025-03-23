@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { tmdbApi, getFanFavorites } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
@@ -89,17 +89,25 @@ const FanFavoritesPage = () => {
     }
   }, [location.search]);
 
+  // Modify the URL handling function
+  const getUrlPath = (type) => {
+    return type === 'movies' ? 'movie' : 'tv';
+  };
+
+  // Add helper function to convert media type for URLs
+  const getMediaTypeForUrl = (type) => {
+    return type === 'movies' ? 'movie' : 'tv';
+  };
+
   const MediaTypeToggle = () => (
     <div className="w-full sm:w-auto flex items-center gap-3 bg-black/20 backdrop-blur-sm p-1.5 rounded-xl border border-white/5">
-      <motion.button
+      <button
         onClick={() => setSelectedMediaType('tv')}
         className={`flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-lg transition-all duration-300 relative overflow-hidden
           ${selectedMediaType === 'tv' 
             ? 'text-black' 
             : 'text-gray-400 hover:text-white'
           }`}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
       >
         <span className="relative z-10 font-medium flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -115,17 +123,15 @@ const FanFavoritesPage = () => {
             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
           />
         )}
-      </motion.button>
+      </button>
 
-      <motion.button
+      <button
         onClick={() => setSelectedMediaType('movies')}
         className={`flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-lg transition-all duration-300 relative overflow-hidden
-          ${selectedMediaType === 'movies' 
+          ${selectedMediaType === 'movies'  
             ? 'text-black' 
             : 'text-gray-400 hover:text-white'
           }`}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
       >
         <span className="relative z-10 font-medium flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -133,7 +139,7 @@ const FanFavoritesPage = () => {
           </svg>
           Movies
         </span>
-        {selectedMediaType === 'movies' && (
+        {selectedMediaType === 'movie' && (
           <motion.div
             layoutId="activeTabBg"
             className="absolute inset-0 bg-[#E4D981] rounded-lg"
@@ -141,7 +147,7 @@ const FanFavoritesPage = () => {
             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
           />
         )}
-      </motion.button>
+      </button>
     </div>
   );
 
@@ -236,9 +242,12 @@ const FanFavoritesPage = () => {
               </div>
             )}
 
-            {/* Grid Section */}
+            {/* Grid Section - Update the media_type mapping */}
             <MediaGrid 
-              items={fanFavoritesData?.results.map(item => ({ ...item, media_type: selectedMediaType }))} 
+              items={fanFavoritesData?.results.map(item => ({ 
+                ...item, 
+                media_type: selectedMediaType === 'movies' ? 'movie' : 'tv'  // Keep the URL correction
+              }))} 
               loading={isLoading} 
               error={error}
             />

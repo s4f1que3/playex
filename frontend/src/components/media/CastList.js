@@ -5,12 +5,16 @@ import { tmdbHelpers } from '../../utils/api';
 import { createMediaUrl } from '../../utils/slugify';
 
 const CastList = ({ cast }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false); // Changed to false
   const [hoveredId, setHoveredId] = useState(null);
   
   if (!cast?.length) return null;
+
+  // Calculate items to show (2 rows)
+  const itemsPerRow = window.innerWidth >= 1024 ? 6 : window.innerWidth >= 768 ? 4 : window.innerWidth >= 640 ? 3 : 2;
+  const initialItems = itemsPerRow * 2;
   
-  const displayCast = isExpanded ? cast : cast.slice(0, 6);
+  const displayCast = isExpanded ? cast : cast.slice(0, initialItems);
   
   const getActorLink = (actor) => {
     // Create a slug from the actor's name and ID
@@ -43,38 +47,19 @@ const CastList = ({ cast }) => {
                 <h2 className="text-2xl font-bold text-white">Featured Cast</h2>
                 <p className="text-gray-400 text-sm">{cast.length} cast members</p>
               </div>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="ml-auto px-4 py-2 rounded-xl bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 
-                         transition-all duration-300 group"
-              >
-                <span className="flex items-center gap-2 text-gray-300 group-hover:text-white">
-                  <motion.svg 
-                    animate={{ rotate: isExpanded ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20" 
-                    fill="currentColor"
-                  >
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </motion.svg>
-                  {isExpanded ? 'Show Less' : 'Show All'}
-                </span>
-              </motion.button>
             </div>
           </div>
 
           <div className="p-6">
-            {/* Existing cast grid with updated classes */}
             <motion.div 
               layout
               className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
+              transition={{ 
+                layout: { duration: 0.3 },
+                ease: "easeInOut"
+              }}
             >
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {displayCast.map((actor, index) => (
                   <motion.div
                     key={actor.id}
@@ -82,7 +67,12 @@ const CastList = ({ cast }) => {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    transition={{
+                      layout: { duration: 0.3 },
+                      opacity: { duration: 0.2 },
+                      scale: { duration: 0.2 },
+                      delay: index * 0.03
+                    }}
                     onHoverStart={() => setHoveredId(actor.id)}
                     onHoverEnd={() => setHoveredId(null)}
                   >
@@ -124,7 +114,7 @@ const CastList = ({ cast }) => {
                           className="absolute top-2 right-2 bg-[#82BC87] rounded-full p-2"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                            <path fillRule="evenodd" d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4 4a1 1 01-1.414 0z" clipRule="evenodd" />
                           </svg>
                         </motion.div>
                       </div>
@@ -134,19 +124,39 @@ const CastList = ({ cast }) => {
               </AnimatePresence>
             </motion.div>
 
-            {/* Show remaining count when collapsed */}
-            {!isExpanded && cast.length > 6 && (
-              <motion.button
-                layout
-                onClick={() => setIsExpanded(true)}
-                className="w-full mt-6 px-4 py-3 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
-                         text-[#82BC87] transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <span>View {cast.length - 6} more cast members</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </motion.button>
+            {/* New Bottom Button Group */}
+            {cast.length > initialItems && (
+              <div className="flex gap-3 mt-6">
+                <motion.button
+                  layout
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="flex-1 px-4 py-3 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
+                           text-[#82BC87] transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  {isExpanded ? (
+                    <>
+                      <span>Show Less</span>
+                      <motion.svg 
+                        animate={{ rotate: 180 }}
+                        transition={{ duration: 0.3 }}
+                        xmlns="http://www.w3.org/2000/svg" 
+                        className="h-5 w-5" 
+                        viewBox="0 0 20 20" 
+                        fill="currentColor"
+                      >
+                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </motion.svg>
+                    </>
+                  ) : (
+                    <>
+                      <span>Show All {cast.length} Cast Members</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </>
+                  )}
+                </motion.button>
+              </div>
             )}
           </div>
         </div>

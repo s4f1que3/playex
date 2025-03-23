@@ -1,6 +1,6 @@
 // File: frontend/src/pages/ActorsPersonal.js
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
@@ -17,7 +17,7 @@ const ActorsPersonal = () => {
 
   const { data: actorData, isLoading } = useQuery({
     queryKey: ['actor', id],
-    queryFn: () => tmdbApi.get(`/person/${id}`).then(res => res.data),
+    queryFn: () => tmdbApi.get(`/person/${id}?append_to_response=combined_credits,images,external_ids`).then(res => res.data),
     enabled: !!id,
     staleTime: 300000 // 5 minutes
   });
@@ -43,14 +43,23 @@ const ActorsPersonal = () => {
 
   const actor = actorData;
 
-  // Sort credits by popularity
+  // Sort credits by popularity and deduplicate TV shows
   const movieCredits = actor.combined_credits?.cast
     ?.filter(credit => credit.media_type === 'movie')
     ?.sort((a, b) => b.popularity - a.popularity) || [];
 
-  const tvCredits = actor.combined_credits?.cast
+  // Deduplicate TV shows by ID and keep the most popular instance
+  const tvCreditsMap = new Map();
+  actor.combined_credits?.cast
     ?.filter(credit => credit.media_type === 'tv')
-    ?.sort((a, b) => b.popularity - a.popularity) || [];
+    ?.forEach(credit => {
+      if (!tvCreditsMap.has(credit.id) || tvCreditsMap.get(credit.id).popularity < credit.popularity) {
+        tvCreditsMap.set(credit.id, credit);
+      }
+    });
+  
+  const tvCredits = Array.from(tvCreditsMap.values())
+    .sort((a, b) => b.popularity - a.popularity);
 
   // Helper function to determine if text needs expansion
   const shouldShowExpand = (text) => {
@@ -257,22 +266,85 @@ const ActorsPersonal = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
+            className="space-y-12" // Added space between sections
           >
-            <MediaCarousel
-              title="Known For - Movies"
-              items={movieCredits.slice(0, 20)}
-              viewAllLink={`/actor/${id}/movies`}
-              loading={false}
-              error={null}
-            />
-            
-            <MediaCarousel
-              title="Known For - TV Shows"
-              items={tvCredits.slice(0, 20)}
-              viewAllLink={`/actor/${id}/tv`}
-              loading={false}
-              error={null}
-            />
+            {/* Movies Section */}
+            {movieCredits.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between gap-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-white">Movie Appearances</h2>
+                      <p className="text-gray-400">{movieCredits.length} movies</p>
+                    </div>
+                  </div>
+                  <Link
+                    to={`/actor/${slug}/movies`}
+                    className="group px-4 py-2 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
+                             border border-[#82BC87]/20 hover:border-[#82BC87]/30
+                             transition-all duration-300 flex items-center gap-2"
+                  >
+                    <span className="text-[#82BC87]">View All</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                         className="h-4 w-4 text-[#82BC87] transform group-hover:translate-x-1 transition-all" 
+                         viewBox="0 0 20 20" fill="currentColor"
+                    >
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </Link>
+                </div>
+                <MediaCarousel
+                  items={movieCredits.slice(0, 20)}
+                  viewAllLink={`/actor/${id}/movies`}
+                  loading={false}
+                  error={null}
+                />
+              </div>
+            )}
+
+            {/* TV Shows Section */}
+            {tvCredits.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between gap-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-white">TV Show Appearances</h2>
+                      <p className="text-gray-400">{tvCredits.length} TV shows</p>
+                    </div>
+                  </div>
+                  <Link
+                    to={`/actor/${slug}/tv`}
+                    className="group px-4 py-2 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
+                             border border-[#82BC87]/20 hover:border-[#82BC87]/30
+                             transition-all duration-300 flex items-center gap-2"
+                  >
+                    <span className="text-[#82BC87]">View All</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" 
+                         className="h-4 w-4 text-[#82BC87] transform group-hover:translate-x-1 transition-all" 
+                         viewBox="0 0 20 20" fill="currentColor"
+                    >
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </Link>
+                </div>
+                <MediaCarousel
+                  items={tvCredits.slice(0, 20)}
+                  viewAllLink={`/actor/${id}/tv`}
+                  loading={false}
+                  error={null}
+                />
+              </div>
+            )}
           </motion.div>
         </div>
       </div>

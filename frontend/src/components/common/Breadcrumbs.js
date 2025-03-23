@@ -72,9 +72,9 @@ const Breadcrumbs = () => {
   const getPathName = (pathname) => {
     switch (pathname) {
       case 'movies':
-        return 'Movies';
-      case 'tv-shows':
-        return 'TV Shows';
+        return mediaType === 'actor' ? 'Movie Appearances' : 'Movies';
+      case 'tv':
+        return mediaType === 'actor' ? 'TV Show Appearances' : 'TV Shows';
       case 'actors':
         return 'Actors';
       case 'trending':
@@ -206,6 +206,12 @@ const Breadcrumbs = () => {
     
     if (pathname === 'collections') {
       return '/collections';
+    }
+    
+    // Handle actor filmography routes
+    if (pathnames[0] === 'actor' && (pathname === 'movies' || pathname === 'tv')) {
+      const actorId = pathnames[1];
+      return `/actor/${actorId}/${pathname}`;
     }
     
     // Default behavior for other routes

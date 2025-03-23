@@ -41,6 +41,7 @@ import CollectionsIndexPage from './pages/CollectionsIndexPage';
 import ContinueWatchingPage from './pages/ContinueWatchingPage';
 import SettingsPage from './pages/SettingsPage';
 import AiringShowsPage from './pages/AiringShowsPage';
+import ActorFilmographyPage from './pages/ActorFilmographyPage';
 
 // Lazy load all routes
 const routes = {
@@ -154,8 +155,8 @@ function App() {
                     
                     {/* Actor routes */}
                     <Route path="/actor/:slug" element={<ActorsPersonal />} />
-                    <Route path="/actor/:slug/movies" element={<ActorCreditsPage type="movie" />} />
-                    <Route path="/actor/:slug/tv" element={<ActorCreditsPage type="tv" />} />
+                    <Route path="/actor/:slug/movies" element={<ActorFilmographyPage mediaType="movie" />} />
+                    <Route path="/actor/:slug/tv" element={<ActorFilmographyPage mediaType="tv" />} />
                     
                     {/* Protected routes */}
                     <Route element={<ProtectedRoute />}>
