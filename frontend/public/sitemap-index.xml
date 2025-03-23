@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://playex.com/sitemap-static.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://playex.com/sitemap-movies.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://playex.com/sitemap-shows.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://playex.com/sitemap-collections.xml</loc>
+  </sitemap>
+</sitemapindex>

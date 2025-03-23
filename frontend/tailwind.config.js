@@ -7,7 +7,6 @@ module.exports = {
 
   theme: {
     extend: {
-      // Your existing extensions...
       animation: {
         'fadeIn': 'fadeIn 1s ease-in-out forwards',
         'loaderSpin': 'loaderSpin 1.5s ease-in-out infinite',

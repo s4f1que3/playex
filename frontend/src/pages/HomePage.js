@@ -9,6 +9,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { getContinueWatching } from '../utils/LocalStorage';
 import EpisodeGuide from '../components/sections/EpisodeGuide';
+import SEO from '../components/common/SEO';
 
 const TrendingSection = ({ items, loading, error }) => {
   return (
@@ -203,300 +204,111 @@ const continueWatchingData = getContinueWatching();
 const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [];
 
   return (
-    <div className="-mt-[72px] overflow-hidden">
-      {/* Hero Section - Updated to use filtered items */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="relative z-10"
-      >
-        <HeroSlider items={validTrendingItems} />
-        {/* Transitional Stats Section - Adjusted positioning and z-index */}
-        <div className="relative z-20"> {/* Changed from absolute to relative and adjusted margin */}
-          <div className="bg-gradient-to-t from-[#161616] via-[#161616]/90 to-transparent pb-12 pt-32">
-            <div className="container mx-auto px-4">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#FF6B6B]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#FF6B6B]" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-                      </svg>
+    <>
+      <SEO 
+        title="Home"
+        description="Watch the latest movies and TV shows on Playex - your premium streaming platform"
+        url={window.location.href}
+      />
+      <div className="-mt-[72px] overflow-hidden">
+        {/* Hero Section - Updated to use filtered items */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="relative z-10"
+        >
+          <HeroSlider items={validTrendingItems} />
+          {/* Transitional Stats Section - Adjusted positioning and z-index */}
+          <div className="relative z-20"> {/* Changed from absolute to relative and adjusted margin */}
+            <div className="bg-gradient-to-t from-[#161616] via-[#161616]/90 to-transparent pb-12 pt-32">
+              <div className="container mx-auto px-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#FF6B6B]/10 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#FF6B6B]" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-white">{trendingData?.length || 0}</div>
+                        <div className="text-sm text-gray-400">Trending Now</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-2xl font-bold text-white">{trendingData?.length || 0}</div>
-                      <div className="text-sm text-gray-400">Trending Now</div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-white">{topRatedMovies?.length || 0}</div>
+                        <div className="text-sm text-gray-400">Top Rated</div>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#E4D981]/10 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-white">{fanFavorites?.length || 0}</div>
+                        <div className="text-sm text-gray-400">Fan Favorites</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-2xl font-bold text-white">{topRatedMovies?.length || 0}</div>
-                      <div className="text-sm text-gray-400">Top Rated</div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#FF8E53]/10 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#FF8E53]" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M4 3a2 2 0 012-2h12a2 2 0 012 2v10l-5-2.5L5 18V4z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold text-white">{popularTVShows?.length || 0}</div>
+                        <div className="text-sm text-gray-400">TV Shows</div>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#E4D981]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-white">{fanFavorites?.length || 0}</div>
-                      <div className="text-sm text-gray-400">Fan Favorites</div>
-                    </div>
-                  </div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#FF8E53]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#FF8E53]" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M4 3a2 2 0 012-2h12a2 2 0 012 2v10l-5-2.5L5 18V4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-white">{popularTVShows?.length || 0}</div>
-                      <div className="text-sm text-gray-400">TV Shows</div>
-                    </div>
-                  </div>
-                </motion.div>
+                  </motion.div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
 
-      <div className="space-y-12">
-        {/* Insert EpisodeGuide before ContinueWatching */}
-        <EpisodeGuide />
-        
-        {/* Continue Watching Section */}
+        <div className="space-y-12">
+          {/* Insert EpisodeGuide before ContinueWatching */}
+          <EpisodeGuide />
+          
+          {/* Continue Watching Section */}
 
-        {continueWatchingData.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="relative mb-20"
-          >
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
-              <motion.div 
-                animate={{ 
-                  scale: [1, 1.2, 1],
-                  rotate: [0, -45, 0] 
-                }} 
-                transition={{ 
-                  duration: 10,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-                className="absolute inset-0"
-              >
-                <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
-              </motion.div>
-            </div>
-
-            <div className="container mx-auto px-4">
-              <div className="relative py-12">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-                  <div className="flex items-center gap-6">
-                    <div className="relative">
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#82BC87] to-[#6da972] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
-                        <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                          </svg>
-                        </div>
-                      </div>
-                      <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#82BC87] flex items-center justify-center animate-pulse">
-                        <span className="text-xs font-bold text-white">⏱️</span>
-                      </div>
-                    </div>
-                    <div>
-                      <motion.h2 
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="text-4xl font-bold text-white flex flex-wrap items-center gap-1 mb-1 relative"
-                      >
-                        <span>Continue</span>
-                        <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#6da972] relative z-10">
-                          Watching
-                        </span>
-                      </motion.h2>
-                      <p className="text-gray-400">Pick up where you left off</p>
-                    </div>
-                  </div>
-
-                  <Link
-                    to="/continue-watching"
-                    className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#82BC87]/10 to-transparent 
-                             hover:from-[#82BC87]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
-                  >
-                    <span className="text-[#82BC87] font-medium whitespace-nowrap">View All</span>
-                    <svg 
-                      xmlns="http://www.w3.org/2000/svg" 
-                      className="h-5 w-5 text-[#82BC87] transform group-hover:translate-x-1 transition-transform duration-300"
-                      viewBox="0 0 20 20" 
-                      fill="currentColor"
-                    >
-                      <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
-                  </Link>
-                </div>
-
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
-                  <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
-                  
-                  <MediaCarousel
-                    items={continueWatchingData.map(item => ({
-                      ...item.details,
-                      link: item.media_type === 'tv' && item.details.last_episode
-                        ? `/player/tv/${item.media_id}/${item.details.last_episode.season}/${item.details.last_episode.episode}`
-                        : `/player/${item.media_type}/${item.media_id}`
-                    }))}
-                    loading={false}
-                    error={null}
-                    showType={true}
-                  />
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
-        {/* end of section */}
-
-      {/* Main Content Section - Removed padding top since we don't need it anymore */}
-      <div className="bg-[#161616] relative z-20">
-        {/* Add Trending Section */}
-        <TrendingSection
-          items={trendingData}
-          loading={trendingLoading}
-          error={trendingError}
-        />
-
-        <div className="container mx-auto px-4">
-          <div className="space-y-20">
-            {/* Popular Movies Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
-                <motion.div 
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    rotate: [0, -45, 0] 
-                  }} 
-                  transition={{ 
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  className="absolute inset-0"
-                >
-                  <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
-                </motion.div>
-              </div>
-
-              <div className="container mx-auto px-4">
-                <div className="relative py-12">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-                    <div className="flex items-center gap-6">
-                      <div className="relative">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FF6B6B] to-[#FF8E53] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
-                          <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#FF6B6B]" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-                            </svg>
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#FF6B6B] flex items-center justify-center animate-pulse">
-                          <span className="text-xs font-bold text-white">🎬</span>
-                        </div>
-                      </div>
-                      <div>
-                        <motion.h2 
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          className="text-4xl font-bold text-white"
-                        >
-                          Popular
-                          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF6B6B] to-[#FF8E53] ml-3">
-                            Movies
-                          </span>
-                        </motion.h2>
-                        <p className="text-gray-400 mt-2">Discover the most-watched movies right now</p>
-                      </div>
-                    </div>
-
-                    <Link
-                      to="/movies"
-                      className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#FF6B6B]/10 to-transparent 
-                               hover:from-[#FF6B6B]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
-                    >
-                      <span className="text-[#FF6B6B] font-medium whitespace-nowrap">Explore Movies</span>
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className="h-5 w-5 text-[#FF6B6B] transform group-hover:translate-x-1 transition-transform duration-300"
-                        viewBox="0 0 20 20" 
-                        fill="currentColor"
-                      >
-                        <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </Link>
-                  </div>
-
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
-                    <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
-                    
-                    <MediaCarousel
-                      items={popularMovies}
-                      loading={moviesLoading}
-                      error={moviesError}
-                      showType={true}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-   
-            {/* Collections Section */}
+          {continueWatchingData.length > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -511,183 +323,7 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
                     rotate: [0, -45, 0] 
                   }} 
                   transition={{ 
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  className="absolute inset-0"
-                >
-                  <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
-                </motion.div>
-              </div>
-
-              <div className="container mx-auto px-4">
-                <div className="relative py-12">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-                    <div className="flex items-center gap-4"> {/* Changed from gap-8 to gap-6 */}
-                      <div className="relative">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FF8E53] to-[#FF6B6B] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
-                          <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#FF8E53]" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
-                            </svg>
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#FF8E53] flex items-center justify-center animate-pulse">
-                          <span className="text-xs font-bold text-white">📚</span>
-                        </div>
-                      </div>
-                      <div className="mr-4"> {/* Added right margin */}
-                        <motion.h2 
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          className="text-4xl font-bold text-white flex flex-col items-start" // Changed to flex-col and items-start
-                        >
-                          Movie
-                          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF8E53] to-[#FF6B6B]">
-                            Collections
-                          </span>
-                        </motion.h2>
-                        <p className="text-gray-400 mt-2">Complete movie series and franchises</p>
-                      </div>
-                    </div>
-
-                    <Link
-                      to="/collections"
-                      className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#FF8E53]/10 to-transparent 
-                               hover:from-[#FF8E53]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
-                    >
-                      <span className="text-[#FF8E53] font-medium whitespace-nowrap">Explore Collections</span>
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className="h-5 w-5 text-[#FF8E53] transform group-hover:translate-x-1 transition-transform duration-300"
-                        viewBox="0 0 20 20" 
-                        fill="currentColor"
-                      >
-                        <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </Link>
-                  </div>
-
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
-                    <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
-                    
-                    <MediaCarousel
-                      items={collections}
-                      loading={collectionsLoading}
-                      error={null}
-                      showType={true}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Fan Favorites Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative mb-20"
-            >
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
-                <motion.div 
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    rotate: [0, -45, 0] 
-                  }} 
-                  transition={{ 
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  className="absolute inset-0"
-                >
-                  <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
-                </motion.div>
-              </div>
-
-              <div className="container mx-auto px-4">
-                <div className="relative py-12">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-                    <div className="flex items-center gap-6">
-                      <div className="relative">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#E4D981] to-[#d4c86e] p-[2px] -rotate-3 hover:rotate-6 transition-transform duration-300">
-                          <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#E4D981] flex items-center justify-center animate-pulse">
-                          <span className="text-xs font-bold text-white">★</span>
-                        </div>
-                      </div>
-                      <div>
-                        <motion.h2 
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          className="text-4xl font-bold text-white"
-                        >
-                          Fan
-                          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#E4D981] to-[#d4c86e] ml-3">
-                            Favorites
-                          </span>
-                        </motion.h2>
-                        <p className="text-gray-400 mt-2">The most beloved shows among our community</p>
-                      </div>
-                    </div>
-
-                    <Link
-                      to="/fan-favorites"
-                      className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#E4D981]/10 to-transparent 
-                               hover:from-[#E4D981]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
-                    >
-                      <span className="text-[#E4D981] font-medium whitespace-nowrap">Explore More</span>
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className="h-5 w-5 text-[#E4D981] transform group-hover:translate-x-1 transition-transform duration-300"
-                        viewBox="0 0 20 20" 
-                        fill="currentColor"
-                      >
-                        <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                      </svg>
-                    </Link>
-                  </div>
-
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
-                    <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
-                    
-                    <MediaCarousel
-                      items={fanFavorites}
-                      loading={fanFavoritesLoading}
-                      error={null}
-                      showType={true}
-                    />
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Popular TV Shows - Copy the same pattern as above but with different colors and icon */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="relative"
-            >
-              <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
-                <motion.div 
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    rotate: [0, -45, 0] 
-                  }} 
-                  transition={{ 
-                    duration: 20,
+                    duration: 10,
                     repeat: Infinity,
                     ease: "linear"
                   }}
@@ -705,36 +341,35 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
                         <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#82BC87] to-[#6da972] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
                           <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V3zm1 0v14h12V3H4z" clipRule="evenodd" />
-                              <path d="M7 7a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" />
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                             </svg>
                           </div>
                         </div>
                         <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#82BC87] flex items-center justify-center animate-pulse">
-                          <span className="text-xs font-bold text-white">📺</span>
+                          <span className="text-xs font-bold text-white">⏱️</span>
                         </div>
                       </div>
                       <div>
                         <motion.h2 
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className="text-4xl font-bold text-white"
+                          className="text-4xl font-bold text-white flex flex-wrap items-center gap-1 mb-1 relative"
                         >
-                          Popular
-                          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#6da972] ml-3">
-                            TV Shows
+                          <span>Continue</span>
+                          <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#6da972] relative z-10">
+                            Watching
                           </span>
                         </motion.h2>
-                        <p className="text-gray-400 mt-2">Discover the most-watched TV shows right now</p>
+                        <p className="text-gray-400">Pick up where you left off</p>
                       </div>
                     </div>
 
                     <Link
-                      to="/tv-shows"
+                      to="/continue-watching"
                       className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#82BC87]/10 to-transparent 
                                hover:from-[#82BC87]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
                     >
-                      <span className="text-[#82BC87] font-medium whitespace-nowrap">Explore TV Shows</span>
+                      <span className="text-[#82BC87] font-medium whitespace-nowrap">View All</span>
                       <svg 
                         xmlns="http://www.w3.org/2000/svg" 
                         className="h-5 w-5 text-[#82BC87] transform group-hover:translate-x-1 transition-transform duration-300"
@@ -751,21 +386,394 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
                     <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
                     
                     <MediaCarousel
-                      items={popularTVShows}
-                      loading={tvLoading}
-                      error={tvError}
+                      items={continueWatchingData.map(item => ({
+                        ...item.details,
+                        link: item.media_type === 'tv' && item.details.last_episode
+                          ? `/player/tv/${item.media_id}/${item.details.last_episode.season}/${item.details.last_episode.episode}`
+                          : `/player/${item.media_type}/${item.media_id}`
+                      }))}
+                      loading={false}
+                      error={null}
                       showType={true}
                     />
                   </div>
                 </div>
               </div>
             </motion.div>
+          )}
+
+          {/* end of section */}
+
+        {/* Main Content Section - Removed padding top since we don't need it anymore */}
+        <div className="bg-[#161616] relative z-20">
+          {/* Add Trending Section */}
+          <TrendingSection
+            items={trendingData}
+            loading={trendingLoading}
+            error={trendingError}
+          />
+
+          <div className="container mx-auto px-4">
+            <div className="space-y-20">
+              {/* Popular Movies Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
+                  <motion.div 
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      rotate: [0, -45, 0] 
+                    }} 
+                    transition={{ 
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    className="absolute inset-0"
+                  >
+                    <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
+                  </motion.div>
+                </div>
+
+                <div className="container mx-auto px-4">
+                  <div className="relative py-12">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                      <div className="flex items-center gap-6">
+                        <div className="relative">
+                          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FF6B6B] to-[#FF8E53] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
+                            <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#FF6B6B]" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#FF6B6B] flex items-center justify-center animate-pulse">
+                            <span className="text-xs font-bold text-white">🎬</span>
+                          </div>
+                        </div>
+                        <div>
+                          <motion.h2 
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="text-4xl font-bold text-white"
+                          >
+                            Popular
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF6B6B] to-[#FF8E53] ml-3">
+                              Movies
+                            </span>
+                          </motion.h2>
+                          <p className="text-gray-400 mt-2">Discover the most-watched movies right now</p>
+                        </div>
+                      </div>
+
+                      <Link
+                        to="/movies"
+                        className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#FF6B6B]/10 to-transparent 
+                                 hover:from-[#FF6B6B]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
+                      >
+                        <span className="text-[#FF6B6B] font-medium whitespace-nowrap">Explore Movies</span>
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          className="h-5 w-5 text-[#FF6B6B] transform group-hover:translate-x-1 transition-transform duration-300"
+                          viewBox="0 0 20 20" 
+                          fill="currentColor"
+                        >
+                          <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </Link>
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
+                      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
+                      
+                      <MediaCarousel
+                        items={popularMovies}
+                        loading={moviesLoading}
+                        error={moviesError}
+                        showType={true}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+    
+              {/* Collections Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative mb-20"
+              >
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
+                  <motion.div 
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      rotate: [0, -45, 0] 
+                    }} 
+                    transition={{ 
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    className="absolute inset-0"
+                  >
+                    <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
+                  </motion.div>
+                </div>
+
+                <div className="container mx-auto px-4">
+                  <div className="relative py-12">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                      <div className="flex items-center gap-4"> {/* Changed from gap-8 to gap-6 */}
+                        <div className="relative">
+                          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FF8E53] to-[#FF6B6B] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
+                            <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#FF8E53]" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#FF8E53] flex items-center justify-center animate-pulse">
+                            <span className="text-xs font-bold text-white">📚</span>
+                          </div>
+                        </div>
+                        <div className="mr-4"> {/* Added right margin */}
+                          <motion.h2 
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="text-4xl font-bold text-white flex flex-col items-start" // Changed to flex-col and items-start
+                          >
+                            Movie
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#FF8E53] to-[#FF6B6B]">
+                              Collections
+                            </span>
+                          </motion.h2>
+                          <p className="text-gray-400 mt-2">Complete movie series and franchises</p>
+                        </div>
+                      </div>
+
+                      <Link
+                        to="/collections"
+                        className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#FF8E53]/10 to-transparent 
+                                 hover:from-[#FF8E53]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
+                      >
+                        <span className="text-[#FF8E53] font-medium whitespace-nowrap">Explore Collections</span>
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          className="h-5 w-5 text-[#FF8E53] transform group-hover:translate-x-1 transition-transform duration-300"
+                          viewBox="0 0 20 20" 
+                          fill="currentColor"
+                        >
+                          <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </Link>
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
+                      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
+                      
+                      <MediaCarousel
+                        items={collections}
+                        loading={collectionsLoading}
+                        error={null}
+                        showType={true}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Fan Favorites Section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative mb-20"
+              >
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
+                  <motion.div 
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      rotate: [0, -45, 0] 
+                    }} 
+                    transition={{ 
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    className="absolute inset-0"
+                  >
+                    <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
+                  </motion.div>
+                </div>
+
+                <div className="container mx-auto px-4">
+                  <div className="relative py-12">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                      <div className="flex items-center gap-6">
+                        <div className="relative">
+                          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#E4D981] to-[#d4c86e] p-[2px] -rotate-3 hover:rotate-6 transition-transform duration-300">
+                            <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#E4D981] flex items-center justify-center animate-pulse">
+                            <span className="text-xs font-bold text-white">★</span>
+                          </div>
+                        </div>
+                        <div>
+                          <motion.h2 
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="text-4xl font-bold text-white"
+                          >
+                            Fan
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#E4D981] to-[#d4c86e] ml-3">
+                              Favorites
+                            </span>
+                          </motion.h2>
+                          <p className="text-gray-400 mt-2">The most beloved shows among our community</p>
+                        </div>
+                      </div>
+
+                      <Link
+                        to="/fan-favorites"
+                        className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#E4D981]/10 to-transparent 
+                                 hover:from-[#E4D981]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
+                      >
+                        <span className="text-[#E4D981] font-medium whitespace-nowrap">Explore More</span>
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          className="h-5 w-5 text-[#E4D981] transform group-hover:translate-x-1 transition-transform duration-300"
+                          viewBox="0 0 20 20" 
+                          fill="currentColor"
+                        >
+                          <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </Link>
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
+                      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
+                      
+                      <MediaCarousel
+                        items={fanFavorites}
+                        loading={fanFavoritesLoading}
+                        error={null}
+                        showType={true}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Popular TV Shows - Copy the same pattern as above but with different colors and icon */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="absolute inset-0 pointer-events-none">
+                  <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
+                  <motion.div 
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      rotate: [0, -45, 0] 
+                    }} 
+                    transition={{ 
+                      duration: 20,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    className="absolute inset-0"
+                  >
+                    <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150 opacity-5" />
+                  </motion.div>
+                </div>
+
+                <div className="container mx-auto px-4">
+                  <div className="relative py-12">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                      <div className="flex items-center gap-6">
+                        <div className="relative">
+                          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#82BC87] to-[#6da972] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
+                            <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V3zm1 0v14h12V3H4z" clipRule="evenodd" />
+                                <path d="M7 7a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#82BC87] flex items-center justify-center animate-pulse">
+                            <span className="text-xs font-bold text-white">📺</span>
+                          </div>
+                        </div>
+                        <div>
+                          <motion.h2 
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="text-4xl font-bold text-white"
+                          >
+                            Popular
+                            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#6da972] ml-3">
+                              TV Shows
+                            </span>
+                          </motion.h2>
+                          <p className="text-gray-400 mt-2">Discover the most-watched TV shows right now</p>
+                        </div>
+                      </div>
+
+                      <Link
+                        to="/tv-shows"
+                        className="group relative px-4 sm:px-6 py-2 sm:py-3 rounded-xl bg-gradient-to-r from-[#82BC87]/10 to-transparent 
+                                 hover:from-[#82BC87]/20 transition-all duration-300 flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start"
+                      >
+                        <span className="text-[#82BC87] font-medium whitespace-nowrap">Explore TV Shows</span>
+                        <svg 
+                          xmlns="http://www.w3.org/2000/svg" 
+                          className="h-5 w-5 text-[#82BC87] transform group-hover:translate-x-1 transition-transform duration-300"
+                          viewBox="0 0 20 20" 
+                          fill="currentColor"
+                        >
+                          <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </Link>
+                    </div>
+
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#161616] to-transparent z-10 pointer-events-none" />
+                      <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#161616] to-transparent z-10 pointer-events-none" />
+                      
+                      <MediaCarousel
+                        items={popularTVShows}
+                        loading={tvLoading}
+                        error={tvError}
+                        showType={true}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
           </div>
         </div>
-        </div>
+                
       </div>
-              
-    </div>
+    </>
   );
 };
 

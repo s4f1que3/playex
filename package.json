@@ -12,6 +12,7 @@
     "i18next": "^24.2.3",
     "ldrs": "^1.1.2",
     "react-error-boundary": "^5.0.0",
+    "react-helmet-async": "^2.0.5",
     "react-i18next": "^15.4.1",
     "swiper": "^11.2.6"
   }

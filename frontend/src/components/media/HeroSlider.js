@@ -1,4 +1,3 @@
-// File: frontend/src/components/media/HeroSlider.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';

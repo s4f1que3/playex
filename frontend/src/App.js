@@ -6,6 +6,7 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import PremiumLoader from './components/common/PremiumLoader';
 import { lazyLoadRoute, routeConfig } from './utils/lazyLoad';
 import { prefetchRoute } from './utils/prefetchRoutes';
+import { HelmetProvider } from 'react-helmet-async';
 
 // Layouts
 import MainLayout from './Layouts/MainLayout';
@@ -110,64 +111,72 @@ function App() {
   }, [loading]);
 
   return (
-    <div className="min-h-screen bg-[#161616] text-white overflow-x-hidden">
-      {loading && <PremiumLoader overlay={true} text="Welcome to Playex" size="large" />}
-      
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <Router>
-            {/* Only show the main content when not loading or with opacity transition */}
-            <div className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
-              <CookieConsent />
-              <SystemAnnouncement />
-              <Routes>
-                {/* general routes */}
-                <Route path="/" element={<MainLayout />}>
-                  <Route index element={
-                    <Suspense fallback={<PremiumLoader />}>
-                      <routes.Home />
-                    </Suspense>
-                  } />
-                  <Route path="movies" element={<MoviesPage />} />
-                  <Route path="tv-shows" element={<TVShowsPage />} />
-                  <Route path="Trending" element={<TrendingPage />} />
-                  <Route path="search" element={<SearchResultsPage />} />
-                  <Route path="/terms" element={<TermsPage />} />
-                  <Route path="/FAQ" element={<FAQ />} />
-                  <Route path="/privacy" element={<PrivacyPolicyPage />} />
-                  <Route path="/cookies" element={<CookiesPolicyPage />} />
-                  <Route path="movie/:slug" element={<MediaDetailsPage mediaType="movie" />} />
-                  <Route path="tv/:slug" element={<MediaDetailsPage mediaType="tv" />} />
-                  <Route path="player/movie/:slug" element={<PlayerPage mediaType="movie" />} />
-                  <Route path="player/tv/:slug/:season/:episode" element={<PlayerPage mediaType="tv" />} />
-                  <Route path="/tv/:slug/episodes/:season" element={<EpisodesPage />} />
-                  <Route path="/fan-favorites" element={<FanFavoritesPage />} /> 
-                  <Route path="/collections" element={<CollectionsIndexPage />} /> 
-                  <Route path="/collection/:id" element={<CollectionsPage />} />
-                  <Route path="/continue-watching" element={<ContinueWatchingPage />} />
-                  <Route path="/settings" element={<SettingsPage />} />
-                  <Route path="/airing-shows" element={<AiringShowsPage />} />
-                  
-                  {/* Actor routes */}
-                  <Route path="/actor/:slug" element={<ActorsPersonal />} />
-                  <Route path="/actor/:slug/movies" element={<ActorCreditsPage type="movie" />} />
-                  <Route path="/actor/:slug/tv" element={<ActorCreditsPage type="tv" />} />
-                  
-                  {/* Protected routes */}
-                  <Route element={<ProtectedRoute />}>
-                    <Route path="watchlist" element={<WatchlistPage />} />
-                    <Route path="favorites" element={<FavoritesPage />} />
+    <HelmetProvider>
+      <main className="min-h-screen bg-[#161616] text-white overflow-x-hidden">
+        {loading && <PremiumLoader overlay={true} text="Welcome to Playex" size="large" />}
+        
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Router>
+              <div className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
+                <header>
+                  <CookieConsent />
+                  <SystemAnnouncement />
+                </header>
+
+                <Routes>
+                  {/* general routes */}
+                  <Route path="/" element={<MainLayout />}>
+                    <Route index element={
+                      <Suspense fallback={<PremiumLoader />}>
+                        <routes.Home />
+                      </Suspense>
+                    } />
+                    <Route path="movies" element={<MoviesPage />} />
+                    <Route path="tv-shows" element={<TVShowsPage />} />
+                    <Route path="Trending" element={<TrendingPage />} />
+                    <Route path="search" element={<SearchResultsPage />} />
+                    <Route path="/terms" element={<TermsPage />} />
+                    <Route path="/FAQ" element={<FAQ />} />
+                    <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                    <Route path="/cookies" element={<CookiesPolicyPage />} />
+                    <Route path="movie/:slug" element={<MediaDetailsPage mediaType="movie" />} />
+                    <Route path="tv/:slug" element={<MediaDetailsPage mediaType="tv" />} />
+                    <Route path="player/movie/:slug" element={<PlayerPage mediaType="movie" />} />
+                    <Route path="player/tv/:slug/:season/:episode" element={<PlayerPage mediaType="tv" />} />
+                    <Route path="/tv/:slug/episodes/:season" element={<EpisodesPage />} />
+                    <Route path="/fan-favorites" element={<FanFavoritesPage />} /> 
+                    <Route path="/collections" element={<CollectionsIndexPage />} /> 
+                    <Route path="/collection/:id" element={<CollectionsPage />} />
+                    <Route path="/continue-watching" element={<ContinueWatchingPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/airing-shows" element={<AiringShowsPage />} />
+                    
+                    {/* Actor routes */}
+                    <Route path="/actor/:slug" element={<ActorsPersonal />} />
+                    <Route path="/actor/:slug/movies" element={<ActorCreditsPage type="movie" />} />
+                    <Route path="/actor/:slug/tv" element={<ActorCreditsPage type="tv" />} />
+                    
+                    {/* Protected routes */}
+                    <Route element={<ProtectedRoute />}>
+                      <Route path="watchlist" element={<WatchlistPage />} />
+                      <Route path="favorites" element={<FavoritesPage />} />
+                    </Route>
                   </Route>
-                </Route>
-                
-                {/* 404 route */}
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </div>
-          </Router>
-        </AuthProvider>
-      </QueryClientProvider>
-    </div>
+                  
+                  {/* 404 route */}
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+
+                <footer className="mt-auto">
+                  {/* Add your footer content here */}
+                </footer>
+              </div>
+            </Router>
+          </AuthProvider>
+        </QueryClientProvider>
+      </main>
+    </HelmetProvider>
   );
 }
 

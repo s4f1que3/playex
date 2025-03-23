@@ -1,3 +1,11 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemaps
+Sitemap: https://playex.com/sitemap.xml
+
+# Disallow paths
+Disallow: /api/
+Disallow: /admin/
+Disallow: /settings/
