@@ -17,7 +17,8 @@ app.use(cors({
     'http://localhost:3000',
     'https://playex.vercel.app',
     'https://playex-frontend.vercel.app',
-    'https://playex-backend.vercel.app'
+    'https://playex-backend.vercel.app',
+    /\.vercel\.app$/  // Allow all Vercel subdomains
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
