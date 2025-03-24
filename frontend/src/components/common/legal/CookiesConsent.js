@@ -147,7 +147,7 @@ const CookieConsent = () => {
                   </div>
                 </div>
 
-                {/* Actions - Fixed */}
+                {/* Actions - Fixed actions */}
                 <div className="relative p-6 bg-black/20 border-t border-white/5 flex flex-col sm:flex-row-reverse gap-3 flex-shrink-0">
                   <motion.button
                     whileHover={{ scale: 1.02 }}
