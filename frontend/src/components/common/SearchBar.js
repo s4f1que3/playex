@@ -97,7 +97,7 @@ const SearchBar = ({ isMobile = false }) => {
 
   return (
     <motion.div 
-      className={`relative ${isMobile ? 'w-full' : 'w-80'}`} 
+      className={`relative ${isMobile ? 'w-full' : 'w-[325px]'}`} 
       ref={searchRef}
       initial="hidden"
       animate="visible"
@@ -110,7 +110,7 @@ const SearchBar = ({ isMobile = false }) => {
             <input
               ref={searchInputRef}
               type="text"
-              placeholder={isMobile ? "Search..." : "Search movies, shows, actors..."}
+              placeholder={isMobile ? "Search..." : "Search movies, shows & actors"}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
