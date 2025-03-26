@@ -181,16 +181,31 @@ const SeasonsAccordion = ({ tvId, tvName, seasons, activeSeason, setActiveSeason
   const [isEpisodesExpanded, setIsEpisodesExpanded] = useState(true);
   const [lastWatched, setLastWatched] = useState(null);
 
+  // Add preloading function
+  const preloadImages = (episodes) => {
+    episodes?.forEach(episode => {
+      if (episode.still_path) {
+        const img = new Image();
+        img.src = tmdbHelpers.getImageUrl(episode.still_path);
+      }
+    });
+  };
+
   useEffect(() => {
     const lastWatchedData = getLastWatchedEpisode(tvId);
     setLastWatched(lastWatchedData);
   }, [tvId]);
 
+  // Update the useQuery to include preloading
   const { data: seasonDetails, isLoading } = useQuery({
     queryKey: ['seasonDetails', tvId, activeSeason],
     queryFn: () => tmdbApi.get(`/tv/${tvId}/season/${activeSeason}`).then(res => res.data),
     enabled: !!tvId && !!activeSeason,
-    staleTime: 300000 // 5 minutes
+    staleTime: 300000, // 5 minutes
+    onSuccess: (data) => {
+      // Preload images when season data arrives
+      preloadImages(data.episodes);
+    }
   });
 
   const filteredSeasons = seasons.filter(season => season.season_number > 0);
