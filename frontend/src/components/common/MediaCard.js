@@ -43,10 +43,11 @@ const MediaCard = ({ media, showType = true }) => {
   // Format rating (only for movies and TV shows)
   const rating = !isPerson && vote_average ? (vote_average / 10) * 5 : 0;
   
+  // Ensure we always use the TMDB ID when creating URLs
   const mediaUrl = createMediaUrl(
     type,
     id,
-    title || name
+    displayTitle || 'untitled'
   );
   
   return (

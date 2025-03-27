@@ -15,7 +15,7 @@ const setSlugMapping = (slug, id, type) => {
   localStorage.setItem(SLUG_MAP_KEY, JSON.stringify(mappings));
 };
 
-export const createSlug = (text) => {
+export const slugify = (text) => {
   if (!text) return '';
   return text
     .toString()
@@ -28,31 +28,18 @@ export const createSlug = (text) => {
     .replace(/-+$/, '');         // Trim hyphens from end
 };
 
-export const createMediaUrl = (type, id, title) => {
-  const slug = createSlug(title);
-  setSlugMapping(slug, id, type);
-  
-  // Handle different types of media URLs
-  switch (type) {
-    case 'person':
-      return `/actor/${slug}`;
-    case 'movie':
-    case 'tv':
-      return `/${type}/${slug}`;
-    default:
-      return `/${type}/${slug}`;
-  }
+export const createMediaUrl = (mediaType, id, title) => {
+  // Always include the ID in a consistent format
+  const slug = `${id}-${slugify(title)}`;
+  return `/${mediaType}/${slug}`;
 };
 
-export const parseMediaUrl = (param) => {
-  if (!param) {
-    return { id: null, slug: '' };
-  }
-  
-  const match = param.match(/^(\d+)(?:-.+)?$/);
+export const parseMediaUrl = (slug) => {
+  // Extract ID from slug (it's always the first part before the first hyphen)
+  const id = slug.split('-')[0];
   return {
-    id: match ? match[1] : param,
-    slug: match ? match[0].slice(match[1].length + 1) : ''
+    id: parseInt(id),
+    slug: slug
   };
 };
 

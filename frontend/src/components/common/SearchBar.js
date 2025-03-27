@@ -58,14 +58,8 @@ const SearchBar = ({ isMobile = false }) => {
     const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
     const title = item.title || item.name;
     
-    if (item.media_type === 'person') {
-      const actorUrl = createMediaUrl('person', item.id, item.name);
-      navigate(actorUrl);
-    } else {
-      const mediaUrl = createMediaUrl(mediaType, item.id, title);
-      navigate(mediaUrl);
-    }
-
+    const mediaUrl = createMediaUrl(mediaType, item.id, title);
+    navigate(mediaUrl);
     setShowSuggestions(false);
     setSearchTerm('');
   };
