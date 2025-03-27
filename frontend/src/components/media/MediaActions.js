@@ -197,10 +197,17 @@ const MediaActions = ({
 
   const handleWatchClick = () => {
     const slug = createMediaUrl(mediaType, media.id, media.title || media.name).split('/')[2];
+    
     if (mediaType === 'movie') {
       navigate(`/player/movie/${slug}`);
     } else {
-      navigate(`/player/tv/${slug}/${activeSeason}/1`);
+      // Get last watched episode info or default to S1E1
+      const lastWatchedData = getLastWatchedEpisode(media.id);
+      if (lastWatchedData && lastWatchedData.season && lastWatchedData.episode) {
+        navigate(`/player/tv/${slug}/${lastWatchedData.season}/${lastWatchedData.episode}`);
+      } else {
+        navigate(`/player/tv/${slug}/${activeSeason}/1`);
+      }
     }
   };
   
