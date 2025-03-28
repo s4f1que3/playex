@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
+import { parseMediaUrl } from '../utils/slugify';
 import Spinner from '../components/common/Spinner';
 import MediaCarousel from '../components/media/MediaCarousel';
 import { useActorResolver } from '../hooks/useActorResolver';
@@ -12,28 +13,35 @@ import SEO from '../components/common/SEO';
 
 const ActorsPersonal = () => {
   const { slug } = useParams();
-  const { id, loading: resolverLoading, error: resolverError } = useActorResolver(slug);
+  const { id } = parseMediaUrl(slug);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const { data: actorData, isLoading } = useQuery({
     queryKey: ['actor', id],
-    queryFn: () => tmdbApi.get(`/person/${id}?append_to_response=combined_credits,images,external_ids`).then(res => res.data),
+    queryFn: () => tmdbApi.get(`/person/${id}?append_to_response=combined_credits,images,external_ids`)
+      .then(res => res.data)
+      .catch(error => {
+        if (error.response?.status === 404) {
+          throw new Error('Actor not found');
+        }
+        throw error;
+      }),
     enabled: !!id,
-    staleTime: 300000 // 5 minutes
+    staleTime: 300000
   });
 
-  if (resolverLoading || isLoading) {
+  if (isLoading) {
     return <PremiumLoader text="Loading Actor Details" overlay={true} />;
   }
 
-  if (resolverError || !actorData) {
+  if (!actorData) {
     return (
       <div className="min-h-screen bg-[#161616] pt-24">
         <div className="container mx-auto px-4">
           <div className="bg-red-900/20 border border-red-900/50 rounded-xl p-8 text-center">
             <h2 className="text-2xl font-bold text-red-500 mb-2">Actor Not Found</h2>
             <p className="text-gray-400">
-              {resolverError || "The requested actor doesn't exist or has been removed."}
+              {"The requested actor doesn't exist or has been removed."}
             </p>
           </div>
         </div>
@@ -73,6 +81,9 @@ const ActorsPersonal = () => {
     if (words.length <= 100) return text;
     return words.slice(0, 100).join(' ') + '...';
   };
+
+  // Update the links to filmography pages to use id-slug format
+  const actorUrlBase = slug; // Keep the same slug for consistency
 
   return (
     <>
@@ -284,7 +295,7 @@ const ActorsPersonal = () => {
                     </div>
                   </div>
                   <Link
-                    to={`/actor/${slug}/movies`}
+                    to={`/actor/${actorUrlBase}/movies`}
                     className="group px-4 py-2 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
                              border border-[#82BC87]/20 hover:border-[#82BC87]/30
                              transition-all duration-300 flex items-center gap-2"
@@ -323,7 +334,7 @@ const ActorsPersonal = () => {
                     </div>
                   </div>
                   <Link
-                    to={`/actor/${slug}/tv`}
+                    to={`/actor/${actorUrlBase}/tv`}
                     className="group px-4 py-2 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
                              border border-[#82BC87]/20 hover:border-[#82BC87]/30
                              transition-all duration-300 flex items-center gap-2"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,7 +7,7 @@ import { useActorResolver } from '../hooks/useActorResolver';
 import PremiumLoader from '../components/common/PremiumLoader';
 import SEO from '../components/common/SEO';
 import MediaGrid from '../components/media/MediaGrid';
-import Pagination from '../components/common/Pagnation'; // Add this import
+import Pagination from '../components/common/Pagnation';
 
 const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
   const { slug } = useParams();
@@ -23,18 +23,77 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
     : 2;                             // xs
   const itemsPerPage = window.innerWidth >= 768 ? itemsPerRow * 4 : itemsPerRow * 3;
 
+  // Add retries and better error handling for the main query
   const { data: actorData, isLoading, error } = useQuery({
     queryKey: ['actor', id],
-    queryFn: () => tmdbApi.get(`/person/${id}?append_to_response=combined_credits`).then(res => res.data),
-    enabled: !!id,
-    staleTime: 300000
+    queryFn: async () => {
+      let attempts = 0;
+      const maxAttempts = 3;
+
+      while (attempts < maxAttempts) {
+        try {
+          const response = await tmdbApi.get(`/person/${id}?append_to_response=combined_credits`, {
+            timeout: 10000, // 10 second timeout
+          });
+          return response.data;
+        } catch (error) {
+          attempts++;
+          console.error(`Attempt ${attempts} failed:`, error);
+          
+          if (attempts === maxAttempts) {
+            throw new Error(`Failed to fetch actor data after ${maxAttempts} attempts: ${error.message}`);
+          }
+          
+          // Wait before retrying
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
+        }
+      }
+    },
+    enabled: !!id && !resolverError,
+    staleTime: 300000, // 5 minutes
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
   });
 
-  // Error handling
+  useEffect(() => {
+    // Log detailed debugging information
+    if (resolverError || error) {
+      console.group('Actor Filmography Debug Info');
+      console.log('Current State:', {
+        slug,
+        id,
+        resolverLoading,
+        resolverError,
+        isLoading,
+        error,
+        actorData: actorData || null
+      });
+      
+      if (resolverError) {
+        console.error('Resolver Error Details:', {
+          message: resolverError.message,
+          code: resolverError.code,
+          stack: resolverError.stack
+        });
+      }
+      
+      if (error) {
+        console.error('Query Error Details:', {
+          message: error.message,
+          response: error.response,
+          request: error.request,
+          config: error.config
+        });
+      }
+      console.groupEnd();
+    }
+  }, [slug, id, resolverError, error, actorData, resolverLoading, isLoading]);
+
+  // Error component with more detailed information
   if (resolverError || error) {
     return (
       <div className="min-h-screen bg-[#161616] pt-24 flex items-center justify-center">
-        <div className="text-center">
+        <div className="text-center max-w-xl mx-auto px-4">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-500/10 flex items-center justify-center">
             <svg className="w-8 h-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -42,9 +101,30 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
           </div>
           <h3 className="text-xl text-white mb-2">Error Loading Data</h3>
           <p className="text-gray-400 mb-4">Unable to load actor information.</p>
-          <Link to="/" className="text-[#82BC87] hover:text-[#E4D981] transition duration-300">
-            Return Home
-          </Link>
+          <div className="text-sm text-gray-500 mb-4">
+            Error Code: {error?.response?.status || resolverError?.code || 'Unknown'}
+            {(error?.message || resolverError?.message) && (
+              <div className="mt-2 p-2 bg-gray-800 rounded text-left">
+                <code className="text-xs text-gray-400">
+                  {error?.message || resolverError?.message}
+                </code>
+              </div>
+            )}
+          </div>
+          <div className="flex gap-4 justify-center">
+            <button 
+              onClick={() => window.location.reload()} 
+              className="text-[#82BC87] hover:text-[#E4D981] transition duration-300"
+            >
+              Try Again
+            </button>
+            <Link 
+              to="/" 
+              className="text-[#82BC87] hover:text-[#E4D981] transition duration-300"
+            >
+              Return Home
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -177,7 +257,6 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
           />
         )}
       </Link>
-
       <Link
         to={`/actor/${slug}/tv`}
         className={`flex-1 sm:flex-none px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-md transition-all duration-300 relative overflow-hidden text-xs sm:text-base

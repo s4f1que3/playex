@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../utils/api';
+import { createMediaUrl } from '../utils/slugify';
 import MediaGrid from '../components/media/MediaGrid';
 import Pagination from '../components/common/Pagnation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -100,15 +101,21 @@ const SearchResultsPage = () => {
             ...res.data,
             results: res.data.results.map(person => ({
               ...person,
-              media_type: 'person'
+              media_type: 'actor'
             }))
           };
         });
       }
-      // Otherwise use multi search
+      // Otherwise use multi search and convert person to actor
       return tmdbApi.get('/search/multi', {
         params: { query: searchQuery, page }
-      }).then(res => res.data);
+      }).then(res => ({
+        ...res.data,
+        results: res.data.results.map(item => ({
+          ...item,
+          media_type: item.media_type === 'person' ? 'actor' : item.media_type
+        }))
+      }));
     },
     enabled: !!searchQuery,
     keepPreviousData: true,
@@ -127,11 +134,31 @@ const SearchResultsPage = () => {
   
   // Filter results based on media type if using multi search
   const filteredResults = data?.results?.filter(item => {
+    // First check media type
     if (mediaType === 'all') {
-      return ['movie', 'tv', 'person'].includes(item.media_type);
+      if (!['movie', 'tv', 'actor'].includes(item.media_type)) return false;
+      // Filter out actors without profile pictures
+      if (item.media_type === 'actor' && !item.profile_path) return false;
+      return true;
+    }
+    if (mediaType === 'person') {
+      // For actor-specific searches, only show those with profile pictures
+      return item.media_type === 'actor' && item.profile_path;
     }
     return item.media_type === mediaType;
-  });
+  }).map(item => ({
+    ...item,
+    // Add poster_path for actors using their profile_path
+    poster_path: item.media_type === 'actor' ? item.profile_path : item.poster_path
+  }));
+
+  const getItemLink = (item) => {
+    const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
+    if (mediaType === 'person') {
+      return createMediaUrl('actor', item.id, item.name);
+    }
+    return createMediaUrl(mediaType, item.id, item.title || item.name);
+  };
 
   const filterOptions = [
     {

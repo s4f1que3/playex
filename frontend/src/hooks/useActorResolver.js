@@ -7,21 +7,17 @@ export const useActorResolver = (slug) => {
   useEffect(() => {
     const resolveActor = async () => {
       try {
-        // First check if the slug ends with a numeric ID
-        const matches = slug.match(/-(\d+)$/);
-        if (matches) {
-          const id = parseInt(matches[1]);
-          setData({ id, loading: false, error: null });
+        // Check for ID at start of slug (12835-vin-diesel format)
+        const startIdMatch = slug.match(/^(\d+)-/);
+        if (startIdMatch) {
+          setData({ id: parseInt(startIdMatch[1]), loading: false, error: null });
           return;
         }
-
-        // If no ID in slug, search by name
+        
+        // Handle name-only format (vin-diesel format)
         const searchQuery = slug.split('-').join(' ');
         const response = await tmdbApi.get('/search/person', {
-          params: {
-            query: searchQuery,
-            include_adult: false,
-          }
+          params: { query: searchQuery }
         });
 
         if (response.data.results && response.data.results.length > 0) {

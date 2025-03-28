@@ -9,12 +9,6 @@ const getSlugMappings = () => {
   }
 };
 
-const setSlugMapping = (slug, id, type) => {
-  const mappings = getSlugMappings();
-  mappings[`${type}/${slug}`] = id;
-  localStorage.setItem(SLUG_MAP_KEY, JSON.stringify(mappings));
-};
-
 export const slugify = (text) => {
   if (!text) return '';
   return text
@@ -29,21 +23,16 @@ export const slugify = (text) => {
 };
 
 export const createMediaUrl = (mediaType, id, title) => {
-  // Always include the ID in a consistent format
+  // For all media types including actors, use id-slug format
   const slug = `${id}-${slugify(title)}`;
   return `/${mediaType}/${slug}`;
 };
 
 export const parseMediaUrl = (slug) => {
-  // Extract ID from slug (it's always the first part before the first hyphen)
+  // Simple id-slug split for all media types
   const id = slug.split('-')[0];
   return {
     id: parseInt(id),
     slug: slug
   };
-};
-
-export const getIdFromSlug = (type, slug) => {
-  const mappings = getSlugMappings();
-  return mappings[`${type}/${slug}`];
 };

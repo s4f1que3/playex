@@ -35,6 +35,7 @@ export const createMediaUrl = (type, id, title) => {
   // Handle different types of media URLs
   switch (type) {
     case 'person':
+    case 'actor':
       return `/actor/${slug}`;
     case 'person/movies':
       return `/actor/${slug}/movies`;

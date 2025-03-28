@@ -1,14 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import PrefetchLink from './PrefetchLink';
-import { Link } from 'react-router-dom';
 import { tmdbHelpers } from '../../utils/api';
+import { createMediaUrl } from '../../utils/slugify';
 
 const ActorCard = ({ actor }) => {
   const { id, name, profile_path, known_for_department, known_for } = actor;
+  const actorUrl = createMediaUrl('actor', id, name);
 
   return (
-    <PrefetchLink to={`/actor/${id}`} className="block h-full group">
+    <PrefetchLink to={actorUrl} className="block h-full group">
       <div className="relative h-full overflow-hidden rounded-xl backdrop-blur-sm border border-white/5 transition-all duration-500 hover:scale-[1.02] bg-gradient-to-b from-gray-800/50 to-gray-900/50">
         {/* Image Container */}
         <div className="aspect-[2/3] relative overflow-hidden">

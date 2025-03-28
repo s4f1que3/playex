@@ -58,7 +58,8 @@ const SearchBar = ({ isMobile = false }) => {
     const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
     const title = item.title || item.name;
     
-    const mediaUrl = createMediaUrl(mediaType, item.id, title);
+    const adjustedMediaType = mediaType === 'person' ? 'actor' : mediaType;
+    const mediaUrl = createMediaUrl(adjustedMediaType, item.id, title);
     navigate(mediaUrl);
     setShowSuggestions(false);
     setSearchTerm('');
