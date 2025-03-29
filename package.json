@@ -1,5 +1,18 @@
 {
   "devDependencies": {
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__template": "^7.4.4",
+    "@types/babel__traverse": "^7.20.7",
+    "@types/bonjour": "^3.5.13",
+    "@types/cookie": "^0.6.0",
+    "@types/istanbul-lib-report": "^3.0.3",
+    "@types/json5": "^0.0.30",
+    "@types/ndarray": "^1.0.14",
+    "@types/parse-json": "^4.0.2",
+    "@types/prettier": "^2.7.3",
+    "@types/q": "^1.5.8",
+    "@types/stack-utils": "^2.0.3",
+    "@types/stylis": "^4.2.7",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.5.3",
     "source-map-explorer": "^2.5.3",
