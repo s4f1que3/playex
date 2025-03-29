@@ -139,7 +139,7 @@ const FanFavoritesPage = () => {
           </svg>
           Movies
         </span>
-        {selectedMediaType === 'movie' && (
+        {selectedMediaType === 'movies' && (
           <motion.div
             layoutId="activeTabBg"
             className="absolute inset-0 bg-[#E4D981] rounded-lg"
