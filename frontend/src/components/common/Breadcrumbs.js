@@ -25,7 +25,7 @@ const BreadcrumbItem = ({ children, to, isLast }) => {
             {children}
             <div className="ml-2 transform transition-transform duration-300 group-hover:translate-x-1">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a 1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a 1 1 0 010 1.414l-4 4a 1 1 0 01-1.414 0z" clipRule="evenodd" />
               </svg>
             </div>
           </Link>
@@ -43,22 +43,20 @@ const Breadcrumbs = () => {
   const location = useLocation();
   const pathnames = location.pathname.split('/').filter(Boolean);
 
-  // Fetch media title for movie, TV show, or actor pages
-  const mediaType = ['movie', 'tv', 'actor'].includes(pathnames[0]) ? pathnames[0] : null;
-  const mediaId = mediaType && pathnames[1];
+  const mediaType = pathnames[0] === 'player' ? pathnames[1] : 
+    ['movie', 'tv', 'actor'].includes(pathnames[0]) ? pathnames[0] : null;
+  const mediaId = mediaType && (pathnames[0] === 'player' ? pathnames[2] : pathnames[1]);
 
   const { data: mediaDetails } = useQuery({
     queryKey: ['mediaDetails', mediaType, mediaId],
     queryFn: () => {
-      // For actor details, use the person endpoint
       const endpoint = mediaType === 'actor' ? 'person' : mediaType;
       return tmdbApi.get(`/${endpoint}/${mediaId}`).then(res => res.data);
     },
     enabled: !!mediaType && !!mediaId,
-    staleTime: 300000 // 5 minutes
+    staleTime: 300000
   });
-  
-  // Skip rendering breadcrumbs on home page or auth pages
+
   if (
     location.pathname === '/' ||
     location.pathname === '/login' ||
@@ -68,7 +66,6 @@ const Breadcrumbs = () => {
     return null;
   }
   
-  // Map path segments to readable names
   const getPathName = (pathname) => {
     switch (pathname) {
       case 'movies':
@@ -114,78 +111,45 @@ const Breadcrumbs = () => {
     }
   };
   
-  // Generate proper routes for breadcrumb navigation
   const getProperRoute = (pathname, index, pathnames) => {
-    // Add debug console log
-    console.log('Debug:', {
-      pathname,
-      index,
-      pathnames,
-      condition: {
-        isPlayer: pathnames[0] === 'player',
-        isTv: pathnames[1] === 'tv',
-        isNumber: /^\d+$/.test(pathname),
-        isIndex4: index === 4,
-        fullPath: pathnames.join('/')
+    // Handle player routes
+    if (pathnames[0] === 'player') {
+      if (pathname === 'player') return null;
+      
+      // Handle TV shows route
+      if (pathname === 'tv') return '/tv-shows';
+      
+      // Handle Movies route
+      if (pathname === 'movie') return '/movies';
+      
+      // Handle media details page for both TV shows and Movies
+      if ((pathname === mediaId) && mediaDetails) {
+        const mediaType = pathnames[1]; // will be either 'tv' or 'movie'
+        return `/${mediaType}/${mediaId}`;
       }
-    });
-
-    // Update the condition to correctly identify the season number
-    if (
-      pathnames[0] === 'player' && 
-      pathnames[1] === 'tv' && 
-      /^\d+$/.test(pathname) &&
-      index === 3  // Changed from 4 to 3 since season number is at index 3 in player/tv/[id]/[season]/[episode]
-    ) {
-      const showId = pathnames[2];
-      const seasonNumber = pathname;
-      return `/tv/${showId}/episodes/${seasonNumber}`;
+      
+      // Handle episode numbers for TV shows and movies
+      if (/^\d+$/.test(pathname) && index === 3) {
+        const mediaType = pathnames[1];
+        if (mediaType === 'tv') {
+          return `/tv/${pathnames[2]}/episodes/${pathname}`;
+        } else if (mediaType === 'movie') {
+          return `/movie/${pathnames[2]}`;
+        }
+      }
     }
 
-    // Special handling for player routes
-    if (pathname === 'player') {
-      return '/'; // Redirect to home since we don't have a dedicated player page
-    }
-    
-    // For movie/tv/actor in player path, redirect to the media details page
-    if ((pathname === 'movie' || pathname === 'tv' || pathname === 'actor') && pathnames[0] === 'player') {
-      const mediaId = pathnames[2];
-      return `/${pathname}/${mediaId}`;
-    }
-
-    // Handle numeric IDs in player/tv paths (this is the TV show ID)
-    if (
-       pathnames[0] === 'player' && 
-       pathnames[1] === 'tv' && 
-        /^\d+$/.test(pathname) &&
-       index === 2 // This is the TV show ID position
-     ) {
-         return `/tv/${pathname}`;
-       }
-    
-    // Update this specific section for season numbers in player paths
-    if (
-      pathnames[0] === 'player' && 
-      pathnames[1] === 'tv' && 
-      /^\d+$/.test(pathname) &&
-      index === 4  // This matches the season number position
-    ) {
-      const showId = pathnames[2];
-      const seasonNumber = pathname;
-      return `/tv/${showId}/episodes/${seasonNumber}`; // Ensure correct URL format
-    }
-
-    // For movie/tv/actor as first segment, this is already correct
-    if ((pathname === 'movie' || pathname === 'tv' || pathname === 'actor') && index === 0) {
+    // Handle direct media routes
+    if ((pathname === 'movie' || pathname === 'tv') && index === 0) {
       return `/${pathname}/${pathnames[1]}`;
     }
     
-    // Special case for movies, tv-shows, and actors pages
-    if (pathname === 'movies') {
+    // Handle collection routes
+    if (pathname === 'movies' || pathname === 'movie') {
       return '/movies';
     }
     
-    if (pathname === 'tv-shows') {
+    if (pathname === 'tv-shows' || pathname === 'tv') {
       return '/tv-shows';
     }
     
@@ -193,31 +157,29 @@ const Breadcrumbs = () => {
       return '/actors';
     }
     
-    // Add this case for episodes page
+    // Handle episode routes
     if (pathname === 'episodes' && pathnames[index - 2] === 'tv') {
       const showId = pathnames[index - 1];
       const season = pathnames[index + 1];
       return `/tv/${showId}/episodes/${season}`;
     }
     
+    // Handle collection routes
     if (pathname === 'collection' && index === 0) {
-      return '/collections'; // When clicking "collection" in breadcrumb, go to collections page
+      return '/collections';
     }
     
     if (pathname === 'collections') {
       return '/collections';
     }
     
-    // Handle actor filmography routes
+    // Handle actor routes
     if (pathnames[0] === 'actor' && (pathname === 'movies' || pathname === 'tv')) {
       const actorId = pathnames[1];
       return `/actor/${actorId}/${pathname}`;
     }
     
-    // Default behavior for other routes
     return `/${pathnames.slice(0, index + 1).join('/')}`;
-
-    
   };
   
   return (
@@ -251,10 +213,23 @@ const Breadcrumbs = () => {
             const isLast = index === pathnames.length - 1;
             const path = getProperRoute(pathname, index, pathnames);
 
-            // Special case for media details pages
-            if ((pathname === mediaId) && mediaDetails) {
+            if (pathname === 'player') {
               return (
-                <BreadcrumbItem key={pathname} to={path} isLast={isLast}>
+                <BreadcrumbItem key={pathname} to="#" isLast={false}>
+                  <span className="text-sm font-medium" onClick={(e) => e.preventDefault()}>
+                    {getPathName(pathname)}
+                  </span>
+                </BreadcrumbItem>
+              );
+            }
+
+            // For both TV shows and movies in player path
+            if (
+              ((pathname === mediaId) && mediaDetails) ||
+              (pathnames[0] === 'player' && index === 2 && mediaDetails)
+            ) {
+              return (
+                <BreadcrumbItem key={`media-${pathname}`} to={path} isLast={isLast}>
                   <div className="flex items-center gap-2">
                     <motion.img
                       initial={{ opacity: 0, scale: 0.8 }}
@@ -272,13 +247,17 @@ const Breadcrumbs = () => {
               );
             }
 
-            // Skip redundant segments
-            if (pathname === 'season' || (pathname === mediaId && !mediaDetails)) {
+            // Skip elements we don't want to show
+            if (
+              pathname === 'season' || 
+              (pathname === mediaId && !mediaDetails) ||
+              (pathnames[0] === 'player' && /^\d+$/.test(pathname) && index === 2)
+            ) {
               return null;
             }
 
             return (
-              <BreadcrumbItem key={pathname} to={path} isLast={isLast}>
+              <BreadcrumbItem key={`path-${index}-${pathname}`} to={path} isLast={isLast}>
                 <span className="text-sm font-medium">
                   {getPathName(pathname)}
                 </span>
