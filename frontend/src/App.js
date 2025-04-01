@@ -7,6 +7,7 @@ import PremiumLoader from './components/common/PremiumLoader';
 import { lazyLoadRoute, routeConfig } from './utils/lazyLoad';
 import { prefetchRoute } from './utils/prefetchRoutes';
 import { HelmetProvider } from 'react-helmet-async';
+import { useSecurityProtection } from './hooks/useSecurityProtection';
 
 // Layouts
 import MainLayout from './Layouts/MainLayout';
@@ -64,6 +65,8 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  useSecurityProtection();
+  
   const [loading, setLoading] = useState(true);
   
   // Function to finish loading animation
