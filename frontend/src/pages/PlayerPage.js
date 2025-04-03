@@ -19,7 +19,6 @@ const PlayerPage = ({ mediaType }) => {
     return localStorage.getItem('preferredPlayer') || 'vidlink';
   });
 
-  // Combine navigation logic into a single useEffect
   useEffect(() => {
     if (mediaType === 'tv') {
       if (!season || !episode || !slug) {
@@ -28,36 +27,41 @@ const PlayerPage = ({ mediaType }) => {
     }
   }, [mediaType, slug, season, episode, navigate]);
 
-  // Function to handle player type change
   const handlePlayerChange = (type) => {
     localStorage.setItem('preferredPlayer', type);
-    // Reload the current page to apply changes
     window.location.reload();
   };
   
-  // Fetch media details
-const { data, isLoading, error } = useQuery({
-  queryKey: ['playerMedia', mediaType, id, season, episode],
-  queryFn: () => {
-    if (mediaType === 'movie') {
-      return tmdbApi.get(`/movie/${id}`).then(res => res.data);
-    } else if (mediaType === 'tv') {
-      return Promise.all([
-        tmdbApi.get(`/tv/${id}`).then(res => res.data),
-        tmdbApi.get(`/tv/${id}/season/${season}/episode/${episode}`).then(res => res.data)
-      ]).then(([tvData, episodeData]) => {
-        return { ...tvData, episode: episodeData };
-      });
-    }
-  },
-  staleTime: 300000 // 5 minutes
-});
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['playerMedia', mediaType, id, season, episode],
+    queryFn: async () => {
+      if (mediaType === 'movie') {
+        return tmdbApi.get(`/movie/${id}`).then(res => res.data);
+      } else if (mediaType === 'tv') {
+        const [tvData, episodeData, seasonData] = await Promise.all([
+          tmdbApi.get(`/tv/${id}`).then(res => res.data),
+          tmdbApi.get(`/tv/${id}/season/${season}/episode/${episode}`).then(res => res.data),
+          tmdbApi.get(`/tv/${id}/season/${season}`).then(res => res.data)
+        ]);
+
+        if (parseInt(episode) === seasonData.episodes.length && 
+            tvData.seasons.find(s => s.season_number === parseInt(season) + 1)) {
+          const nextSeasonData = await tmdbApi.get(`/tv/${id}/season/${parseInt(season) + 1}`).then(res => res.data);
+          return { ...tvData, episode: episodeData, seasonData, nextSeasonData };
+        }
+
+        return { ...tvData, episode: episodeData, seasonData };
+      }
+    },
+    staleTime: 300000
+  });
   
   useEffect(() => {
     if (!data) return;
     
     if (mediaType === 'tv') {
       setLastWatchedEpisode(id, season, episode);
+      localStorage.setItem(`currentEpisode_${id}_${season}`, episode);
     }
     
     addToContinueWatching(id, mediaType, data);
@@ -85,14 +89,12 @@ const { data, isLoading, error } = useQuery({
     );
   }
   
-  // Get title and basic info
   const title = mediaType === 'movie' ? data.title : data.name;
   const episodeTitle = mediaType === 'tv' ? data.episode.name : null;
   const releaseYear = mediaType === 'movie' 
     ? (data.release_date ? new Date(data.release_date).getFullYear() : '') 
     : (data.first_air_date ? new Date(data.first_air_date).getFullYear() : '');
   
-  // Update episode navigation links
   const createEpisodeLink = (seasonNum, episodeNum) => {
     if (!slug) return '#';
     return `/player/tv/${slug}/${seasonNum}/${episodeNum}`;
@@ -112,7 +114,6 @@ const { data, isLoading, error } = useQuery({
         animate={{ opacity: 1 }}
         className="-mx-4 -mt-6"
       >
-        {/* Enhanced Video Player Container */}
         <div className="relative bg-black">
           <div className="absolute inset-0 bg-gradient-to-b from-[#161616]/50 to-transparent z-10 pointer-events-none" />
           <VideoPlayer 
@@ -124,7 +125,6 @@ const { data, isLoading, error } = useQuery({
           />
         </div>
 
-        {/* Keep existing player selection UI */}
         <div className="relative bg-gradient-to-b from-black via-gray-900 to-transparent">
           <div className="container mx-auto px-4 py-6">
             <div className="flex justify-center">
@@ -141,7 +141,6 @@ const { data, isLoading, error } = useQuery({
                   )}
                 ].map(({ id, icon }) => (
                   <div key={id} className="relative">
-                    {/* Caret indicator */}
                     {playerType === id && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 text-[#82BC87]">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 20 20" fill="currentColor">
@@ -187,7 +186,6 @@ const { data, isLoading, error } = useQuery({
               </div>
             </div>
 
-            {/* Move recommendation message below buttons and add conditional rendering */}
             <AnimatePresence>
               {(playerType === 'vidlink' || playerType === 'embedsu') && (
                 <motion.div
@@ -208,15 +206,15 @@ const { data, isLoading, error } = useQuery({
                               onClick={() => handlePlayerChange('vidsrc')}>
                           Vidsrc
                         </span>
+                        <span>Ensure you have an</span>
+                        <span className="
+                        text-[#82BC87] font-medium ml-1 hover:text-[#6da972] 
+                        cursor-pointer transition-colors duration-300"> 
+                            <a href=
+                            "https://chromewebstore.google.com/detail/popup-blocker-strict/aefkmifgmaafnojlojpnekbpbmjiiogg">
+                              ad blocker.</a>
+                          </span>
                       </span>
-                      <span>Ensure you have an</span>
-                      <span className="
-                      text-[#82BC87] font-medium ml-1 hover:text-[#6da972] 
-                      cursor-pointer transition-colors duration-300"> 
-                          <a href=
-                          "https://chromewebstore.google.com/detail/popup-blocker-strict/aefkmifgmaafnojlojpnekbpbmjiiogg">
-                            ad blocker.</a>
-                        </span>
                     </div>
                   </div>
                 </motion.div>
@@ -225,7 +223,6 @@ const { data, isLoading, error } = useQuery({
           </div>
         </div>
 
-        {/* Enhanced Content Section */}
         <div className="container mx-auto px-4 py-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -233,15 +230,12 @@ const { data, isLoading, error } = useQuery({
             transition={{ delay: 0.3 }}
             className="relative"
           >
-            {/* Background Effects */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
               <div className="absolute -top-20 left-1/4 w-96 h-96 bg-[#82BC87]/20 rounded-full filter blur-[100px] animate-pulse" />
               <div className="absolute -bottom-20 right-1/4 w-96 h-96 bg-[#E4D981]/20 rounded-full filter blur-[100px] animate-pulse" />
             </div>
 
-            {/* Content Container */}
             <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden shadow-2xl">
-              {/* Media Info Header */}
               <div className="p-6 border-b border-white/10">
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}
@@ -267,7 +261,6 @@ const { data, isLoading, error } = useQuery({
                 </motion.div>
               </div>
 
-              {/* Enhanced Media Details */}
               <div className="p-6">
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -289,7 +282,6 @@ const { data, isLoading, error } = useQuery({
                     </Link>
                   )}
 
-                  {/* Enhanced Media Type Badge */}
                   <div className="px-4 py-2 rounded-xl bg-white/5 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
                       {mediaType === 'movie' ? (
@@ -302,7 +294,6 @@ const { data, isLoading, error } = useQuery({
                   </div>
                 </motion.div>
 
-                {/* Enhanced Overview Section */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -314,7 +305,6 @@ const { data, isLoading, error } = useQuery({
                   </p>
                 </motion.div>
 
-                {/* Enhanced Episode Navigation for TV Shows */}
                 {mediaType === 'tv' && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -338,55 +328,111 @@ const { data, isLoading, error } = useQuery({
 
                       <div className="p-4">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          {/* Previous Episode */}
                           {data.episode && data.episode.episode_number > 1 && (
                             <Link 
                               to={createEpisodeLink(season, parseInt(episode) - 1)}
                               className="group relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm border border-white/5 transition-all duration-300 hover:border-[#82BC87]/20"
                             >
-                              <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
                               <div className="relative p-4 flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#82BC87]/10 transition-all duration-300">
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87] transition-colors duration-300" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-                                  </svg>
+                                <div className="flex items-center gap-3">
+                                  <div className="relative w-8 h-8">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87] transition-all duration-300 absolute inset-0 m-auto" viewBox="0 0 20 20" fill="currentColor">
+                                      <path fillRule="evenodd" d="M15.707 15.707a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l5-5a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                                    </svg>
+                                  </div>
+                                  <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10">
+                                    <img
+                                      src={tmdbHelpers.getImageUrl(data?.seasonData?.episodes?.find(ep => ep.episode_number === parseInt(episode) - 1)?.still_path)}
+                                      alt="Previous Episode"
+                                      className="w-full h-full object-cover"
+                                    />
+                                  </div>
                                 </div>
-                                <span className="text-gray-400 group-hover:text-white transition-colors duration-300">Previous Episode</span>
+                                <div className="flex flex-col">
+                                  <span className="text-[#82BC87] text-xs font-medium mb-0.5">Previous Episode</span>
+                                  <span className="text-gray-400 group-hover:text-white transition-colors duration-300">
+                                    Episode {parseInt(episode) - 1}
+                                  </span>
+                                </div>
                               </div>
                             </Link>
                           )}
 
-                          {/* All Episodes */}
                           <Link 
                             to={`/tv/${slug}/episodes/${season}`}
-                            className="group relative overflow-hidden rounded-xl bg-[#82BC87]/10 backdrop-blur-sm border border-[#82BC87]/20 transition-all duration-300 hover:bg-[#82BC87]/20"
+                            className="group relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm border border-white/5 transition-all duration-300 hover:border-[#82BC87]/20"
                           >
-                            <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
                             <div className="relative p-4 flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-[#82BC87]/10 flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                                  <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
-                                </svg>
+                              <div className="flex items-center gap-3">
+                                <div className="relative w-8 h-8">
+                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87] transition-all duration-300 absolute inset-0 m-auto" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
+                                  </svg>
+                                </div>
+                                <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10">
+                                  <img
+                                    src={tmdbHelpers.getImageUrl(data?.poster_path)}
+                                    alt="Show Poster"
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
                               </div>
-                              <span className="text-white font-medium">All Episodes</span>
+                              <div className="flex flex-col">
+                                <span className="text-[#82BC87] text-xs font-medium mb-0.5">View All</span>
+                                <span className="text-gray-400 group-hover:text-white transition-colors duration-300">
+                                  Season {season} Episodes
+                                </span>
+                              </div>
                             </div>
                           </Link>
 
-                          {/* Next Episode */}
-                          {data.episode && data.episode.season_number && 
-                          data.episode.episode_number < (data.seasons.find(s => s.season_number === parseInt(season))?.episode_count || 0) && (
+                          {(data.episode && (
+                            data.episode.episode_number < (data.seasonData?.episodes?.length || 0) ||
+                            (data.episode.episode_number === data.seasonData?.episodes?.length && 
+                             data.seasons?.find(s => s.season_number === parseInt(season) + 1))
+                          )) && (
                             <Link 
-                              to={createEpisodeLink(season, parseInt(episode) + 1)}
+                              to={data.episode.episode_number < data.seasonData?.episodes?.length
+                                ? createEpisodeLink(season, parseInt(episode) + 1)
+                                : createEpisodeLink(parseInt(season) + 1, 1)
+                              }
                               className="group relative overflow-hidden rounded-xl bg-black/20 backdrop-blur-sm border border-white/5 transition-all duration-300 hover:border-[#82BC87]/20"
                             >
-                              <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                              <div className="relative p-4 flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:bg-[#82BC87]/10 transition-all duration-300">
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87] transition-colors duration-300" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                                  </svg>
+                              <div className="relative p-4">
+                                <div className="flex items-center justify-between gap-3">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-lg overflow-hidden border border-white/10">
+                                      <img
+                                        src={tmdbHelpers.getImageUrl(
+                                          data.episode.episode_number < data.seasonData?.episodes?.length
+                                            ? data?.seasonData?.episodes?.find(ep => ep.episode_number === parseInt(episode) + 1)?.still_path
+                                            : data?.nextSeasonData?.episodes?.[0]?.still_path
+                                        )}
+                                        alt="Next Episode"
+                                        className="w-full h-full object-cover"
+                                      />
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className="text-[#82BC87] text-xs font-medium mb-0.5">
+                                        {data.episode.episode_number < data.seasonData?.episodes?.length
+                                          ? 'Next Episode'
+                                          : 'Next Season'
+                                        }
+                                      </span>
+                                      <span className="text-gray-400 group-hover:text-white transition-colors duration-300">
+                                        {data.episode.episode_number < data.seasonData?.episodes?.length
+                                          ? `Episode ${parseInt(episode) + 1}`
+                                          : `Season ${parseInt(season) + 1}, Episode 1`
+                                        }
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="relative w-8 h-8">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87] transition-all duration-300 absolute inset-0 m-auto" viewBox="0 0 20 20" fill="currentColor">
+                                      <path fillRule="evenodd" d="M4.293 15.707a1 1 0 001.414 0l5-5a1 1 0 000-1.414l-5-5a1 1 0 00-1.414 1.414L8.586 10l-4.293 4.293a1 1 0 000 1.414z" clipRule="evenodd" />
+                                    </svg>
+                                  </div>
                                 </div>
-                                <span className="text-gray-400 group-hover:text-white transition-colors duration-300">Next Episode</span>
                               </div>
                             </Link>
                           )}

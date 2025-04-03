@@ -46,7 +46,7 @@ const Breadcrumbs = () => {
   const mediaType = pathnames[0] === 'player' ? pathnames[1] : 
     ['movie', 'tv', 'actor'].includes(pathnames[0]) ? pathnames[0] : null;
   const mediaId = mediaType && (pathnames[0] === 'player' ? pathnames[2] : pathnames[1]);
-
+  
   const { data: mediaDetails } = useQuery({
     queryKey: ['mediaDetails', mediaType, mediaId],
     queryFn: () => {
@@ -54,6 +54,14 @@ const Breadcrumbs = () => {
       return tmdbApi.get(`/${endpoint}/${mediaId}`).then(res => res.data);
     },
     enabled: !!mediaType && !!mediaId,
+    staleTime: 300000
+  });
+
+  // Add collection query
+  const { data: collectionData } = useQuery({
+    queryKey: ['collection', pathnames[1]],
+    queryFn: () => tmdbApi.get(`/collection/${pathnames[1]}`).then(res => res.data),
+    enabled: pathnames[0] === 'collection' && !!pathnames[1],
     staleTime: 300000
   });
 
@@ -67,6 +75,11 @@ const Breadcrumbs = () => {
   }
   
   const getPathName = (pathname) => {
+    // Add collection handling
+    if (pathnames[0] === 'collection' && pathname === pathnames[1] && collectionData) {
+      return collectionData.name;
+    }
+    
     switch (pathname) {
       case 'movies':
         return mediaType === 'actor' ? 'Movie Appearances' : 'Movies';
@@ -228,9 +241,10 @@ const Breadcrumbs = () => {
               ((pathname === mediaId) && mediaDetails) ||
               (pathnames[0] === 'player' && index === 2 && mediaDetails)
             ) {
+              const mediaDetailsPath = `/${pathnames[1]}/${mediaId}`;
               return (
-                <BreadcrumbItem key={`media-${pathname}`} to={path} isLast={isLast}>
-                  <div className="flex items-center gap-2">
+                <BreadcrumbItem key={`media-${pathname}`} to={mediaDetailsPath} isLast={isLast}>
+                  <div className="flex items-center gap-2 group">
                     <motion.img
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -239,8 +253,29 @@ const Breadcrumbs = () => {
                       alt=""
                       onError={(e) => e.target.style.display = 'none'}
                     />
-                    <span className="text-sm font-medium">
+                    <span className="text-sm font-medium text-[#82BC87] group-hover:text-white transition-colors duration-300">
                       {mediaDetails.title || mediaDetails.name}
+                    </span>
+                  </div>
+                </BreadcrumbItem>
+              );
+            }
+
+            // Add collection handling
+            if (pathnames[0] === 'collection' && index === 1 && collectionData) {
+              return (
+                <BreadcrumbItem key={`collection-${pathname}`} to={path} isLast={isLast}>
+                  <div className="flex items-center gap-2">
+                    <motion.img
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="w-5 h-5 rounded-md object-cover"
+                      src={`https://image.tmdb.org/t/p/w92${collectionData.poster_path}`}
+                      alt=""
+                      onError={(e) => e.target.style.display = 'none'}
+                    />
+                    <span className="text-sm font-medium">
+                      {collectionData.name}
                     </span>
                   </div>
                 </BreadcrumbItem>
@@ -251,7 +286,9 @@ const Breadcrumbs = () => {
             if (
               pathname === 'season' || 
               (pathname === mediaId && !mediaDetails) ||
-              (pathnames[0] === 'player' && /^\d+$/.test(pathname) && index === 2)
+              (pathnames[0] === 'player' && /^\d+$/.test(pathname) && index === 2) ||
+              // Skip numerical collection IDs
+              (pathnames[0] === 'collection' && index === 1 && /^\d+/.test(pathname))
             ) {
               return null;
             }
