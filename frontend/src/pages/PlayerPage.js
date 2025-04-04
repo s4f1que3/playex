@@ -206,7 +206,7 @@ const PlayerPage = ({ mediaType }) => {
                               onClick={() => handlePlayerChange('vidsrc')}>
                           Vidsrc
                         </span>
-                        <span>Ensure you have an</span>
+                        <span> Ensure you have an</span>
                         <span className="
                         text-[#82BC87] font-medium ml-1 hover:text-[#6da972] 
                         cursor-pointer transition-colors duration-300"> 
@@ -266,44 +266,121 @@ const PlayerPage = ({ mediaType }) => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
-                  className="flex flex-wrap items-center gap-3"
+                  className="grid gap-6 md:grid-cols-2"
                 >
-                  {releaseYear && (
-                    <Link
-                      to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?${
-                        mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year'
-                      }=${releaseYear}`}
-                      className="group px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#E4D981] group-hover:scale-110 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
-                      </svg>
-                      <span className="text-gray-300 group-hover:text-white transition-colors duration-300">{releaseYear}</span>
-                    </Link>
-                  )}
-
-                  <div className="px-4 py-2 rounded-xl bg-white/5 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                      {mediaType === 'movie' ? (
-                        <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-                      ) : (
-                        <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
+                  {/* Main Tags Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm uppercase tracking-wider text-gray-400 font-medium">Media Info</h3>
+                    <div className="flex flex-wrap items-center gap-3">
+                      {releaseYear && (
+                        <Link
+                          to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?${
+                            mediaType === 'movie' ? 'primary_release_year' : 'first_air_date_year'
+                          }=${releaseYear}`}
+                          className="group px-4 py-2 rounded-xl bg-gradient-to-r from-[#E4D981]/10 to-transparent hover:from-[#E4D981]/20 border border-[#E4D981]/10 hover:border-[#E4D981]/30 transition-all duration-300 flex items-center gap-2"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#E4D981] group-hover:scale-110 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-[#E4D981] group-hover:text-white transition-colors duration-300">{releaseYear}</span>
+                        </Link>
                       )}
-                    </svg>
-                    <span className="text-gray-300">{mediaType === 'movie' ? 'Movie' : 'TV Series'}</span>
+
+                      {mediaType === 'movie' && data.runtime && (
+                        <div className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#82BC87]/10 to-transparent border border-[#82BC87]/10 flex items-center gap-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-[#82BC87]">{Math.floor(data.runtime / 60)}h {data.runtime % 60}m</span>
+                        </div>
+                      )}
+
+                      {data.vote_average > 0 && (
+                        <div className="px-4 py-2 rounded-xl bg-gradient-to-r from-yellow-500/10 to-transparent border border-yellow-500/10 flex items-center gap-2">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                          <div className="flex items-center gap-1">
+                            <span className="text-yellow-500 font-medium">{data.vote_average.toFixed(1)}</span>
+                            <span className="text-yellow-500/50 text-sm">/ 10</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
+
+                  {/* Genres Section */}
+                  {data.genres && data.genres.length > 0 && (
+                    <div className="space-y-4">
+                      <h3 className="text-sm uppercase tracking-wider text-gray-400 font-medium">Genres</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {data.genres.map(genre => (
+                          <Link
+                            key={genre.id}
+                            to={`/${mediaType === 'movie' ? 'movies' : 'tv-shows'}?with_genres=${genre.id}`}
+                            className="relative group"
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/40 to-[#E4D981]/40 rounded-lg opacity-0 group-hover:opacity-20 blur-[2px] transition-all duration-500" />
+                            <div className="px-3 py-1 rounded-lg bg-gradient-to-r from-[#82BC87]/5 to-[#E4D981]/5 border border-white/5 relative hover:border-white/10 transition-all duration-500">
+                              <span className="text-sm bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] group-hover:text-white/90 transition-all duration-500">
+                                {genre.name}
+                              </span>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
-                  className="mt-6 prose prose-invert max-w-none"
+                  className="mt-8 prose prose-invert max-w-none"
                 >
                   <p className="text-gray-300 leading-relaxed">
                     {mediaType === 'tv' && data.episode ? data.episode.overview : data.overview}
                   </p>
                 </motion.div>
+
+                {mediaType === 'movie' && data.belongs_to_collection && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    className="mt-6"
+                  >
+                    <Link
+                      to={`/collection/${data.belongs_to_collection.id}`}
+                      className="group relative flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-[#82BC87]/10 to-transparent hover:from-[#82BC87]/20 transition-all duration-300 border border-[#82BC87]/10 hover:border-[#82BC87]/20"
+                    >
+                      {data.belongs_to_collection.backdrop_path && (
+                        <div className="w-16 h-16 rounded-lg overflow-hidden border border-white/10">
+                          <img
+                            src={`https://image.tmdb.org/t/p/w500${data.belongs_to_collection.backdrop_path}`}
+                            alt={data.belongs_to_collection.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm text-[#82BC87] mb-1">Part of Collection</p>
+                        <h3 className="text-lg font-semibold text-white group-hover:text-[#82BC87] transition-colors duration-300">
+                          {data.belongs_to_collection.name}
+                        </h3>
+                      </div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-[#82BC87] ml-auto group-hover:translate-x-1 transition-transform duration-300"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </Link>
+                  </motion.div>
+                )}
 
                 {mediaType === 'tv' && (
                   <motion.div

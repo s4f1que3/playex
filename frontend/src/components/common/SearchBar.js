@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../../utils/api';
 import { createMediaUrl } from '../../utils/slugify';
+import { findSimilarTitles, getSearchSuggestions } from '../../utils/search';
 
 const SearchBar = ({ isMobile = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -12,16 +13,50 @@ const SearchBar = ({ isMobile = false }) => {
   const searchRef = useRef(null);
   const searchInputRef = useRef(null);
 
-  // Search suggestions query - FIXED FOR TANSTACK QUERY V5
   const { data: suggestions, isLoading } = useQuery({
     queryKey: ['searchSuggestions', searchTerm],
-    queryFn: () => tmdbApi.get('/search/multi', { params: { query: searchTerm } })
-      .then(res => res.data.results.slice(0, 5)),
-    enabled: searchTerm.length > 2,
-    staleTime: 60000 // 1 minute
+    queryFn: async () => {
+      const response = await tmdbApi.get('/search/multi', { 
+        params: { 
+          query: searchTerm,
+          include_adult: false,
+          language: 'en-US'
+        }
+      });
+      
+      const results = response.data.results;
+      
+      if (results.length === 0 && searchTerm.length >= 2) {
+        const fuzzyResponse = await tmdbApi.get('/search/multi', {
+          params: {
+            query: searchTerm.slice(0, Math.max(2, searchTerm.length - 2)),
+            include_adult: false,
+            language: 'en-US'
+          }
+        });
+        
+        const fuzzyResults = fuzzyResponse.data.results;
+        const similarResults = findSimilarTitles(searchTerm, fuzzyResults);
+        
+        if (similarResults.length > 0) {
+          return {
+            results: similarResults.slice(0, 5),
+            suggestions: getSearchSuggestions(searchTerm, fuzzyResults)
+          };
+        }
+      }
+      
+      return {
+        results: results.slice(0, 5),
+        suggestions: []
+      };
+    },
+    enabled: searchTerm.length > 1,
+    staleTime: 60000
   });
 
-  // Close suggestions when clicking outside
+  const { results = [], suggestions: typoSuggestions = [] } = suggestions || {};
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -35,9 +70,8 @@ const SearchBar = ({ isMobile = false }) => {
 
   useEffect(() => {
     const handleKeyPress = (e) => {
-      // Check if Ctrl + S is pressed
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-        e.preventDefault(); // Prevent default save dialog
+        e.preventDefault();
         searchInputRef.current?.focus();
       }
     };
@@ -100,7 +134,6 @@ const SearchBar = ({ isMobile = false }) => {
     >
       <form onSubmit={handleSearch} className="flex group">
         <div className="relative flex-grow">
-          {/* Enhanced Search Input */}
           <div className="relative">
             <input
               ref={searchInputRef}
@@ -121,7 +154,6 @@ const SearchBar = ({ isMobile = false }) => {
                          transition-all duration-300"
             />
             
-            {/* Search Icon */}
             <div className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-gray-400 
                           group-hover:text-[#82BC87] transition-colors duration-300">
               <motion.svg 
@@ -138,7 +170,6 @@ const SearchBar = ({ isMobile = false }) => {
               </motion.svg>
             </div>
 
-            {/* Keyboard Shortcut Badge - Hidden on Mobile */}
             <div className="hidden md:block absolute right-4 top-1/2 -translate-y-1/2 
                           bg-gray-800/50 rounded-lg px-2 py-1
                           border border-white/5 opacity-50 group-hover:opacity-100
@@ -149,7 +180,6 @@ const SearchBar = ({ isMobile = false }) => {
         </div>
       </form>
 
-      {/* Enhanced Search Suggestions - Adjusted for Mobile */}
       <AnimatePresence>
         {showSuggestions && searchTerm.length > 2 && (
           <motion.div
@@ -163,9 +193,7 @@ const SearchBar = ({ isMobile = false }) => {
             }}
           >
             <div className="relative overflow-hidden rounded-2xl">
-              {/* Backdrop Blur & Gradient */}
               <div className="bg-gray-900/95 border border-white/5 shadow-[0_20px_70px_-10px_rgba(0,0,0,0.3)]">
-                {/* Loading State */}
                 {isLoading && (
                   <div className="relative p-4 md:p-8 flex items-center justify-center">
                     <div className="flex items-center gap-3 bg-[#82BC87]/10 px-3 py-2 rounded-xl">
@@ -184,14 +212,12 @@ const SearchBar = ({ isMobile = false }) => {
                   </div>
                 )}
 
-                {/* Results List */}
-                {!isLoading && suggestions && suggestions.length > 0 && (
+                {!isLoading && results.length > 0 && (
                   <div className="relative divide-y divide-white/5">
-                    {/* Category Labels */}
                     <div className="px-4 md:px-6 py-3 md:py-4">
                       <div className="flex items-center gap-2 text-xs md:text-sm text-gray-400">
                         <span className="px-2 py-1 rounded-full bg-[#82BC87]/10 text-[#82BC87]">
-                          {suggestions.length} results
+                          {results.length} results
                         </span>
                         {!isMobile && (
                           <>
@@ -202,10 +228,9 @@ const SearchBar = ({ isMobile = false }) => {
                       </div>
                     </div>
 
-                    {/* Results Grid - Adjusted Heights for Mobile */}
                     <div className="max-h-[40vh] md:max-h-[60vh] overflow-y-auto overscroll-contain">
                       <div className="p-2 md:p-4 grid grid-cols-1 gap-2">
-                        {suggestions.map((item, index) => {
+                        {results.map((item, index) => {
                           const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
                           const title = item.title || item.name;
                           const year = item.release_date || item.first_air_date;
@@ -223,7 +248,6 @@ const SearchBar = ({ isMobile = false }) => {
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: index * 0.05 }}
                             >
-                              {/* Thumbnail */}
                               <div className="relative h-14 w-10 md:h-16 md:w-12 rounded-lg overflow-hidden flex-shrink-0">
                                 <img
                                   src={tmdbHelpers.getImageUrl(
@@ -236,7 +260,6 @@ const SearchBar = ({ isMobile = false }) => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                               </div>
 
-                              {/* Content */}
                               <div className="flex-1 min-w-0">
                                 <div className="font-medium text-sm md:text-base text-white group-hover:text-[#82BC87] transition-colors duration-300 truncate">
                                   {item.title || item.name}
@@ -267,7 +290,6 @@ const SearchBar = ({ isMobile = false }) => {
                                 </div>
                               </div>
 
-                              {/* Arrow Icon */}
                               <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-[#82BC87] transform group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
                               </svg>
@@ -277,7 +299,6 @@ const SearchBar = ({ isMobile = false }) => {
                       </div>
                     </div>
 
-                    {/* Footer Action */}
                     <div className="p-3 md:p-4">
                       <button
                         onClick={handleSearch}
@@ -303,11 +324,28 @@ const SearchBar = ({ isMobile = false }) => {
                   </div>
                 )}
 
-                {/* No Results State */}
-                {!isLoading && suggestions && suggestions.length === 0 && (
+                {!isLoading && results.length === 0 && (
                   <div className="p-4 md:p-8 text-center text-gray-400">
                     <svg className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-3 md:mb-4 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                     <p className="text-sm md:text-base">No results found for "{searchTerm}"</p>
+                  </div>
+                )}
+
+                {typoSuggestions.length > 0 && (
+                  <div className="px-4 py-2 border-t border-white/5">
+                    <p className="text-xs text-gray-400 mb-2">Did you mean:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {typoSuggestions.map((suggestion, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setSearchTerm(suggestion)}
+                          className="px-2 py-1 text-xs rounded-lg bg-[#82BC87]/10 text-[#82BC87] 
+                                   hover:bg-[#82BC87]/20 transition-colors duration-300"
+                        >
+                          {suggestion}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
