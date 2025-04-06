@@ -8,6 +8,8 @@ import { Select, Tag } from '../components/ui';
 import RequestForm from '../components/requests/RequestForm';
 import { useCollectionsPrefetch } from '../hooks/useCollectionsPrefetch';
 import { categoryKeywords, categories } from '../constants/categoryKeywords';
+import { collectionService } from '../services/collectionService';
+import { useDebounce } from 'use-debounce';
 
 const CHUNK_SIZE = 30; // Number of items to load per chunk
 const PREFETCH_THRESHOLD = 2; // Number of chunks to prefetch ahead
@@ -15,7 +17,7 @@ const PREFETCH_THRESHOLD = 2; // Number of chunks to prefetch ahead
 const CollectionsIndexPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [debouncedQuery] = useDebounce(searchQuery, 300);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedSort, setSelectedSort] = useState('popularity');
   const [isGridView, setIsGridView] = useState(true);
@@ -23,115 +25,77 @@ const CollectionsIndexPage = () => {
 
   useCollectionsPrefetch(categoryKeywords);
 
-  // Create debounced search
-  const debouncedSearch = useCallback((value) => {
-    const timeoutId = setTimeout(() => {
-      setDebouncedQuery(value);
-    }, 300); // 300ms delay
-
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-  // Update query to use chunked loading
+  // Modified query that depends on the selected category
   const { data: collections, isLoading } = useQuery({
-    queryKey: ['allCollections'],
-    queryFn: async () => {
-      let allResults = [];
-      let processedIds = new Set();
-
-      // Process queries in parallel chunks
-      const promises = Object.entries(categoryKeywords).flatMap(([category, keywords]) => 
-        keywords.map(query => 
-          tmdbApi.get('/search/collection', {
-            params: {
-              query,
-              include_adult: false,
-              language: 'en-US',
-              page: 1
-            }
-          }).then(response => ({
-            category,
-            results: response.data.results
-          })).catch(() => ({ category, results: [] }))
-        )
-      );
-
-      // Process all responses
-      const responses = await Promise.allSettled(promises);
-      
-      // Process valid responses and maintain category information
-      responses
-        .filter(r => r.status === 'fulfilled')
-        .forEach(r => {
-          const { category, results } = r.value;
-          
-          results.forEach(collection => {
-            // Skip if we've already processed this ID
-            if (processedIds.has(collection.id)) return;
-            processedIds.add(collection.id);
-
-            // Only add if it has required fields
-            if (collection && collection.id && collection.name) {
-              allResults.push({
-                ...collection,
-                media_type: 'collection',
-                poster_path: collection.poster_path || collection.backdrop_path,
-                title: collection.name,
-                id: collection.id,
-                category,
-                searchText: collection.name.toLowerCase(),
-                vote_average: collection.vote_average || 0,
-                popularity: collection.popularity || 0
-              });
-            }
-          });
-        });
-
-      // Don't filter out items missing poster_path to maintain full count
-      return allResults;
+    queryKey: ['collections', selectedCategory],
+    queryFn: () => {
+      if (selectedCategory === 'all') {
+        return collectionService.getAllCollections(categoryKeywords);
+      } else {
+        // Fetch only collections for the selected category
+        return collectionService.getCollectionsByCategory(selectedCategory, categoryKeywords[selectedCategory]);
+      }
     },
-    staleTime: Infinity,
-    cacheTime: Infinity,
+    staleTime: 60000, // 1 minute instead of Infinity for better updates
+    cacheTime: 300000, // 5 minutes instead of Infinity
     refetchOnWindowFocus: false,
     refetchOnMount: false
   });
 
-  // Update search handler
+  // Update search handler to use debounced value
   const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchQuery(value);
-    debouncedSearch(value);
+    setSearchQuery(e.target.value);
     setCurrentPage(1); // Reset to first page on search
   };
 
-  // Memoize filtered collections for better performance
+  // Updated category selector handler
+  const handleCategoryChange = (category) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // Reset to first page when changing category
+  };
+
+  // Memoize filtered collections - now simplified since we're already filtering by category in the query
   const filteredAndSortedCollections = useMemo(() => {
     if (!collections) return [];
     
     let result = collections;
-
-    // Apply category filter
-    if (selectedCategory !== 'all') {
-      result = result.filter(c => c.category === selectedCategory);
-    }
     
-    // Apply search filter
+    // Apply search filter using debounced query
     if (debouncedQuery) {
       const searchTerm = debouncedQuery.toLowerCase();
-      result = result.filter(c => c.searchText.includes(searchTerm));
+      const beforeSearch = result.length;
+      result = result.filter(c => {
+        const searchableText = [
+          c.title,
+          c.name,
+          c.searchText,
+          c.overview,
+          ...(c.genres || []).map(g => typeof g === 'object' ? (g.name || '') : g),
+          ...(c.keywords || []).map(k => typeof k === 'object' ? (k.name || '') : k)
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+        return searchableText.includes(searchTerm);
+      });
+      console.debug(`Search filter "${debouncedQuery}": ${beforeSearch} → ${result.length} items`);
     }
     
-    // Apply sort
+    // Apply sort with improved handling
     return result.sort((a, b) => {
       switch (selectedSort) {
-        case 'name': return a.name.localeCompare(b.name);
-        case 'rating': return b.vote_average - a.vote_average;
-        default: return b.popularity - a.popularity;
+        case 'name': 
+          return (a.title || a.name || '').localeCompare(b.title || b.name || '');
+        case 'rating': 
+          return ((b.vote_average || 0) - (a.vote_average || 0)) || 
+                 ((b.popularity || 0) - (a.popularity || 0)); // Secondary sort by popularity
+        default: // popularity
+          return ((b.popularity || 0) - (a.popularity || 0));
       }
     });
-  }, [collections, selectedCategory, debouncedQuery, selectedSort]);
+  }, [collections, debouncedQuery, selectedSort]);
 
-  // Get current page collections with virtualization
+  // Get current page collections
   const getCurrentPageCollections = useCallback(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -160,44 +124,40 @@ const CollectionsIndexPage = () => {
         <div className="relative min-h-screen">
           {/* Parallax Hero Section */}
           <div className="relative -mx-2 sm:-mx-4 overflow-hidden mb-32 sm:mb-40"> {/* Added margin bottom */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="relative h-[35vh] sm:h-[45vh] md:h-[55vh] flex items-center"
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/50 to-[#161616] z-20" />
-              <div className="absolute inset-0 bg-[#161616]">
-                <div className="absolute inset-0 opacity-5 animate-pulse">
-                  <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150" />
-                </div>
-              </div>
-
-              <div className="container relative z-30 mx-auto px-3 sm:px-4">
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="max-w-3xl"
-                >
-                  <div className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-4 sm:mb-6 backdrop-blur-sm">
-                    <span className="relative flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
-                    </span>
-                    <span className="text-[#82BC87] font-medium">Browse Collections</span>
+            <motion.div className="relative min-h-screen">
+              <div className="relative h-[35vh] sm:h-[45vh] md:h-[55vh] flex items-center">
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/50 to-[#161616] z-20" />
+                <div className="absolute inset-0 bg-[#161616]">
+                  <div className="absolute inset-0 opacity-5 animate-pulse">
+                    <div className="absolute inset-0 bg-pattern-grid transform rotate-45 scale-150" />
                   </div>
+                </div>
+                <div className="container relative z-30 mx-auto px-3 sm:px-4">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="max-w-3xl"
+                  >
+                    <div className="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-4 sm:mb-6 backdrop-blur-sm">
+                      <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                      </span>
+                      <span className="text-[#82BC87] font-medium">Browse Collections</span>
+                    </div>
 
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 tracking-tight">
-                    Discover
-                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
-                      Movie Collections
-                    </span>
-                  </h1>
-
-                  <p className="text-gray-300 text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed">
-                    From epic franchises to complete series, explore our curated collection of movie universes.
-                  </p>
-                </motion.div>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 tracking-tight">
+                      Discover
+                      <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+                        Movie Collections
+                      </span>
+                    </h1>
+                    <p className="text-gray-300 text-base sm:text-lg md:text-xl max-w-2xl leading-relaxed">
+                      From epic franchises to complete series, explore our curated collection of movie universes.
+                    </p>
+                  </motion.div>
+                </div>
               </div>
             </motion.div>
           </div>
@@ -231,7 +191,6 @@ const CollectionsIndexPage = () => {
                   <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-
               {/* Filters */}
               <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mt-4 sm:mt-6">
                 <Select 
@@ -332,8 +291,8 @@ const CollectionsIndexPage = () => {
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="fixed bottom-20 sm:bottom-8 right-4 sm:right-8 bg-[#82BC87] hover:bg-[#6da972] text-white p-2.5 sm:p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 group"
           >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 sm:h-6 sm:w-6 transform group-hover:-translate-y-1 transition-transform duration-300" 
               fill="none" 
               viewBox="0 0 24 24" 

@@ -245,7 +245,7 @@ export const categories = [
   { id: 'drama', name: 'Drama' },
   { id: 'western', name: 'Western' },
   { id: 'war', name: 'War' },
-  { id: 'martial-arts', name: 'Martial Arts' },
+  { id: 'martial_arts', name: 'Martial Arts' },
   { id: 'musical', name: 'Musical' },
   { id: 'spy', name: 'Spy' },
   { id: 'crime', name: 'Crime' },
