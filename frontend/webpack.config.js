@@ -10,8 +10,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: '[name].[contenthash:8].js',
-    chunkFilename: '[name].[chunkhash:8].chunk.js',
-    publicPath: './',
+    chunkFilename: '[name].[chunkhash:8].chunk.js', // Ensure unique chunk names
+    publicPath: '/',
     clean: true
   },
   module: {
@@ -76,8 +76,8 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'static/css/[name].[contenthash:8].css',
-      chunkFilename: 'static/css/[name].[chunkhash:8].chunk.css'
+      filename: '[name].[contenthash:8].css',
+      chunkFilename: '[name].[chunkhash:8].chunk.css'
     }),
     new JavaScriptObfuscator({
       rotateStringArray: true,
