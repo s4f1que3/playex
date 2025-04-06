@@ -37,7 +37,6 @@ module.exports = {
     ]
   },
   optimization: {
-    minimize: true,
     minimizer: [
       new TerserPlugin({
         terserOptions: {
@@ -54,25 +53,23 @@ module.exports = {
     ],
     splitChunks: {
       chunks: 'all',
-      maxInitialRequests: 25,
+      maxInitialRequests: Infinity,
       minSize: 20000,
       cacheGroups: {
-        defaultVendors: {
+        vendor: {
           test: /[\\/]node_modules[\\/]/,
-          priority: -10,
-          reuseExistingChunk: true,
-          name: 'vendors'
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true
+          name(module) {
+            // Get the package name
+            const packageName = module.context.match(
+              /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+            )[1];
+            // Create unique name
+            return `vendor.${packageName.replace('@', '')}`; 
+          }
         }
       }
     },
-    runtimeChunk: {
-      name: 'runtime'
-    }
+    runtimeChunk: 'single'
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -93,25 +90,7 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['.js', '.jsx'],
-    fallback: {
-      "path": require.resolve("path-browserify"),
-      "stream": require.resolve("stream-browserify"),
-      "crypto": require.resolve("crypto-browserify"),
-      "buffer": require.resolve("buffer/"),
-      "util": require.resolve("util/"),
-      "assert": require.resolve("assert/"),
-      "http": require.resolve("stream-http"),
-      "url": require.resolve("url/"),
-      "os": require.resolve("os-browserify/browser"),
-      "https": require.resolve("https-browserify"),
-    }
-  },
-  cache: {
-    type: 'filesystem',
-    buildDependencies: {
-      config: [__filename]
-    }
+    extensions: ['.js', '.jsx']
   },
   performance: {
     hints: false,
