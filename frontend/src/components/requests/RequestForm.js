@@ -134,7 +134,11 @@ const MailToSuccessAnimation = () => (
   </div>
 );
 
-const RequestForm = () => {
+const RequestForm = ({ 
+  title = "Request a TV Show",
+  description = "Can't find your favorite show? Let us know and we'll add it to our collection!",
+  buttonText = "Submit"
+}) => {
   const [request, setRequest] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -195,9 +199,9 @@ const RequestForm = () => {
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-3">Request a TV Show</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-3">{title}</h2>
               <p className="text-sm sm:text-base text-gray-400 mb-6 sm:mb-8 max-w-lg">
-                Can't find your favorite show? Let us know and we'll add it to our collection!
+                {description}
               </p>
 
               <form onSubmit={handleSubmit} className="w-full max-w-xl">
@@ -210,7 +214,6 @@ const RequestForm = () => {
                         setRequest(value);
                       }
                     }}
-                    placeholder="Enter the name of the TV show you'd like to see..."
                     maxLength={200}
                     rows={2}
                     className="w-full px-4 sm:px-6 py-4 sm:py-5 pr-[120px] sm:pr-[160px] rounded-lg sm:rounded-xl 
@@ -244,7 +247,7 @@ const RequestForm = () => {
                       <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <>
-                        <span>Submit</span>
+                        <span>{buttonText}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                         </svg>
