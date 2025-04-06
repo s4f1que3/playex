@@ -39,3 +39,17 @@ export const prefetchRoute = async (routeName) => {
     }
   }
 };
+
+export const prefetchInitialData = async () => {
+  try {
+    // Most commonly accessed routes
+    const initialRoutes = ['home', 'movies', 'tvShows', 'trending', 'collections'];
+    
+    // Prefetch all initial routes in parallel
+    await Promise.all(
+      initialRoutes.map(route => prefetchRoute(route))
+    );
+  } catch (error) {
+    console.error('Error prefetching initial data:', error);
+  }
+};

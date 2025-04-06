@@ -295,6 +295,25 @@ const getFanFavorites = async (mediaType = 'tv') => {
   }
 };
 
+// Add prefetch helper
+export const prefetchInitialData = async () => {
+  try {
+    const promises = [
+      tmdbApi.get('/movie/popular'),
+      tmdbApi.get('/tv/popular'),
+      tmdbApi.get('/trending/all/day'),
+      tmdbApi.get('/genre/movie/list'),
+      tmdbApi.get('/genre/tv/list')
+    ];
+    await Promise.all(promises);
+  } catch (error) {
+    console.error('Error prefetching initial data:', error);
+  }
+};
+
+// Initialize prefetch on module load
+prefetchInitialData();
+
 // Add to exports
 export {
   getFanFavorites
