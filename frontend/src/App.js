@@ -8,7 +8,6 @@ import { lazyLoadRoute, routeConfig } from './utils/lazyLoad';
 import { prefetchRoute } from './utils/prefetchRoutes';
 import { HelmetProvider } from 'react-helmet-async';
 import { useSecurityProtection } from './hooks/useSecurityProtection';
-import { disableSourceMaps } from './utils/security';
 
 // Layouts
 import MainLayout from './Layouts/MainLayout';
@@ -114,10 +113,6 @@ function App() {
       return () => window.removeEventListener('popstate', handleRouteChange);
     }
   }, [loading]);
-
-  useEffect(() => {
-    disableSourceMaps();
-  }, []);
 
   return (
     <HelmetProvider>
