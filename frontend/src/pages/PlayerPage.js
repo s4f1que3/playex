@@ -9,6 +9,7 @@ import PremiumLoader from '../components/common/PremiumLoader';
 import { useSlugResolver } from '../hooks/useSlugResolver';
 import { parseMediaUrl, createMediaUrl, getIdFromSlug } from '../utils/slugify';
 import SEO from '../components/common/SEO';
+import { setShowCompleted, removeShowCompleted } from '../utils/LocalStorage';
 
 const PlayerPage = ({ mediaType }) => {
   const { slug, season, episode } = useParams();
@@ -65,6 +66,18 @@ const PlayerPage = ({ mediaType }) => {
     }
     
     addToContinueWatching(id, mediaType, data);
+
+    if (mediaType === 'tv' && data) {
+      // Check if this is the last episode of the last season
+      const isLastEpisode = episode === data?.season?.episodes?.length;
+      const isLastSeason = season === data?.seasons?.length;
+      
+      if (isLastEpisode && isLastSeason) {
+        setShowCompleted(id);
+      } else {
+        removeShowCompleted(id);
+      }
+    }
   }, [mediaType, id, season, episode, data]);
   
   if (isLoading) {
@@ -130,13 +143,13 @@ const PlayerPage = ({ mediaType }) => {
             <div className="flex justify-center">
               <div className="inline-flex gap-3 p-1 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/5 shadow-2xl">
                 {[
-                  { id: 'vidlink', icon: (
+                  { id: 'vidlink', displayName: 'Nova', icon: (
                     <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
                   )},
-                  { id: 'embedsu', icon: (
+                  { id: 'embedsu', displayName: 'Surge', icon: (
                     <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
                   )},
-                  { id: 'vidsrc', icon: (
+                  { id: 'vidsrc', displayName: 'Orion', icon: (
                     <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
                   )}
                 ].map(({ id, icon }) => (
@@ -177,7 +190,7 @@ const PlayerPage = ({ mediaType }) => {
                             ? 'translate-x-0.5'
                             : 'text-gray-400 group-hover:text-white'
                         }`}>
-                          {id.charAt(0).toUpperCase() + id.slice(1)}
+                          {id === 'vidlink' ? 'Nova' : id === 'embedsu' ? 'Surge' : 'Orion'}
                         </span>
                       </div>
                     </button>
@@ -201,10 +214,10 @@ const PlayerPage = ({ mediaType }) => {
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                       </svg>
                       <span className="text-gray-300">
-                        If {playerType} isn't working, try our most reliable player: 
+                        If {playerType === 'vidlink' ? 'Nova' : playerType === 'embedsu' ? 'Surge' : ''} isn't working, try our most reliable player: 
                         <span className="text-[#82BC87] font-medium ml-1 hover:text-[#6da972] cursor-pointer transition-colors duration-300" 
                               onClick={() => handlePlayerChange('vidsrc')}>
-                          Vidsrc
+                          Orion
                         </span>
                         <span> Ensure you have an</span>
                         <span className="

@@ -10,8 +10,9 @@ import {
   toggleWatchlist, 
   isInFavorites, 
   isInWatchlist,
-  getLastWatchedEpisode, 
-  setLastWatchedEpisode 
+  getLastWatchedEpisode,
+  getMediaProgress,
+  isInContinueWatching,
 } from '../../utils/LocalStorage';
 import { motion } from 'framer-motion';
 import { createMediaUrl } from '../../utils/slugify';
@@ -119,6 +120,9 @@ const MediaActions = ({
     staleTime: 300000 // 5 minutes
   });
 
+  const mediaProgress = getMediaProgress(media.id, mediaType);
+  const showContinueWatching = mediaProgress > 0 && mediaProgress < 100;
+
   useEffect(() => {
     const checkStatus = () => {
       const watchlistStatus = isInWatchlist(media.id, mediaType);
@@ -210,6 +214,16 @@ const MediaActions = ({
       }
     }
   };
+
+  const getWatchButtonText = () => {
+    if (mediaType === 'tv') {
+      return lastWatched 
+        ? `Continue S${lastWatched.season} E${lastWatched.episode}`
+        : `Start S${activeSeason} E1`;
+    } else {
+      return isInContinueWatching(media.id, 'movie') ? 'Continue Watching' : 'Watch Now';
+    }
+  };
   
   return (
     <motion.div 
@@ -234,11 +248,7 @@ const MediaActions = ({
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
               </svg>
             }
-            text={lastWatched 
-              ? `Continue S${lastWatched.season} E${lastWatched.episode}`
-              : mediaType === 'movie' 
-                ? 'Watch Now' 
-                : `Start S${activeSeason} E1`}
+            text={getWatchButtonText()}
             onClick={handleWatchClick}
           />
 

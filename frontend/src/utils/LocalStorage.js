@@ -6,6 +6,7 @@ const WATCHLIST_KEY = 'user_watchlist';
 const PROGRESS_KEY = 'user_watch_progress';
 const LAST_WATCHED_KEY = 'user_last_watched';
 const CONTINUE_WATCHING_KEY = 'user_continue_watching';
+const COMPLETED_SHOWS_KEY = 'completed_shows';
 
 // Favorites helper functions
 export const getFavorites = () => {
@@ -180,4 +181,52 @@ export const removeContinueWatching = (mediaId, mediaType) => {
   
   localStorage.setItem(CONTINUE_WATCHING_KEY, JSON.stringify(filteredList));
   return true;
+};
+
+export const isInContinueWatching = (mediaId, mediaType) => {
+  const continueWatching = getContinueWatching();
+  return continueWatching.some(
+    item => item.media_id === mediaId && item.media_type === mediaType
+  );
+};
+
+// Media progress tracking
+export const getMediaProgress = (mediaId, mediaType) => {
+  const progressData = localStorage.getItem(PROGRESS_KEY);
+  const progress = progressData ? JSON.parse(progressData) : {};
+  const key = `${mediaType}_${mediaId}`;
+  return progress[key] || 0;
+};
+
+export const setMediaProgress = (mediaId, mediaType, progress) => {
+  const progressData = localStorage.getItem(PROGRESS_KEY);
+  const allProgress = progressData ? JSON.parse(progressData) : {};
+  const key = `${mediaType}_${mediaId}`;
+  allProgress[key] = progress;
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(allProgress));
+};
+
+// Add new functions for completed shows
+export const setShowCompleted = (showId) => {
+  const completedShows = getCompletedShows();
+  if (!completedShows.includes(showId)) {
+    completedShows.push(showId);
+    localStorage.setItem(COMPLETED_SHOWS_KEY, JSON.stringify(completedShows));
+  }
+};
+
+export const removeShowCompleted = (showId) => {
+  const completedShows = getCompletedShows();
+  const updatedShows = completedShows.filter(id => id !== showId);
+  localStorage.setItem(COMPLETED_SHOWS_KEY, JSON.stringify(updatedShows));
+};
+
+export const getCompletedShows = () => {
+  const data = localStorage.getItem(COMPLETED_SHOWS_KEY);
+  return data ? JSON.parse(data) : [];
+};
+
+export const isShowCompleted = (showId) => {
+  const completedShows = getCompletedShows();
+  return completedShows.includes(showId);
 };

@@ -3,7 +3,7 @@
 // Storage keys
 const FAVORITES_KEY = 'user_favorites';
 const WATCHLIST_KEY = 'user_watchlist';
-const PROGRESS_KEY = 'user_watch_progress';
+const PROGRESS_KEY = 'media_progress';
 const LAST_WATCHED_KEY = 'user_last_watched';
 const CONTINUE_WATCHING_KEY = 'user_continue_watching';
 
@@ -141,26 +141,33 @@ export const toggleWatchlist = (mediaId, mediaType, details) => {
 };
 
 // Add new functions for continue watching
-export const addToContinueWatching = (mediaId, mediaType, details) => {
+export const addToContinueWatching = (mediaId, mediaType, details, progress = 0) => {
   const continueWatching = getContinueWatching();
   
-  // Create new item with timestamp
+  // If progress is 100% and it's either a movie or the last episode of the last season
+  if (progress >= 100) {
+    if (mediaType === 'movie' || 
+        (mediaType === 'tv' && 
+         details.season_number === details.total_seasons &&
+         details.episode_number === details.total_episodes)) {
+      // Remove from continue watching instead of adding
+      return removeContinueWatching(mediaId, mediaType);
+    }
+  }
+  
   const newItem = {
     media_id: mediaId,
     media_type: mediaType,
     details,
+    progress,
     last_watched: new Date().toISOString()
   };
   
-  // Remove existing entry if present (to update timestamp)
   const filteredList = continueWatching.filter(
     item => !(item.media_id === mediaId && item.media_type === mediaType)
   );
   
-  // Add new item at the beginning
   filteredList.unshift(newItem);
-  
-  // Keep only last 20 items
   const updatedList = filteredList.slice(0, 20);
   
   localStorage.setItem(CONTINUE_WATCHING_KEY, JSON.stringify(updatedList));
@@ -180,4 +187,19 @@ export const removeContinueWatching = (mediaId, mediaType) => {
   
   localStorage.setItem(CONTINUE_WATCHING_KEY, JSON.stringify(filteredList));
   return true;
+};
+
+export const getMediaProgress = (mediaId, mediaType) => {
+  const progressData = localStorage.getItem(PROGRESS_KEY);
+  const progress = progressData ? JSON.parse(progressData) : {};
+  const key = `${mediaType}_${mediaId}`;
+  return progress[key] || 0;
+};
+
+export const setMediaProgress = (mediaId, mediaType, progress) => {
+  const progressData = localStorage.getItem(PROGRESS_KEY);
+  const allProgress = progressData ? JSON.parse(progressData) : {};
+  const key = `${mediaType}_${mediaId}`;
+  allProgress[key] = progress;
+  localStorage.setItem(PROGRESS_KEY, JSON.stringify(allProgress));
 };

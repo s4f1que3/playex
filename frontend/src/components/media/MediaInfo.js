@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbHelpers } from '../../utils/api';
+import { isShowCompleted } from '../../utils/LocalStorage';
 
 const RatingCircle = ({ rating }) => (
   <div className="absolute -top-6 -right-6 w-20 h-20 bg-gray-900/80 backdrop-blur-sm rounded-full p-1.5 transform hover:scale-110 transition-all duration-300">
@@ -115,6 +116,8 @@ const MediaInfo = ({ media, mediaType }) => {
       return usRating?.rating || 'NR';
     }
   };
+
+  const isCompleted = mediaType === 'tv' && isShowCompleted(media.id);
   
   return (
     <div className="relative min-h-[70vh] flex items-end">
@@ -268,6 +271,16 @@ const MediaInfo = ({ media, mediaType }) => {
                 {status && (
                   <span className="text-gray-400 bg-gray-800 px-3 py-1 rounded-full text-sm">
                     {status}
+                  </span>
+                )}
+                
+                {mediaType === 'tv' && isCompleted && (
+                  <span className="px-3 py-1 rounded-full text-sm inline-flex items-center gap-1 
+                                   bg-[#82BC87]/20 text-[#82BC87] border border-[#82BC87]/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    Watched
                   </span>
                 )}
                 
