@@ -21,16 +21,54 @@ export const useCollectionsPrefetch = (categoryKeywords) => {
           let allResults = [];
 
           for (const chunk of chunks) {
-            const chunkPromises = chunk.map(query => 
-              tmdbApi.get('/search/collection', {
-                params: {
-                  query,
-                  include_adult: false,
-                  language: 'en-US',
-                  page: 1
-                }
-              }).catch(() => ({ data: { results: [] } }))
-            );
+            const chunkPromises = chunk.map(async (query) => {
+              try {
+                const response = await tmdbApi.get('/search/collection', {
+                  params: {
+                    query,
+                    include_adult: false,
+                    language: 'en-US',
+                    page: 1
+                  }
+                });
+
+                // Get additional details for each collection
+                const collections = await Promise.all(
+                  response.data.results.map(async (collection) => {
+                    try {
+                      const details = await tmdbApi.get(`/collection/${collection.id}`, {
+                        params: { language: 'en-US' }
+                      });
+                      
+                      // Get the first movie in collection to check its genres
+                      const firstMovie = details.data.parts?.[0]?.id;
+                      let movieGenres = [];
+                      
+                      if (firstMovie) {
+                        const movieDetails = await tmdbApi.get(`/movie/${firstMovie}`, {
+                          params: { language: 'en-US' }
+                        });
+                        movieGenres = movieDetails.data.genres || [];
+                      }
+
+                      return {
+                        ...collection,
+                        ...details.data,
+                        genres: movieGenres,
+                        media_type: 'collection',
+                        searchText: `${collection.name} ${details.data.overview || ''}`
+                      };
+                    } catch {
+                      return null;
+                    }
+                  })
+                );
+
+                return { data: { results: collections.filter(Boolean) } };
+              } catch {
+                return { data: { results: [] } };
+              }
+            });
 
             const chunkResponses = await Promise.allSettled(chunkPromises);
             const validResults = chunkResponses
@@ -48,7 +86,7 @@ export const useCollectionsPrefetch = (categoryKeywords) => {
             poster_path: collection.poster_path,
             title: collection.name,
             id: collection.id,
-            category: 'all'
+            category: determineCategory(collection, categoryKeywords)
           }));
 
           return [...new Map(
@@ -65,3 +103,24 @@ export const useCollectionsPrefetch = (categoryKeywords) => {
     prefetchCollections();
   }, [queryClient, categoryKeywords]);
 };
+
+function determineCategory(collection, categoryKeywords) {
+  const genres = collection.genres?.map(g => g.name.toLowerCase()) || [];
+  const searchText = collection.searchText?.toLowerCase() || '';
+  
+  for (const [category, keywords] of Object.entries(categoryKeywords)) {
+    const matchesKeywords = keywords.some(keyword => 
+      searchText.includes(keyword.toLowerCase())
+    );
+    
+    const matchesGenre = genres.some(genre => 
+      keywords.some(keyword => genre.includes(keyword.toLowerCase()))
+    );
+
+    if (matchesKeywords || matchesGenre) {
+      return category;
+    }
+  }
+  
+  return 'all';
+}
