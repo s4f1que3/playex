@@ -9,8 +9,9 @@ const GenreDropdown = ({ value, onChange, disabled }) => {
     Featured: [
       { id: 'all', name: 'All', icon: '🎬' },
     ],
-    Genres: [
+    Genres: [ 
       { id: 'action', name: 'Action', icon: '💥' },
+      { id: 'superhero', name: 'Superhero', icon: '🦹'},
       { id: 'adventure', name: 'Adventure', icon: '🗺️' },
       { id: 'animation', name: 'Animation', icon: '🎨' },
       { id: 'comedy', name: 'Comedy', icon: '😄' },
