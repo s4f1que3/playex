@@ -78,6 +78,7 @@ function App() {
   useCollectionsPrefetch(categoryKeywords);
 
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   // Function to finish loading animation
   const finishLoading = () => {
@@ -103,16 +104,31 @@ function App() {
   useEffect(() => {
     const prefetchEssentialData = async () => {
       try {
-        // Prefetch collections immediately
-        await queryClient.prefetchQuery({
+        // Try to load collections with validation
+        const result = await queryClient.prefetchQuery({
           queryKey: ['collections'],
-          queryFn: () => collectionService.getAllCollections(),
+          queryFn: async () => {
+            try {
+              const data = await collectionService.getAllCollections();
+              if (!data?.collections?.length) {
+                throw new Error('Invalid collections data');
+              }
+              return data;
+            } catch (err) {
+              // If there's an error, clear cache and retry once
+              collectionService.clearCache();
+              return await collectionService.getAllCollections();
+            }
+          },
+          retry: 1,
           staleTime: Infinity
         });
-        
-        // Then handle other prefetching
+
         await prefetchInitialData();
-      } finally {
+        finishLoading();
+      } catch (err) {
+        console.error('Failed to load essential data:', err);
+        setError(err);
         finishLoading();
       }
     };
@@ -175,6 +191,23 @@ function App() {
       queryFn: () => collectionService.getAllCollections(),
     });
   }, []);
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#161616] flex items-center justify-center p-4">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-white mb-4">Something went wrong</h2>
+          <p className="text-gray-400 mb-6">We're having trouble loading the app data</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-[#82BC87] text-white rounded-xl hover:bg-[#6da972] transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

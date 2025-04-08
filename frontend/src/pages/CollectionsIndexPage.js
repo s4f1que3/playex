@@ -30,14 +30,24 @@ const CollectionsIndexPage = () => {
 
   useCollectionsPrefetch(categoryKeywords);
 
-  const { data: collectionsData, isLoading, isFetching } = useQuery({
+  const { data: collectionsData, isLoading, isFetching, error } = useQuery({
     queryKey: ['collections'],
-    queryFn: () => collectionService.getAllCollections(),
+    queryFn: async () => {
+      try {
+        return await collectionService.getAllCollections();
+      } catch (err) {
+        // If there's an error, clear cache and retry
+        collectionService.clearCache();
+        return collectionService.getAllCollections();
+      }
+    },
     staleTime: Infinity, // Never consider the data stale
     suspense: false,
-    useErrorBoundary: true,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
+    useErrorBoundary: false,
+    retry: 1,
+    onError: (error) => {
+      console.error('Failed to load collections:', error);
+    }
   });
 
   useEffect(() => {
@@ -52,32 +62,15 @@ const CollectionsIndexPage = () => {
 
   const collections = collectionsData?.collections || [];
 
-  // Update search handler to use debounced value
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1); // Reset to first page on search
-  };
-
-  // Updated category selector handler with startTransition
-  const handleCategoryChange = (category) => {
-    startTransition(() => {
-      setSelectedCategory(category);
-      setCurrentPage(1); // Reset to first page when changing category
-    });
-  };
-
-  // Updated filtering logic
   const filteredAndSortedCollections = useMemo(() => {
     if (!collections) return [];
     
     let result = collections;
 
-    // Apply category filter
     if (selectedCategory !== 'all') {
       result = result.filter(c => c.category === selectedCategory);
     }
     
-    // Apply search filter
     if (debouncedQuery) {
       const searchTerm = debouncedQuery.toLowerCase();
       result = result.filter(c => {
@@ -94,26 +87,57 @@ const CollectionsIndexPage = () => {
       });
     }
     
-    // Apply sort with improved handling
     return result.sort((a, b) => {
       switch (selectedSort) {
         case 'name': 
           return (a.title || a.name || '').localeCompare(b.title || b.name || '');
         case 'rating': 
           return ((b.vote_average || 0) - (a.vote_average || 0)) || 
-                 ((b.popularity || 0) - (a.popularity || 0)); // Secondary sort by popularity
-        default: // popularity
+               ((b.popularity || 0) - (a.popularity || 0));
+        default:
           return ((b.popularity || 0) - (a.popularity || 0));
       }
     });
   }, [collections, selectedCategory, debouncedQuery, selectedSort]);
 
-  // Get current page collections
   const getCurrentPageCollections = useCallback(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredAndSortedCollections?.slice(startIndex, endIndex) || [];
   }, [currentPage, filteredAndSortedCollections, itemsPerPage]);
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-[#161616] pt-24">
+        <div className="container mx-auto px-4">
+          <div className="bg-red-900/20 border border-red-900/50 rounded-xl p-8 text-center">
+            <h2 className="text-2xl font-bold text-red-500 mb-2">Failed to load collections</h2>
+            <p className="text-gray-400 mb-6">
+              {error.message || "There was an error loading the collections."}
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-3 bg-[#82BC87] text-white rounded-xl hover:bg-[#6da972] transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1); // Reset to first page on search
+  };
+
+  const handleCategoryChange = (category) => {
+    startTransition(() => {
+      setSelectedCategory(category);
+      setCurrentPage(1); // Reset to first page when changing category
+    });
+  };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -138,7 +162,7 @@ const CollectionsIndexPage = () => {
       <div className="container mx-auto px-2 sm:px-4">
         <div className="relative min-h-screen">
           {/* Parallax Hero Section */}
-          <div className="relative -mx-2 sm:-mx-4 overflow-hidden mb-20 sm:mb-1"> {/* Reduced margin bottom */}
+          <div className="relative -mx-2 sm:-mx-4 overflow-hidden mb-1"> {/* Removed different mobile margin */}
             <motion.div className="relative min-h-screen">
               <div className="relative h-[35vh] sm:h-[45vh] md:h-[55vh] flex items-center">
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 via-gray-900/50 to-[#161616] z-20" />
@@ -178,7 +202,7 @@ const CollectionsIndexPage = () => {
           </div>
 
           {/* Content Section */}
-          <div className="container mx-auto px-2 sm:px-4 -mt-10 sm:-mt-[430px] relative z-30"> {/* Reduced negative margin */}
+          <div className="container mx-auto px-2 sm:px-4 -mt-[430px] relative z-30"> {/* Made margin top consistent */}
             {/* Search and Filters */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -242,7 +266,7 @@ const CollectionsIndexPage = () => {
                   <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
                 </svg>
                 <span className="text-gray-400">
-                  Found <span className="text-[#82BC87] font-medium">{filteredAndSortedCollections.length.toLocaleString()}</span> collections
+                  Found <span className="text-[#82BC87] font-medium">1000+</span> collections
                 </span>
               </motion.div>
             )}
