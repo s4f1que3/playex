@@ -2,6 +2,7 @@ import { openDB } from 'idb';
 import { tmdbApi } from '../utils/api';
 import { categoryKeywords } from '../constants/categoryKeywords';
 
+const CACHE_VERSION = 'v1'; // Add version control
 const CACHE_KEY = 'playex_collections_cache';
 const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
 
@@ -9,11 +10,30 @@ class CollectionService {
   constructor() {
     this.memoryCache = new Map();
     this.fetchPromise = null;
+    this.validateCache();
+  }
+
+  validateCache() {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        // Check if cache version matches and data is valid
+        if (!parsed.version || 
+            parsed.version !== CACHE_VERSION || 
+            !Array.isArray(parsed.data) || 
+            !parsed.timestamp) {
+          this.clearCache();
+        }
+      }
+    } catch (error) {
+      this.clearCache();
+    }
   }
 
   async getAllCollections() {
     try {
-      // Return memory cache if available and valid
+      // Return memory cache if available
       if (this.memoryCache.size > 0) {
         return {
           collections: Array.from(this.memoryCache.values()),
@@ -21,13 +41,13 @@ class CollectionService {
         };
       }
 
-      // Check localStorage cache with validation
+      // Check localStorage cache
       const cached = localStorage.getItem(CACHE_KEY);
       if (cached) {
         try {
-          const { data, timestamp } = JSON.parse(cached);
-          // Validate data structure and expiry
-          if (Array.isArray(data) && 
+          const { data, timestamp, version } = JSON.parse(cached);
+          if (version === CACHE_VERSION && 
+              Array.isArray(data) && 
               data.every(item => item.id && item.title) && 
               Date.now() - timestamp < CACHE_DURATION) {
             this.memoryCache = new Map(data.map(item => [item.id, item]));
@@ -35,26 +55,30 @@ class CollectionService {
               collections: data,
               isLoading: false,
             };
-          } else {
-            // Invalid or expired data - clear it
-            localStorage.removeItem(CACHE_KEY);
           }
         } catch (error) {
-          // Handle corrupted cache
-          console.error('Cache data corrupted, clearing...', error);
-          localStorage.removeItem(CACHE_KEY);
+          console.error('Cache validation failed:', error);
+          this.clearCache();
         }
       }
 
-      // If no valid cache, fetch fresh data
-      if (!this.fetchPromise) {
-        this.fetchPromise = this._fetchFreshData();
-      }
+      // Fetch fresh data
+      const collections = await this._fetchCollections(categoryKeywords);
+      
+      // Update cache with version
+      this.memoryCache = new Map(collections.map(item => [item.id, item]));
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        version: CACHE_VERSION,
+        data: collections,
+        timestamp: Date.now()
+      }));
 
-      return this.fetchPromise;
+      return {
+        collections,
+        isLoading: false,
+      };
     } catch (error) {
       console.error('Error in getAllCollections:', error);
-      // Clear potentially corrupted data
       this.clearCache();
       throw error;
     }
@@ -72,6 +96,7 @@ class CollectionService {
       // Update caches with valid data
       this.memoryCache = new Map(collections.map(item => [item.id, item]));
       localStorage.setItem(CACHE_KEY, JSON.stringify({
+        version: CACHE_VERSION,
         data: collections,
         timestamp: Date.now()
       }));
@@ -187,6 +212,9 @@ class CollectionService {
     try {
       this.memoryCache.clear();
       localStorage.removeItem(CACHE_KEY);
+      // Clear any other related caches
+      localStorage.removeItem('collectionsCache');
+      localStorage.removeItem('collections_timestamp');
     } catch (error) {
       console.error('Error clearing cache:', error);
     }
