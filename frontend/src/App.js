@@ -1,19 +1,25 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import ProtectedRoute from './components/common/ProtectedRoute';
-import PremiumLoader from './components/common/PremiumLoader';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { HelmetProvider } from 'react-helmet-async';
+
+// Utils and Services
 import { lazyLoadRoute, routeConfig } from './utils/lazyLoad';
 import { prefetchRoute, prefetchInitialData } from './utils/prefetchRoutes';
-import { HelmetProvider } from 'react-helmet-async';
+import { collectionService } from './services/collectionService';
+import { categoryKeywords } from './constants/categoryKeywords';
+
+// Contexts and Hooks
+import { AuthProvider } from './contexts/AuthContext';
 import { useSecurityProtection } from './hooks/useSecurityProtection';
 import { useCollectionsPrefetch } from './hooks/useCollectionsPrefetch';
-import { categoryKeywords } from './constants/categoryKeywords'; // Move categoryKeywords to a separate file
 
-// Layouts
+// Layout
 import MainLayout from './Layouts/MainLayout';
 
-// Components
+// Common Components
+import ProtectedRoute from './components/common/ProtectedRoute';
+import PremiumLoader from './components/common/PremiumLoader';
 import TermsPage from './components/common/legal/TermsPage';
 import FAQ from './components/common/legal/FAQ';
 import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
@@ -39,11 +45,22 @@ import SimilarContentPage from './pages/SimilarContentPage';
 import EpisodesPage from './pages/EpisodesPage';
 import FanFavoritesPage from './pages/FanFavoritesPage';
 import CollectionsPage from './pages/CollectionsPage';
-import CollectionsIndexPage from './pages/CollectionsIndexPage'; 
+import CollectionsIndexPage from './pages/CollectionsIndexPage';
 import ContinueWatchingPage from './pages/ContinueWatchingPage';
 import SettingsPage from './pages/SettingsPage';
 import AiringShowsPage from './pages/AiringShowsPage';
 import ActorFilmographyPage from './pages/ActorFilmographyPage';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 60, // 1 hour
+      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+    },
+  },
+});
 
 // Lazy load all routes
 const routes = {
@@ -82,16 +99,26 @@ function App() {
     }
   }, []);
 
-  // Add prefetching effect
+  // Modify the existing prefetch effect
   useEffect(() => {
-    // Start prefetching during loading screen
-    const prefetchData = async () => {
-      await prefetchInitialData();
-      finishLoading(); // Only finish loading after data is prefetched
+    const prefetchEssentialData = async () => {
+      try {
+        // Prefetch collections immediately
+        await queryClient.prefetchQuery({
+          queryKey: ['collections'],
+          queryFn: () => collectionService.getAllCollections(),
+          staleTime: Infinity
+        });
+        
+        // Then handle other prefetching
+        await prefetchInitialData();
+      } finally {
+        finishLoading();
+      }
     };
-    
-    prefetchData();
-  }, []); // Run once on mount
+
+    prefetchEssentialData();
+  }, []);
 
   useEffect(() => {
     // Start prefetching after initial load
@@ -117,71 +144,105 @@ function App() {
     }
   }, [loading]);
 
-  return (
-    <HelmetProvider>
-      <main className="min-h-screen bg-[#161616] text-white overflow-x-hidden">
-        {loading && <PremiumLoader overlay={true} text="Welcome to Playex" size="large" />}
+  // Add immediate collections prefetch
+  useEffect(() => {
+    const prefetchCollections = async () => {
+      try {
+        // Start fetching collections immediately when app loads
+        await collectionService.getAllCollections();
         
-        <AuthProvider>
-          <Router>
-            <div className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
-              <header>
-                <CookieConsent />
-                <SystemAnnouncement />
-              </header>
+        // Also prefetch the collections page component
+        const collectionsModule = import('./pages/CollectionsIndexPage');
+        
+        // Add link preload
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.as = 'script';
+        link.href = '/collections-index.chunk.js';
+        document.head.appendChild(link);
+      } catch (error) {
+        console.error('Error prefetching collections:', error);
+      }
+    };
 
-              <Routes>
-                {/* general routes */}
-                <Route path="/" element={<MainLayout />}>
-                  <Route index element={
-                    <Suspense fallback={<PremiumLoader />}>
-                      <routes.Home />
-                    </Suspense>
-                  } />
-                  <Route path="movies" element={<MoviesPage />} />
-                  <Route path="tv-shows" element={<TVShowsPage />} />
-                  <Route path="Trending" element={<TrendingPage />} />
-                  <Route path="search" element={<SearchResultsPage />} />
-                  <Route path="/terms" element={<TermsPage />} />
-                  <Route path="/FAQ" element={<FAQ />} />
-                  <Route path="/privacy" element={<PrivacyPolicyPage />} />
-                  <Route path="/cookies" element={<CookiesPolicyPage />} />
-                  <Route path="movie/:slug" element={<MediaDetailsPage mediaType="movie" />} />
-                  <Route path="tv/:slug" element={<MediaDetailsPage mediaType="tv" />} />
-                  <Route path="player/movie/:slug" element={<PlayerPage mediaType="movie" />} />
-                  <Route path="player/tv/:slug/:season/:episode" element={<PlayerPage mediaType="tv" />} />
-                  <Route path="/tv/:slug/episodes/:season" element={<EpisodesPage />} />
-                  <Route path="/fan-favorites" element={<FanFavoritesPage />} /> 
-                  <Route path="/collections" element={<CollectionsIndexPage />} /> 
-                  <Route path="/collection/:id" element={<CollectionsPage />} />
-                  <Route path="/continue-watching" element={<ContinueWatchingPage />} />
-                  <Route path="/settings" element={<SettingsPage />} />
-                  <Route path="/airing-shows" element={<AiringShowsPage />} />
-                  
-                  {/* Actor routes */}
-                  <Route path="/actor/:slug" element={<ActorsPersonal />} />
-                  <Route path="/actor/:slug/movies" element={<ActorFilmographyPage mediaType="movie" />} />
-                  <Route path="/actor/:slug/tv" element={<ActorFilmographyPage mediaType="tv" />} />
-                  
-                  {/* Protected routes */}
-                  <Route element={<ProtectedRoute />}>
-                    <Route path="watchlist" element={<WatchlistPage />} />
-                    <Route path="favorites" element={<FavoritesPage />} />
+    prefetchCollections();
+  }, []);
+
+  useEffect(() => {
+    // Prefetch collections immediately when app loads
+    queryClient.prefetchQuery({
+      queryKey: ['collections'],
+      queryFn: () => collectionService.getAllCollections(),
+    });
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
+        <main className="min-h-screen bg-[#161616] text-white overflow-x-hidden">
+          {loading && <PremiumLoader overlay={true} text="Welcome to Playex" size="large" />}
+          
+          <AuthProvider>
+            <Router>
+              <div className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
+                <header>
+                  <CookieConsent />
+                  <SystemAnnouncement />
+                </header>
+
+                <Routes>
+                  {/* general routes */}
+                  <Route path="/" element={<MainLayout />}>
+                    <Route index element={
+                      <Suspense fallback={<PremiumLoader />}>
+                        <routes.Home />
+                      </Suspense>
+                    } />
+                    <Route path="movies" element={<MoviesPage />} />
+                    <Route path="tv-shows" element={<TVShowsPage />} />
+                    <Route path="Trending" element={<TrendingPage />} />
+                    <Route path="search" element={<SearchResultsPage />} />
+                    <Route path="/terms" element={<TermsPage />} />
+                    <Route path="/FAQ" element={<FAQ />} />
+                    <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                    <Route path="/cookies" element={<CookiesPolicyPage />} />
+                    <Route path="movie/:slug" element={<MediaDetailsPage mediaType="movie" />} />
+                    <Route path="tv/:slug" element={<MediaDetailsPage mediaType="tv" />} />
+                    <Route path="player/movie/:slug" element={<PlayerPage mediaType="movie" />} />
+                    <Route path="player/tv/:slug/:season/:episode" element={<PlayerPage mediaType="tv" />} />
+                    <Route path="/tv/:slug/episodes/:season" element={<EpisodesPage />} />
+                    <Route path="/fan-favorites" element={<FanFavoritesPage />} /> 
+                    <Route path="/collections" element={<CollectionsIndexPage />} /> 
+                    <Route path="/collection/:id" element={<CollectionsPage />} />
+                    <Route path="/continue-watching" element={<ContinueWatchingPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/airing-shows" element={<AiringShowsPage />} />
+                    
+                    {/* Actor routes */}
+                    <Route path="/actor/:slug" element={<ActorsPersonal />} />
+                    <Route path="/actor/:slug/movies" element={<ActorFilmographyPage mediaType="movie" />} />
+                    <Route path="/actor/:slug/tv" element={<ActorFilmographyPage mediaType="tv" />} />
+                    
+                    {/* Protected routes */}
+                    <Route element={<ProtectedRoute />}>
+                      <Route path="watchlist" element={<WatchlistPage />} />
+                      <Route path="favorites" element={<FavoritesPage />} />
+                    </Route>
                   </Route>
-                </Route>
-                
-                {/* 404 route */}
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
+                  
+                  {/* 404 route */}
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
 
-              <footer className="mt-auto">
-                {/* Add your footer content here */}
-              </footer>
-            </div>
-          </Router>
-        </AuthProvider>
-      </main>
-    </HelmetProvider>
+                <footer className="mt-auto">
+                  {/* Add your footer content here */}
+                </footer>
+              </div>
+            </Router>
+          </AuthProvider>
+        </main>
+      </HelmetProvider>
+    </QueryClientProvider>
   );
 }
 
