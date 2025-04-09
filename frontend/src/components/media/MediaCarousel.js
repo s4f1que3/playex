@@ -4,10 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import MediaCard from '../common/MediaCard';
 import PremiumLoader from '../common/PremiumLoader';
 
-const MediaCarousel = ({ items, loading, error, showType = false }) => {
+const MediaCarousel = ({ items = [], loading, error, showType = false }) => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const containerRef = useRef(null);
+
+  const safeItems = Array.isArray(items) ? items : [];
 
   const checkScroll = () => {
     if (containerRef.current) {
@@ -89,9 +91,9 @@ const MediaCarousel = ({ items, loading, error, showType = false }) => {
         onScroll={checkScroll}
         className="flex gap-4 overflow-x-auto scroll-smooth pb-4"
       >
-        {items?.map((item, index) => (
+        {safeItems?.map((item, index) => (
           <motion.div
-            key={`${item.id}-${index}`}
+            key={`${item?.id || index}-${index}`}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: index * 0.1 }}
