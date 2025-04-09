@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback, Suspense, useTransition, useEffect } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useState, useMemo, useCallback, Suspense, useTransition } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi } from '../utils/api';
 import MediaGrid from '../components/media/MediaGrid';
@@ -14,8 +14,6 @@ import { useDebounce } from 'use-debounce';
 
 const CHUNK_SIZE = 30; // Number of items to load per chunk
 const PREFETCH_THRESHOLD = 2; // Number of chunks to prefetch ahead
-const CACHE_KEY = 'collectionsCache';
-const CACHE_DURATION = 3600000; // 1 hour
 
 const CollectionsIndexPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -26,31 +24,22 @@ const CollectionsIndexPage = () => {
   const [isGridView, setIsGridView] = useState(true);
   const [isPending, startTransition] = useTransition();
   const itemsPerPage = 36; // 6x6 grid
-  const queryClient = useQueryClient();
 
   useCollectionsPrefetch(categoryKeywords);
 
-  const { data: collectionsData, isLoading, isFetching } = useQuery({
-    queryKey: ['collections'],
-    queryFn: () => collectionService.getAllCollections(),
-    staleTime: Infinity, // Never consider the data stale
-    suspense: false,
-    useErrorBoundary: true,
-    refetchOnMount: false,
+  // Modified query to include category filtering
+  const { data: collections, isLoading } = useQuery({
+    queryKey: ['collections', selectedCategory],
+    queryFn: () => collectionService.getAllCollections(categoryKeywords),
+    staleTime: 300000, 
+    cacheTime: 3600000,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    suspense: true,
+    useErrorBoundary: true,
+    retry: 2,
+    retryDelay: 1000,
   });
-
-  useEffect(() => {
-    // Force immediate loading state if data isn't cached
-    if (!collectionsData?.collections?.length) {
-      queryClient.prefetchQuery({
-        queryKey: ['collections'],
-        queryFn: () => collectionService.getAllCollections(),
-      });
-    }
-  }, []);
-
-  const collections = collectionsData?.collections || [];
 
   // Update search handler to use debounced value
   const handleSearch = (e) => {
@@ -131,7 +120,7 @@ const CollectionsIndexPage = () => {
     }
   };
 
-  const isLoadingState = isLoading || isFetching || isPending || !collections.length;
+  const isLoadingState = isLoading || isPending;
 
   return (
     <div className="min-h-screen bg-[#161616] pt-16 sm:pt-20 md:pt-24">
