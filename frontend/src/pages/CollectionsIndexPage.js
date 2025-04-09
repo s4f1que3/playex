@@ -34,8 +34,6 @@ const CollectionsIndexPage = () => {
     queryKey: ['collections'],
     queryFn: async () => {
       try {
-        // Force cache validation on load
-        collectionService.validateCache();
         return await collectionService.getAllCollections();
       } catch (err) {
         // If there's an error, clear cache and retry
@@ -47,11 +45,8 @@ const CollectionsIndexPage = () => {
     suspense: false,
     useErrorBoundary: false,
     retry: 1,
-    refetchOnMount: true, // Add this to ensure data is always valid
     onError: (error) => {
       console.error('Failed to load collections:', error);
-      // Clear cache on error
-      collectionService.clearCache();
     }
   });
 
@@ -160,9 +155,7 @@ const CollectionsIndexPage = () => {
     }
   };
 
-  const isLoadingState = isLoading || isFetching || isPending;
-  const hasNoData = !collections || collections.length === 0;
-  const showLoader = isLoadingState || hasNoData;
+  const isLoadingState = isLoading || isFetching || isPending || !collections.length;
 
   return (
     <div className="min-h-screen bg-[#161616] pt-16 sm:pt-20 md:pt-24">
@@ -283,7 +276,7 @@ const CollectionsIndexPage = () => {
               className="relative z-30 bg-gray-900/90 backdrop-blur-xl rounded-xl sm:rounded-2xl p-3 sm:p-6 border border-white/5 shadow-2xl"
               layout
             >
-              {showLoader ? (
+              {isLoadingState ? (
                 <div className="flex items-center justify-center py-12">
                   <div className="flex flex-col items-center gap-4">
                     <div className="w-10 h-10 border-4 border-[#82BC87] border-t-transparent rounded-full animate-spin" />
