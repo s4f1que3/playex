@@ -12,80 +12,54 @@ class CollectionService {
   }
 
   async getAllCollections() {
-    try {
-      // Return memory cache if available and valid
-      if (this.memoryCache.size > 0) {
+    // Return memory cache if available
+    if (this.memoryCache.size > 0) {
+      return {
+        collections: Array.from(this.memoryCache.values()),
+        isLoading: false,
+      };
+    }
+
+    // Check localStorage cache
+    const cached = localStorage.getItem(CACHE_KEY);
+    if (cached) {
+      const { data, timestamp } = JSON.parse(cached);
+      if (Date.now() - timestamp < CACHE_DURATION) {
+        this.memoryCache = new Map(data.map(item => [item.id, item]));
         return {
-          collections: Array.from(this.memoryCache.values()),
+          collections: data,
           isLoading: false,
         };
       }
+    }
 
-      // Check localStorage cache with validation
-      const cached = localStorage.getItem(CACHE_KEY);
-      if (cached) {
-        try {
-          const { data, timestamp } = JSON.parse(cached);
-          // Validate data structure and expiry
-          if (Array.isArray(data) && 
-              data.every(item => item.id && item.title) && 
-              Date.now() - timestamp < CACHE_DURATION) {
-            this.memoryCache = new Map(data.map(item => [item.id, item]));
-            return {
-              collections: data,
-              isLoading: false,
-            };
-          } else {
-            // Invalid or expired data - clear it
-            localStorage.removeItem(CACHE_KEY);
-          }
-        } catch (error) {
-          // Handle corrupted cache
-          console.error('Cache data corrupted, clearing...', error);
-          localStorage.removeItem(CACHE_KEY);
-        }
-      }
-
-      // If no valid cache, fetch fresh data
-      if (!this.fetchPromise) {
-        this.fetchPromise = this._fetchFreshData();
-      }
-
+    // If already fetching, return the promise
+    if (this.fetchPromise) {
       return this.fetchPromise;
-    } catch (error) {
-      console.error('Error in getAllCollections:', error);
-      // Clear potentially corrupted data
-      this.clearCache();
-      throw error;
     }
-  }
 
-  async _fetchFreshData() {
-    try {
-      const collections = await this._fetchCollections(categoryKeywords);
-      
-      // Validate fetched data before caching
-      if (!Array.isArray(collections) || collections.length === 0) {
-        throw new Error('Invalid collections data received');
+    // Start new fetch
+    this.fetchPromise = (async () => {
+      try {
+        const collections = await this._fetchCollections(categoryKeywords);
+        
+        // Update caches
+        this.memoryCache = new Map(collections.map(item => [item.id, item]));
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          data: collections,
+          timestamp: Date.now()
+        }));
+
+        return {
+          collections,
+          isLoading: false,
+        };
+      } finally {
+        this.fetchPromise = null;
       }
+    })();
 
-      // Update caches with valid data
-      this.memoryCache = new Map(collections.map(item => [item.id, item]));
-      localStorage.setItem(CACHE_KEY, JSON.stringify({
-        data: collections,
-        timestamp: Date.now()
-      }));
-
-      return {
-        collections,
-        isLoading: false,
-      };
-    } catch (error) {
-      console.error('Error fetching fresh data:', error);
-      throw error;
-    } finally {
-      this.fetchPromise = null;
-    }
+    return this.fetchPromise;
   }
 
   async _fetchCollections(keywords) {
@@ -184,12 +158,8 @@ class CollectionService {
   }
 
   clearCache() {
-    try {
-      this.memoryCache.clear();
-      localStorage.removeItem(CACHE_KEY);
-    } catch (error) {
-      console.error('Error clearing cache:', error);
-    }
+    this.memoryCache.clear();
+    localStorage.removeItem(CACHE_KEY);
   }
 }
 
