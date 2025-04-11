@@ -6,10 +6,88 @@ import { tmdbApi } from '../utils/api';
 import HeroSlider from '../components/media/HeroSlider';
 import MediaCarousel from '../components/media/MediaCarousel';
 import { useAuth } from '../contexts/AuthContext';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { getContinueWatching } from '../utils/LocalStorage';
 import EpisodeGuide from '../components/sections/EpisodeGuide';
 import SEO from '../components/common/SEO';
+
+const Counter = ({ value, title, description, icon, color, link }) => {
+  const isNumeric = typeof value === 'number';
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, latest => isNumeric? Math.round(latest) : value);
+  
+  React.useEffect(() => {
+    if(isNumeric) {
+    const controls = animate(count, value, {
+      duration: 2,
+      ease: "easeOut"
+    });
+    return controls.stop;
+    }
+  }, [count, value]);
+
+  const ContentWrapper = link ? Link : 'div';
+
+  return (
+    <ContentWrapper
+      to={link}
+      className={`block ${link ? 'cursor-pointer' : ''}`}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ y: -5 }}
+        className="relative group"
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl 
+                    transform transition-transform duration-300 group-hover:scale-105" />
+      
+        <div className="relative bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6
+                    transform transition-transform duration-300">
+          <div className="flex items-start gap-4">
+            <div className={`w-12 h-12 rounded-xl bg-${color}/10 flex items-center justify-center
+                         group-hover:scale-110 transition-transform duration-300`}>
+              {icon}
+            </div>
+            
+            <div className="flex-1">
+              <div className="flex items-baseline gap-1">
+                <motion.span className="text-3xl font-bold bg-gradient-to-r from-white to-white/80 
+                                    bg-clip-text text-transparent">
+                  {rounded}
+                </motion.span>
+                <span className="text-lg text-white/80">+</span>
+              </div>
+              
+              <h3 className="text-lg font-medium text-white mt-1">{title}</h3>
+              <p className="text-sm text-gray-400 mt-1">{description}</p>
+
+              {/* Animated line */}
+              <div className="relative mt-3 h-0.5 w-full overflow-hidden rounded-full bg-white/10">
+                <motion.div
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "0%" }}
+                  transition={{ duration: 1.5, ease: "easeOut" }}
+                  className={`absolute inset-0 bg-gradient-to-r from-${color} to-${color}/50`}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Particle effects */}
+          <div className="absolute -z-10 inset-0">
+            <div className="absolute top-0 left-1/2 w-1 h-1 rounded-full bg-white/20 animate-float" 
+                 style={{ animationDelay: "0s" }} />
+            <div className="absolute bottom-0 right-1/4 w-1 h-1 rounded-full bg-white/20 animate-float" 
+                 style={{ animationDelay: "0.5s" }} />
+            <div className="absolute top-1/2 right-0 w-1 h-1 rounded-full bg-white/20 animate-float" 
+                 style={{ animationDelay: "1s" }} />
+          </div>
+        </div>
+      </motion.div>
+    </ContentWrapper>
+  );
+};
 
 const TrendingSection = ({ items, loading, error }) => {
   return (
@@ -220,82 +298,62 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
         >
           <HeroSlider items={validTrendingItems} />
           {/* Transitional Stats Section - Adjusted positioning and z-index */}
-          <div className="relative z-20"> {/* Changed from absolute to relative and adjusted margin */}
+          <div className="relative z-20">
             <div className="bg-gradient-to-t from-[#161616] via-[#161616]/90 to-transparent pb-12 pt-32">
               <div className="container mx-auto px-4">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                    className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#FF6B6B]/10 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#FF6B6B]" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-white">1M+</div>
-                        <div className="text-sm text-gray-400">Movies</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#FF8E53]" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M4 3a2 2 0 012-2h12a2 2 0 012 2v10l-5-2.5L5 18V4z" clipRule="evenodd" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-white">1M+</div>
-                        <div className="text-sm text-gray-400">Tv Shows</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#E4D981]/10 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-white">125</div>
-                        <div className="text-sm text-gray-400">Fan Favorites</div>
-                      </div>
-                    </div>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="bg-gray-900/50 backdrop-blur-sm border border-white/5 rounded-2xl p-4"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-[#FF8E53]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-white">1K+</div>
-                        <div className="text-sm text-gray-400">Movie Collections</div>
-                      </div>
-                    </div>
-                  </motion.div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <Counter
+                    value="1M"
+                    title="Movies"
+                    description="Curated collection of premium films"
+                    icon={
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#FF6B6B]" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                      </svg>
+                    }
+                    color="[#FF6B6B]"
+                    link="/movies"
+                  />
+                  
+                  <Counter
+                    value="1M"
+                    title="TV Shows"
+                    description="Exclusive series and episodes"
+                    icon={
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v14a1 1 0 01-1 1H4a1 1 0 01-1-1V3zm1 0v14h12V3H4z" clipRule="evenodd" />
+                        <path d="M7 7a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z" />
+                      </svg>
+                    }
+                    color="[#82BC87]"
+                    link="/tv-shows"
+                  />
+                  
+                  <Counter
+                    value={125}
+                    title="Fan Favorites"
+                    description="Most loved by our community"
+                    icon={
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    }
+                    color="[#E4D981]"
+                    link="/fan-favorites"
+                  />
+                  
+                  <Counter
+                    value={1000}
+                    title="Collections"
+                    description="Curated series and franchises"
+                    icon={
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#FF8E53]" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                      </svg>
+                    }
+                    color="[#FF8E53]"
+                    link="/collections"
+                  />
                 </div>
               </div>
             </div>
@@ -780,3 +838,4 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
 };
 
 export default HomePage;
+

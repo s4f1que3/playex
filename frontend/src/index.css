@@ -46,6 +46,21 @@ body {
   }
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-20px);
+    opacity: 1;
+  }
+}
+
+.animate-float {
+  animation: float 3s infinite;
+}
+
 .carousel-container {
   padding: 0 10px;
   position: relative;
