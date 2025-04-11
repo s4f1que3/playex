@@ -8,6 +8,7 @@ import MediaGrid from '../components/media/MediaGrid';
 import MediaFilters from '../components/media/MediaFilters';
 import Pagination from '../components/common/Pagnation';
 import FilterPanel from '../components/common/FilterPanel';
+import BackToTop from '../components/common/BackToTop';
 import SEO from '../components/common/SEO';
 
 const TVShowsPage = () => {
@@ -141,7 +142,7 @@ const TVShowsPage = () => {
                     <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
                   </svg>
                   <span className="text-gray-400">
-                    Found <span className="text-[#82BC87] font-medium">{tvShowsData.pages[0].total_results.toLocaleString()}</span> TV shows
+                    Found <span className="text-[#82BC87] font-medium">1M+</span> TV shows
                   </span>
                 </div>
               )}
@@ -193,6 +194,9 @@ const TVShowsPage = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
           </svg>
         </button>
+      </div>
+      <div className="min-h-screen bg-[#161616]">
+        <BackToTop />
       </div>
     </>
   );

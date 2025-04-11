@@ -167,7 +167,7 @@ const CollectionsIndexPage = () => {
           </div>
 
           {/* Content Section */}
-          <div className="container mx-auto px-2 sm:px-4 -mt-10 sm:-mt-[430px] relative z-30"> {/* Reduced negative margin */}
+          <div className="container mx-auto px-2 sm:px-4 -mt-[520px] sm:-mt-[430px] relative z-30"> {/* Reduced negative margin */}
             {/* Search and Filters */}
             <motion.div 
               initial={{ opacity: 0, y: 20 }}

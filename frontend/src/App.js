@@ -29,7 +29,6 @@ import TrendingPage from './pages/TrendingPage';
 import MediaDetailsPage from './pages/MediaDetailsPage';
 import PlayerPage from './pages/PlayerPage';
 import SearchResultsPage from './pages/SearchResultsPage';
-import WatchlistPage from './pages/WatchListPage';
 import FavoritesPage from './pages/FavoritesPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ActorsPersonal from './pages/ActorsPersonal';
@@ -44,6 +43,7 @@ import ContinueWatchingPage from './pages/ContinueWatchingPage';
 import SettingsPage from './pages/SettingsPage';
 import AiringShowsPage from './pages/AiringShowsPage';
 import ActorFilmographyPage from './pages/ActorFilmographyPage';
+import WatchListPage from './pages/WatchListPage';
 
 // Lazy load all routes
 const routes = {
@@ -165,7 +165,7 @@ function App() {
                   
                   {/* Protected routes */}
                   <Route element={<ProtectedRoute />}>
-                    <Route path="watchlist" element={<WatchlistPage />} />
+                    <Route path="watchlist" element={<WatchListPage />} />
                     <Route path="favorites" element={<FavoritesPage />} />
                   </Route>
                 </Route>

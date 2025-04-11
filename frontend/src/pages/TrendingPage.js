@@ -8,6 +8,7 @@ import MediaGrid from '../components/media/MediaGrid';
 import Pagination from '../components/common/Pagnation';
 import FilterPanel from '../components/common/FilterPanel';
 import SEO from '../components/common/SEO';
+import BackToTop from '../components/common/BackToTop';
 
 const TrendingPage = () => {
   const location = useLocation();
@@ -100,7 +101,7 @@ const TrendingPage = () => {
   // ... existing code until the filter section ...
 
   return (
-    <>
+    <div className="min-h-screen bg-[#161616]">
       <SEO 
         title="Trending Now"
         description="Watch what's trending right now on Playex. Stay updated with the most popular movies and TV shows."
@@ -228,7 +229,8 @@ const TrendingPage = () => {
           </motion.div>
         </div>
       </div>
-    </>
+      <BackToTop />
+    </div>
   );
 };
 

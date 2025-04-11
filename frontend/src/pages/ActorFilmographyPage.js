@@ -236,13 +236,13 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
     <div className="w-fit flex items-center gap-1 sm:gap-3 bg-black/20 backdrop-blur-sm p-0.5 sm:p-1.5 rounded-lg border border-white/5">
       <Link
         to={`/actor/${slug}/movies`}
-        className={`flex-1 sm:flex-none px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-md transition-all duration-300 relative overflow-hidden text-xs sm:text-base
+        className={`w-28 sm:w-32 px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-md transition-all duration-300 relative overflow-hidden text-xs sm:text-base text-center
           ${mediaType === 'movie' 
             ? 'text-black' 
             : 'text-gray-400 hover:text-white'
           }`}
       >
-        <span className="relative z-10 font-medium flex items-center gap-1 sm:gap-2">
+        <span className="relative z-10 font-medium flex items-center justify-center gap-1 sm:gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
           </svg>
@@ -259,13 +259,13 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
       </Link>
       <Link
         to={`/actor/${slug}/tv`}
-        className={`flex-1 sm:flex-none px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-md transition-all duration-300 relative overflow-hidden text-xs sm:text-base
+        className={`w-28 sm:w-32 px-2 sm:px-4 py-1.5 sm:py-2.5 rounded-md transition-all duration-300 relative overflow-hidden text-xs sm:text-base text-center
           ${mediaType === 'tv' 
             ? 'text-black' 
             : 'text-gray-400 hover:text-white'
           }`}
       >
-        <span className="relative z-10 font-medium flex items-center gap-1 sm:gap-2">
+        <span className="relative z-10 font-medium flex items-center justify-center gap-1 sm:gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
             <path d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
           </svg>
