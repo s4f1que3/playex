@@ -126,7 +126,7 @@ const SystemAnnouncement = () => {
                                 className="px-6 py-2 bg-gradient-to-r from-[#82BC87] to-[#6da972] rounded-lg 
                                          text-white font-medium shadow-lg shadow-[#82BC87]/20 
                                          hover:shadow-[#82BC87]/30 transition-all duration-300">
-                                <a href="https:playex.vercel.app/player/tv/78191-you/5/1">
+                                <a href="/player/tv/78191-you/5/1">
                                 Watch Now</a>
                               </motion.button>
                             </div>
