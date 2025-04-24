@@ -56,7 +56,7 @@ const SystemAnnouncement = () => {
                           animate={{ opacity: 1 }}
                           className="text-[#82BC87] font-medium tracking-wide"
                         >
-                          System Update
+                          New season release
                         </motion.span>
                       </div>
                       <div className="h-4 w-px bg-gray-700" />
@@ -114,11 +114,10 @@ const SystemAnnouncement = () => {
                           <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
                             <div className="flex-1">
                               <p className="text-white mb-2">
-                                🎬 <span className="font-medium">Welcome to Playex!</span>
+                                🎬 <span className="font-medium">A new season of "YOU" is available</span>
                               </p>
                               <p className="text-gray-300 text-sm leading-relaxed">
-                                We're thrilled to have you join us! Feel free to share the link with your friends; the official domain will be here soon.
-                              </p>
+                                Season 5 of YOU was just released today, the 24th of October 2023.</p>
                             </div>
                             <div className="flex-shrink-0">
                               <motion.button
@@ -127,8 +126,8 @@ const SystemAnnouncement = () => {
                                 className="px-6 py-2 bg-gradient-to-r from-[#82BC87] to-[#6da972] rounded-lg 
                                          text-white font-medium shadow-lg shadow-[#82BC87]/20 
                                          hover:shadow-[#82BC87]/30 transition-all duration-300">
-                                <a href="https://chromewebstore.google.com/detail/popup-blocker-strict/aefkmifgmaafnojlojpnekbpbmjiiogg">
-                                Ad-Blocker</a>
+                                <a href="https:playex.vercel.app/player/tv/78191-you/5/1">
+                                Watch Now</a>
                               </motion.button>
                             </div>
                           </div>

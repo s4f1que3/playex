@@ -39,31 +39,30 @@ const Counter = ({ value, title, description, icon, color, link }) => {
         whileHover={{ y: -5 }}
         className="relative group"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl 
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-xl 
                     transform transition-transform duration-300 group-hover:scale-105" />
-      
-        <div className="relative bg-black/40 backdrop-blur-xl border border-white/10 rounded-2xl p-6
+
+        <div className="relative bg-black/40 backdrop-blur-xl border border-white/10 rounded-xl p-4
                     transform transition-transform duration-300">
-          <div className="flex items-start gap-4">
-            <div className={`w-12 h-12 rounded-xl bg-${color}/10 flex items-center justify-center
+          <div className="flex items-start gap-3">
+            <div className={`w-10 h-10 rounded-lg bg-${color}/10 flex items-center justify-center
                          group-hover:scale-110 transition-transform duration-300`}>
               {icon}
             </div>
-            
+
             <div className="flex-1">
               <div className="flex items-baseline gap-1">
-                <motion.span className="text-3xl font-bold bg-gradient-to-r from-white to-white/80 
+                <motion.span className="text-2xl font-bold bg-gradient-to-r from-white to-white/80 
                                     bg-clip-text text-transparent">
                   {rounded}
                 </motion.span>
-                <span className="text-lg text-white/80">+</span>
+                <span className="text-base text-white/80">+</span>
               </div>
-              
-              <h3 className="text-lg font-medium text-white mt-1">{title}</h3>
-              <p className="text-sm text-gray-400 mt-1">{description}</p>
 
-              {/* Animated line */}
-              <div className="relative mt-3 h-0.5 w-full overflow-hidden rounded-full bg-white/10">
+              <h3 className="text-base font-medium text-white">{title}</h3>
+              <p className="text-xs text-gray-400">{description}</p>
+
+              <div className="relative mt-2 h-0.5 w-full overflow-hidden rounded-full bg-white/10">
                 <motion.div
                   initial={{ x: "-100%" }}
                   animate={{ x: "0%" }}
@@ -73,6 +72,7 @@ const Counter = ({ value, title, description, icon, color, link }) => {
               </div>
             </div>
           </div>
+
 
           {/* Particle effects */}
           <div className="absolute -z-10 inset-0">
@@ -301,7 +301,7 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
           <div className="relative z-20">
             <div className="bg-gradient-to-t from-[#161616] via-[#161616]/90 to-transparent pb-12 pt-32">
               <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[30px]">
                   <Counter
                     value="1M"
                     title="Movies"
@@ -313,6 +313,7 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
                     }
                     color="[#FF6B6B]"
                     link="/movies"
+                    slim={true}
                   />
                   
                   <Counter
@@ -327,10 +328,11 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
                     }
                     color="[#82BC87]"
                     link="/tv-shows"
+                    slim={true}
                   />
                   
                   <Counter
-                    value={125}
+                    value={100}
                     title="Fan Favorites"
                     description="Most loved by our community"
                     icon={
@@ -340,6 +342,7 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
                     }
                     color="[#E4D981]"
                     link="/fan-favorites"
+                    slim={true}
                   />
                   
                   <Counter
@@ -353,6 +356,7 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
                     }
                     color="[#FF8E53]"
                     link="/collections"
+                    slim={true}
                   />
                 </div>
               </div>
