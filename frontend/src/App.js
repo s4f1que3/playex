@@ -132,7 +132,7 @@ function App() {
                 <AnnouncementManager />
                 <MediaAnnouncement 
                   announcement={{
-                    tmdbId: '78191',
+                    tmdbId: '78191', // YOU tv show ID
                     type: 'tv_season',
                     title: 'YOU',
                     season: 5,

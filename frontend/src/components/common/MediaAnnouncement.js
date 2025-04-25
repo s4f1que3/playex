@@ -5,47 +5,44 @@ const TMDB_IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 const TMDB_API_KEY = '79a60fbe7c4e5877279cae559d9cf5c3';
 const TMDB_API_BASE_URL = 'https://api.themoviedb.org/3';
 
-const defaultProps = {
-  tmdbId: '',
+const defaultAnnouncement = {
+  tmdbId: '78191', // YOU tv show ID
   type: 'tv_season',
-  title: '',
-  season: 1,
+  title: 'YOU',
+  season: 5,
   episode: 1,
-  releaseDate: new Date().toISOString(),
-  description: '',
-  badge: '',
+  releaseDate: '2023-10-24',
+  description: 'YOU is back with a new season! Follow Joe as he navigates his complex life in the latest thrilling installment.',
+  badge: 'New season release',
   cta: {
     text: 'Watch Now',
-    link: '#'
+    link: '/player/tv/78191-you/5/1'
   },
   theme: {
     primary: '#82BC87',
     secondary: '#E4D981'
-  }
+  },
+  posterUrl: null, // Remove the hardcoded URL, we'll get it from TMDB
+  rating: '8.7',
+  genres: ['Drama', 'Thriller', 'Mystery'],
+  runtime: '45m',
+  maturityRating: 'TV-MA',
 };
 
-const MediaAnnouncement = ({ announcement = defaultProps }) => {
+const MediaAnnouncement = ({ announcement }) => {
+  // Merge default and provided announcement props to ensure required properties exist
   const mergedAnnouncement = {
-    ...defaultProps,
+    ...defaultAnnouncement,
     ...announcement
   };
 
-  const [mediaInfo, setMediaInfo] = useState(null);
   const [showAnnouncement, setShowAnnouncement] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [posterPath, setPosterPath] = useState(null);
   const [imageError, setImageError] = useState(false);
-  const [mediaDetails, setMediaDetails] = useState({
-    rating: '0',
-    genres: [],
-    runtime: '',
-    maturityRating: ''
-  });
 
   useEffect(() => {
-    const fetchMediaInfo = async () => {
-      if (!mergedAnnouncement?.tmdbId) return;
-      
+    const fetchTVShowData = async () => {
       try {
         const options = {
           method: 'GET',
@@ -55,66 +52,53 @@ const MediaAnnouncement = ({ announcement = defaultProps }) => {
           }
         };
 
-        // Fetch main media data
-        const mediaEndpoint = mergedAnnouncement.type === 'movie' 
-          ? `${TMDB_API_BASE_URL}/movie/${mergedAnnouncement.tmdbId}`
-          : `${TMDB_API_BASE_URL}/tv/${mergedAnnouncement.tmdbId}`;
+        console.log('Fetching TV show data for ID:', mergedAnnouncement.tmdbId);
+        const response = await fetch(
+          `${TMDB_API_BASE_URL}/tv/${mergedAnnouncement.tmdbId}`,
+          options
+        );
 
-        const mediaResponse = await fetch(mediaEndpoint, options);
-        if (!mediaResponse.ok) throw new Error(`HTTP error! status: ${mediaResponse.status}`);
-        const mediaData = await mediaResponse.json();
-
-        // Fetch additional content ratings for TV shows
-        let contentRating = 'NR';
-        if (mergedAnnouncement.type === 'tv_season') {
-          const ratingsResponse = await fetch(
-            `${TMDB_API_BASE_URL}/tv/${mergedAnnouncement.tmdbId}/content_ratings`,
-            options
-          );
-          if (ratingsResponse.ok) {
-            const ratingsData = await ratingsResponse.json();
-            const usRating = ratingsData.results?.find(r => r.iso_3166_1 === 'US');
-            contentRating = usRating?.rating || 'NR';
-          }
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        // Set media details
-        setMediaDetails({
-          rating: mediaData.vote_average.toFixed(1),
-          genres: mediaData.genres.map(g => g.name),
-          runtime: mergedAnnouncement.type === 'movie' 
-            ? `${mediaData.runtime}m`
-            : mediaData.episode_run_time?.[0] ? `${mediaData.episode_run_time[0]}m` : '',
-          maturityRating: contentRating
-        });
+        const data = await response.json();
+        console.log('TMDB API Response:', data);
 
-        // Set poster
-        if (mediaData.poster_path) {
-          setPosterPath(`${TMDB_IMAGE_BASE_URL}${mediaData.poster_path}`);
+        if (data.poster_path) {
+          const posterUrl = `${TMDB_IMAGE_BASE_URL}${data.poster_path}`;
+          console.log('Setting poster URL:', posterUrl);
+          setPosterPath(posterUrl);
+        } else {
+          console.warn('No poster path found in API response');
+          setImageError(true);
         }
-
       } catch (error) {
-        console.error('Error fetching media data:', error);
+        console.error('Error fetching TV show data:', error);
+        console.error('Error details:', {
+          tmdbId: mergedAnnouncement.tmdbId,
+          error: error.message
+        });
         setImageError(true);
       }
     };
 
-    fetchMediaInfo();
-  }, [mergedAnnouncement?.tmdbId, mergedAnnouncement?.type]);
+    if (mergedAnnouncement.posterUrl) {
+      setPosterPath(mergedAnnouncement.posterUrl);
+    } else {
+      fetchTVShowData();
+    }
+  }, [mergedAnnouncement.tmdbId, mergedAnnouncement.posterUrl]);
 
   useEffect(() => {
-    if (!mergedAnnouncement?.title || !mergedAnnouncement?.season) return;
-    
-    const isDismissed = localStorage.getItem(
-      `announcement_${mergedAnnouncement.title}_${mergedAnnouncement.season}`
-    );
+    const isDismissed = localStorage.getItem(`announcement_${mergedAnnouncement.title}_${mergedAnnouncement.season}`);
     if (isDismissed) {
       setShowAnnouncement(false);
     }
-  }, [mergedAnnouncement?.title, mergedAnnouncement?.season]);
+  }, [mergedAnnouncement]);
 
   const handleDismiss = () => {
-    localStorage.setItem(`announcement_${announcement.title}_${announcement.season}`, 'true');
+    localStorage.setItem(`announcement_${mergedAnnouncement.title}_${mergedAnnouncement.season}`, 'true');
     setShowAnnouncement(false);
   };
 
@@ -242,17 +226,17 @@ const MediaAnnouncement = ({ announcement = defaultProps }) => {
                                   <svg className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                                   </svg>
-                                  <span className="font-semibold text-white">{mediaDetails.rating}</span>
+                                  <span className="font-semibold text-white">{mergedAnnouncement.rating}</span>
                                 </div>
                                 <div className="h-4 w-px bg-gray-700"/>
-                                <span className="text-gray-400">{mediaDetails.maturityRating}</span>
+                                <span className="text-gray-400">{mergedAnnouncement.maturityRating}</span>
                                 <div className="h-4 w-px bg-gray-700"/>
-                                <span className="text-gray-400">{mediaDetails.runtime}</span>
+                                <span className="text-gray-400">{mergedAnnouncement.runtime}</span>
                               </div>
 
                               {/* Genre Tags */}
                               <div className="flex flex-wrap gap-2">
-                                {mediaDetails.genres?.map((genre, index) => (
+                                {mergedAnnouncement.genres?.map((genre, index) => (
                                   <span 
                                     key={index}
                                     className="px-2 py-1 text-xs rounded-md bg-white/10 text-gray-300"
@@ -268,34 +252,41 @@ const MediaAnnouncement = ({ announcement = defaultProps }) => {
                             </div>
                             <div className="flex-shrink-0">
                               <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.95 }}
+                                whileHover={{ scale: 1.05, y: -2 }}
+                                whileTap={{ scale: 0.98 }}
                                 className={`
-                                  inline-flex items-center
-                                  px-5 py-2.5
-                                  rounded-lg
-                                  bg-gradient-to-r from-${mergedAnnouncement.theme.primary} to-${mergedAnnouncement.theme.secondary}
-                                  text-white
-                                  transition-all duration-200
-                                  hover:opacity-90
+                                  relative group
+                                  px-6 py-2.5
+                                  bg-gradient-to-r from-${mergedAnnouncement.theme.primary}/80 to-${mergedAnnouncement.theme.secondary}/80
+                                  rounded-xl
+                                  text-white text-sm font-medium
+                                  border border-white/30
+                                  overflow-hidden
+                                  backdrop-blur-md
+                                  shadow-[0_0_15px_rgba(130,188,135,0.5)]
+                                  hover:shadow-[0_0_25px_rgba(130,188,135,0.65)]
+                                  transition-all duration-500
+                                  before:absolute before:inset-0
+                                  before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent
+                                  before:translate-x-[-200%] before:transition-transform before:duration-700
+                                  hover:before:translate-x-[200%]
+                                  active:shadow-[0_0_10px_rgba(130,188,135,0.3)]
                                 `}
                               >
-                                <a href={mergedAnnouncement.cta.link} className="flex items-center gap-2">
-                                  <span className="text-sm font-semibold tracking-wide">
-                                    {mergedAnnouncement.cta.text}
-                                  </span>
-                                  <svg 
-                                    xmlns="http://www.w3.org/2000/svg" 
-                                    className="h-4 w-4" 
-                                    viewBox="0 0 20 20" 
-                                    fill="currentColor"
+                                <a href={mergedAnnouncement.cta.link} className="flex items-center gap-2 relative z-10">
+                                  <span className="tracking-wide">{mergedAnnouncement.cta.text}</span>
+                                  <motion.div
+                                    animate={{ x: [0, 4, 0] }}
+                                    transition={{ 
+                                      duration: 1.5,
+                                      repeat: Infinity,
+                                      ease: "easeInOut"
+                                    }}
                                   >
-                                    <path 
-                                      fillRule="evenodd" 
-                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" 
-                                      clipRule="evenodd" 
-                                    />
-                                  </svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5-5 5M5 7l5 5-5 5" />
+                                    </svg>
+                                  </motion.div>
                                 </a>
                               </motion.button>
                             </div>
