@@ -20,6 +20,7 @@ import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
 import CookiesPolicyPage from './components/common/legal/CookiePolicyPage';
 import CookieConsent from './components/common/legal/CookiesConsent';
 import SystemAnnouncement from './components/common/SystemAnnouncement';
+import AnnouncementManager from './components/common/AnnouncementManager';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -44,6 +45,7 @@ import SettingsPage from './pages/SettingsPage';
 import AiringShowsPage from './pages/AiringShowsPage';
 import ActorFilmographyPage from './pages/ActorFilmographyPage';
 import WatchListPage from './pages/WatchListPage';
+import MediaAnnouncement from './components/common/MediaAnnouncement';
 
 // Lazy load all routes
 const routes = {
@@ -127,6 +129,27 @@ function App() {
             <div className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
               <header>
                 <CookieConsent />
+                <AnnouncementManager />
+                <MediaAnnouncement 
+                  announcement={{
+                    tmdbId: '78191',
+                    type: 'tv_season',
+                    title: 'YOU',
+                    season: 5,
+                    episode: 1,
+                    releaseDate: '2023-10-24',
+                    description: 'Season 5 of YOU was just released today, the 24th of October 2023.',
+                    badge: 'New season release',
+                    cta: {
+                      text: 'Watch Now',
+                      link: '/player/tv/78191-you/5/1'
+                    },
+                    theme: {
+                      primary: '#82BC87',
+                      secondary: '#E4D981'
+                    }
+                  }}
+                />
                 <SystemAnnouncement />
               </header>
 
