@@ -26,7 +26,7 @@ const SystemAnnouncement = () => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -100, opacity: 0 }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
-          className="fixed bottom-0 left-0 right-0 z-40 mb-4"  // Lower z-index and added mb-4
+          className="fixed bottom-0 left-0 right-0 z-50"
         >
           <div className="relative">
             {/* Background Effects */}
