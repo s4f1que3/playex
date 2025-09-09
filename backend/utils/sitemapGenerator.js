@@ -15,7 +15,7 @@ const generateSitemap = async () => {
       '/movies',
       '/tv-shows',
       '/trending',
-      '/collections',
+
       '/fan-favorites',
       '/airing-shows'
     ];

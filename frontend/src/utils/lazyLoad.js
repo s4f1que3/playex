@@ -35,7 +35,7 @@ export const routeConfig = {
   // Discovery features
   search: () => import(/* webpackChunkName: "search" */ '../pages/SearchResultsPage'),
   collections: () => import(/* webpackChunkName: "collections" */ '../pages/CollectionsPage'),
-  collectionsIndex: () => import(/* webpackChunkName: "collections-index" */ '../pages/CollectionsIndexPage'),
+
   fanFavorites: () => import(/* webpackChunkName: "fan-favorites" */ '../pages/FanFavoritesPage'),
 
   // User features

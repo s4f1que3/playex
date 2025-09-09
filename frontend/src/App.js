@@ -38,7 +38,7 @@ import SimilarContentPage from './pages/SimilarContentPage';
 import EpisodesPage from './pages/EpisodesPage';
 import FanFavoritesPage from './pages/FanFavoritesPage';
 import CollectionsPage from './pages/CollectionsPage';
-import CollectionsIndexPage from './pages/CollectionsIndexPage'; 
+
 import ContinueWatchingPage from './pages/ContinueWatchingPage';
 import SettingsPage from './pages/SettingsPage';
 import AiringShowsPage from './pages/AiringShowsPage';
@@ -152,7 +152,6 @@ function App() {
                   <Route path="player/tv/:slug/:season/:episode" element={<PlayerPage mediaType="tv" />} />
                   <Route path="/tv/:slug/episodes/:season" element={<EpisodesPage />} />
                   <Route path="/fan-favorites" element={<FanFavoritesPage />} /> 
-                  <Route path="/collections" element={<CollectionsIndexPage />} /> 
                   <Route path="/collection/:id" element={<CollectionsPage />} />
                   <Route path="/continue-watching" element={<ContinueWatchingPage />} />
                   <Route path="/settings" element={<SettingsPage />} />

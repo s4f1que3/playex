@@ -77,7 +77,6 @@ const Footer = () => {
         { to: "/movies", label: "Movies", icon: "🎬" },
         { to: "/tv-shows", label: "TV Shows", icon: "📺" },
         { to: "/trending", label: "Trending", icon: "🔥" },
-        { to: "/collections", label: "Collections", icon: "📚" },
         { to: "/fan-favorites", label: "Fan Favorites", icon: "⭐" }
       ]
     },
