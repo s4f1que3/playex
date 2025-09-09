@@ -117,7 +117,7 @@ const SystemAnnouncement = () => {
                                 🎬 <span className="font-medium">A new season of "Wednesday" is available</span>
                               </p>
                               <p className="text-gray-300 text-sm leading-relaxed">
-                                Season 2 Part 1 of Wednesday was just released today, the 3rd of September 2025.</p>
+                                Season 2 Part 2 of Wednesday was just released today, September 2025.</p>
                             </div>
                             <div className="flex-shrink-0">
                               <motion.button
