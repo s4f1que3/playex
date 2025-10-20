@@ -19,6 +19,7 @@ import FAQ from './components/common/legal/FAQ';
 import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
 import CookiesPolicyPage from './components/common/legal/CookiePolicyPage';
 import CookieConsent from './components/common/legal/CookiesConsent';
+import NewDomain from './components/common/legal/NewDomain';
 import SystemAnnouncement from './components/common/SystemAnnouncement';
 
 // Pages
@@ -127,6 +128,7 @@ function App() {
             <div className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
               <header>
                 <CookieConsent />
+                <NewDomain />
                 <SystemAnnouncement />
               </header>
 
