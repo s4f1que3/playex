@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { tmdbApi, tmdbHelpers } from '../../utils/api';
+import { tmdbApi } from '../../utils/api';
+import { searchCollections, formatCollectionResult } from '../../utils/tmdbHelpers';
 import { createMediaUrl } from '../../utils/slugify';
 import { findSimilarTitles, getSearchSuggestions } from '../../utils/search';
 
@@ -16,26 +17,48 @@ const SearchBar = ({ isMobile = false }) => {
   const { data: suggestions, isLoading } = useQuery({
     queryKey: ['searchSuggestions', searchTerm],
     queryFn: async () => {
-      const response = await tmdbApi.get('/search/multi', { 
-        params: { 
-          query: searchTerm,
-          include_adult: false,
-          language: 'en-US'
-        }
-      });
-      
-      const results = response.data.results;
-      
-      if (results.length === 0 && searchTerm.length >= 2) {
-        const fuzzyResponse = await tmdbApi.get('/search/multi', {
-          params: {
-            query: searchTerm.slice(0, Math.max(2, searchTerm.length - 2)),
+      // Search for movies, TV shows, people
+      const [multiResponse, collectionsData] = await Promise.all([
+        tmdbApi.get('/search/multi', { 
+          params: { 
+            query: searchTerm,
             include_adult: false,
             language: 'en-US'
           }
-        });
+        }),
+        searchCollections(tmdbApi, searchTerm)
+      ]);
+      
+      // Format multi search results
+      const multiResults = multiResponse.data.results.map(item => ({
+        ...item,
+        media_type: item.media_type === 'person' ? 'actor' : item.media_type
+      }));
+      
+      // Get collection results
+      const collectionResults = collectionsData.results;
+      
+      // Combine all results and sort by relevance
+      const results = [...collectionResults, ...multiResults];
+      
+      if (results.length === 0 && searchTerm.length >= 2) {
+        // Try fuzzy search with shortened query
+        const fuzzyQuery = searchTerm.slice(0, Math.max(2, searchTerm.length - 2));
+        const [fuzzyMultiResponse, fuzzyCollectionsData] = await Promise.all([
+          tmdbApi.get('/search/multi', {
+            params: {
+              query: fuzzyQuery,
+              include_adult: false,
+              language: 'en-US'
+            }
+          }),
+          searchCollections(tmdbApi, fuzzyQuery)
+        ]);
         
-        const fuzzyResults = fuzzyResponse.data.results;
+        const fuzzyResults = [
+          ...fuzzyCollectionsData.results,
+          ...fuzzyMultiResponse.data.results
+        ];
         const similarResults = findSimilarTitles(searchTerm, fuzzyResults);
         
         if (similarResults.length > 0) {
@@ -92,7 +115,13 @@ const SearchBar = ({ isMobile = false }) => {
     const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
     const title = item.title || item.name;
     
-    const adjustedMediaType = mediaType === 'person' ? 'actor' : mediaType;
+    let adjustedMediaType = mediaType;
+    if (mediaType === 'person') {
+      adjustedMediaType = 'actor';
+    } else if (mediaType === 'collection') {
+      adjustedMediaType = 'collection';
+    }
+    
     const mediaUrl = createMediaUrl(adjustedMediaType, item.id, title);
     navigate(mediaUrl);
     setShowSuggestions(false);
@@ -138,7 +167,7 @@ const SearchBar = ({ isMobile = false }) => {
             <input
               ref={searchInputRef}
               type="text"
-              placeholder={isMobile ? "Search..." : "Search movies, shows & actors"}
+              placeholder={isMobile ? "Search..." : "Search media, collections, actors..."}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -250,10 +279,7 @@ const SearchBar = ({ isMobile = false }) => {
                             >
                               <div className="relative h-14 w-10 md:h-16 md:w-12 rounded-lg overflow-hidden flex-shrink-0">
                                 <img
-                                  src={tmdbHelpers.getImageUrl(
-                                    item.media_type === 'person' ? item.profile_path : item.poster_path,
-                                    'w92'
-                                  ) || 'https://via.placeholder.com/45x68?text=No+Image'}
+                                  src={`https://image.tmdb.org/t/p/w92${item.media_type === 'person' ? item.profile_path : item.poster_path}` || 'https://via.placeholder.com/45x68?text=No+Image'}
                                   alt={item.title || item.name}
                                   className="h-full w-full object-cover transform group-hover:scale-105 transition-transform duration-300"
                                 />
@@ -273,6 +299,10 @@ const SearchBar = ({ isMobile = false }) => {
                                     ) : item.media_type === 'tv' ? (
                                       <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/>
+                                      </svg>
+                                    ) : item.media_type === 'collection' ? (
+                                      <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/>
                                       </svg>
                                     ) : (
                                       <svg className="w-3 h-3 md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">

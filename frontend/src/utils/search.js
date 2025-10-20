@@ -37,6 +37,14 @@ export const findSimilarTitles = (searchTerm, items, threshold = 3) => {
   return items.filter(item => {
     const title = (item.title || item.name || '').toLowerCase();
     const distance = getLevenshteinDistance(normalizedSearch, title);
+    
+    // For collections, also check if the search term matches any part of the collection name
+    if (item.media_type === 'collection') {
+      return distance <= threshold || 
+             title.includes(normalizedSearch) || 
+             normalizedSearch.split(' ').some(word => title.includes(word.toLowerCase()));
+    }
+    
     return distance <= threshold || title.includes(normalizedSearch);
   });
 };

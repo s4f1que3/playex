@@ -682,7 +682,7 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
                 <div className="container mx-auto px-4">
                   <div className="relative py-12">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
-                      <div className="flex items-center gap-4"> {/* Changed from gap-8 to gap-6 */}
+                      <div className="flex items-center gap-4">
                         <div className="relative">
                           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#FF8E53] to-[#FF6B6B] p-[2px] rotate-3 hover:rotate-6 transition-transform duration-300">
                             <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">

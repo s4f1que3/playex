@@ -85,37 +85,122 @@ const SearchResultsPage = () => {
   // Fetch search results
   const { data, isLoading, error } = useQuery({
     queryKey: ['search', searchQuery, page, mediaType],
-    queryFn: () => {
-      // If specific media type is selected, use that endpoint
-      if (mediaType !== 'all' && mediaType !== 'person') {
-        return tmdbApi.get(`/search/${mediaType}`, {
-          params: { query: searchQuery, page }
-        }).then(res => res.data);
-      } 
-      else if (mediaType === 'person') {
-        return tmdbApi.get('/search/person', {
-          params: { query: searchQuery, page }
-        }).then(res => {
-          // Format person results to match multi search
+    queryFn: async () => {
+      try {
+        if (mediaType === 'all') {
+          // For 'all', fetch both multi-search and collections
+          const multiResponse = await tmdbApi.get('/search/multi', {
+            params: { 
+              query: searchQuery,
+              page: page,
+              include_adult: false,
+              language: 'en-US'
+            }
+          });
+
+          const collectionsResponse = await tmdbApi.get('/search/collection', {
+            params: { 
+              query: searchQuery,
+              page: 1, // Always get first page for collections in combined search
+              language: 'en-US'
+            }
+          });
+
+          const multiResults = multiResponse.data.results.map(item => ({
+            ...item,
+            media_type: item.media_type === 'person' ? 'actor' : item.media_type
+          }));
+
+          const collectionResults = collectionsResponse.data.results.map(collection => ({
+            ...collection,
+            media_type: 'collection'
+          }));
+
+          // Combine results, ensuring collections appear at the top when relevant
+          const combinedResults = [...collectionResults, ...multiResults]
+            .filter((item, index, self) => 
+              index === self.findIndex(t => t.id === item.id)
+            )
+            .sort((a, b) => {
+              // Prioritize exact title matches
+              const aTitle = (a.title || a.name || '').toLowerCase();
+              const bTitle = (b.title || b.name || '').toLowerCase();
+              const query = searchQuery.toLowerCase();
+              
+              if (aTitle === query && bTitle !== query) return -1;
+              if (bTitle === query && aTitle !== query) return 1;
+              
+              // Then sort by popularity
+              return (b.popularity || 0) - (a.popularity || 0);
+            });
+
+          const itemsPerPage = 20;
+          const startIndex = (page - 1) * itemsPerPage;
+          const paginatedResults = combinedResults.slice(startIndex, startIndex + itemsPerPage);
+
           return {
-            ...res.data,
-            results: res.data.results.map(person => ({
+            page: page,
+            results: paginatedResults,
+            total_pages: Math.ceil(combinedResults.length / itemsPerPage),
+            total_results: combinedResults.length
+          };
+
+        } else if (mediaType === 'collection') {
+          const response = await tmdbApi.get('/search/collection', {
+            params: { 
+              query: searchQuery, 
+              page,
+              language: 'en-US'
+            }
+          });
+          
+          return {
+            ...response.data,
+            results: response.data.results.map(item => ({ 
+              ...item, 
+              media_type: 'collection' 
+            }))
+          };
+
+        } else if (mediaType === 'person') {
+          const response = await tmdbApi.get('/search/person', {
+            params: { 
+              query: searchQuery, 
+              page,
+              language: 'en-US'
+            }
+          });
+
+          return {
+            ...response.data,
+            results: response.data.results.map(person => ({
               ...person,
               media_type: 'actor'
             }))
           };
-        });
+
+        } else {
+          const response = await tmdbApi.get(`/search/${mediaType}`, {
+            params: { 
+              query: searchQuery, 
+              page,
+              include_adult: false,
+              language: 'en-US'
+            }
+          });
+
+          return {
+            ...response.data,
+            results: response.data.results.map(item => ({
+              ...item,
+              media_type: mediaType
+            }))
+          };
+        }
+      } catch (error) {
+        console.error('Search error:', error);
+        throw error;
       }
-      // Otherwise use multi search and convert person to actor
-      return tmdbApi.get('/search/multi', {
-        params: { query: searchQuery, page }
-      }).then(res => ({
-        ...res.data,
-        results: res.data.results.map(item => ({
-          ...item,
-          media_type: item.media_type === 'person' ? 'actor' : item.media_type
-        }))
-      }));
     },
     enabled: !!searchQuery,
     keepPreviousData: true,
@@ -157,6 +242,9 @@ const SearchResultsPage = () => {
     if (mediaType === 'person') {
       return createMediaUrl('actor', item.id, item.name);
     }
+    if (mediaType === 'collection') {
+      return createMediaUrl('collection', item.id, item.name || item.title);
+    }
     return createMediaUrl(mediaType, item.id, item.title || item.name);
   };
 
@@ -167,6 +255,15 @@ const SearchResultsPage = () => {
       icon: (
         <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      )
+    },
+    {
+      value: 'collection',
+      label: 'Collections',
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/>
         </svg>
       )
     },
@@ -201,7 +298,7 @@ const SearchResultsPage = () => {
 
   // Replace the existing filter dropdown with this enhanced version
   const FilterDropdown = () => (
-    <Menu as="div" className="relative z-[60] inline-block">  {/* Added inline-block */}
+    <Menu as="div" className="relative z-[60] inline-block">
       {({ open }) => (
         <>
           <Menu.Button className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gray-900/90 

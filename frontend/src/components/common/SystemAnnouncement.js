@@ -114,10 +114,10 @@ const SystemAnnouncement = () => {
                           <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
                             <div className="flex-1">
                               <p className="text-white mb-2">
-                                🎬 <span className="font-medium">A new season of "Wednesday" is available</span>
+                                🎬 <span className="font-medium">The new Conjuring is available in HD!</span>
                               </p>
                               <p className="text-gray-300 text-sm leading-relaxed">
-                                Season 2 Part 2 of Wednesday was just released today, September 2025.</p>
+                                The latest conjuring movie "Last Rights" was just released in HD</p> 
                             </div>
                             <div className="flex-shrink-0">
                               <motion.button
@@ -126,7 +126,7 @@ const SystemAnnouncement = () => {
                                 className="px-6 py-2 bg-gradient-to-r from-[#82BC87] to-[#6da972] rounded-lg 
                                          text-white font-medium shadow-lg shadow-[#82BC87]/20 
                                          hover:shadow-[#82BC87]/30 transition-all duration-300">
-                                <a href="/player/tv/119051-wednesday/2/1">
+                                <a href="/player/movie/1038392-the-conjuring-last-rites">
                                 Watch Now</a>
                               </motion.button>
                             </div>
