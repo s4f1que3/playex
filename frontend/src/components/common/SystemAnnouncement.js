@@ -56,7 +56,7 @@ const SystemAnnouncement = () => {
                           animate={{ opacity: 1 }}
                           className="text-[#82BC87] font-medium tracking-wide"
                         >
-                          New season release
+                          New Movie release
                         </motion.span>
                       </div>
                       <div className="h-4 w-px bg-gray-700" />
