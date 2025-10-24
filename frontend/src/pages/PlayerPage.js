@@ -224,7 +224,7 @@ const PlayerPage = ({ mediaType }) => {
                         text-[#82BC87] font-medium ml-1 hover:text-[#6da972] 
                         cursor-pointer transition-colors duration-300"> 
                             <a href=
-                            "https://chromewebstore.google.com/detail/popup-blocker-strict/aefkmifgmaafnojlojpnekbpbmjiiogg">
+                            "/AdBlockers" target = "_blank" rel="noreferrer noopener">
                               ad blocker.</a>
                           </span>
                       </span>

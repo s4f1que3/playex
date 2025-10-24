@@ -19,7 +19,7 @@ const NewDomain = () => {
   const allowedPaths = ['/privacy', '/terms'];
   
   const handleAccept = () => {
-    localStorage.setItem('storageConsent', 'true');
+    localStorage.setItem('domainNoticeAccepted', 'true');
     setShowConsent(false);
   };
 

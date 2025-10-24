@@ -20,6 +20,7 @@ import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
 import CookiesPolicyPage from './components/common/legal/CookiePolicyPage';
 import CookieConsent from './components/common/legal/CookiesConsent';
 import NewDomain from './components/common/legal/NewDomain';
+import AdBlockPage from './components/common/legal/AdBlockPage';
 import SystemAnnouncement from './components/common/SystemAnnouncement';
 
 // Pages
@@ -145,6 +146,7 @@ function App() {
                   <Route path="Trending" element={<TrendingPage />} />
                   <Route path="search" element={<SearchResultsPage />} />
                   <Route path="/terms" element={<TermsPage />} />
+                  <Route path="/AdBlockers" element={<AdBlockPage />} />
                   <Route path="/FAQ" element={<FAQ />} />
                   <Route path="/privacy" element={<PrivacyPolicyPage />} />
                   <Route path="/cookies" element={<CookiesPolicyPage />} />
