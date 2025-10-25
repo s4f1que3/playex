@@ -52,6 +52,8 @@ const AdBlockCard = ({ title, description, link }) => (
         >
           <Link
             to={link}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white font-medium hover:from-[#75b07a] hover:to-[#619665] transition-all duration-300 shadow-lg hover:shadow-[#82BC87]/25"
           >
             <span>Add to Chrome</span>
@@ -146,7 +148,7 @@ const AdBlockPage = () => {
                   <AdBlockCard
                     title="AdBlock Plus"
                     description="The most popular ad blocker for Chrome. Blocks intrusive ads and malware."
-                    link="https://chromewebstore.google.com/detail/adblock-plus-free-ad-bloc/cfhdojbkjhnklbpkdaibdccddilifddb"
+                    link="https://chromewebstore.google.com/detail/adblock-plus-free-ad-bloc/cfhdojbkjhnklbpkdaibdccddilifddb" 
                   />
                   <AdBlockCard
                     title="AdBlock"
