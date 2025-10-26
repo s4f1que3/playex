@@ -19,7 +19,7 @@ import FAQ from './components/common/legal/FAQ';
 import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
 import CookiesPolicyPage from './components/common/legal/CookiePolicyPage';
 import CookieConsent from './components/common/legal/CookiesConsent';
-import NewDomain from './components/common/legal/NewDomain';
+import NewDomain from './components/common/legal/WelcomeNotice';
 import AdBlockPage from './components/common/legal/AdBlockPage';
 import SystemAnnouncement from './components/common/SystemAnnouncement';
 
@@ -46,6 +46,7 @@ import SettingsPage from './pages/SettingsPage';
 import AiringShowsPage from './pages/AiringShowsPage';
 import ActorFilmographyPage from './pages/ActorFilmographyPage';
 import WatchListPage from './pages/WatchListPage';
+import WelcomeNotice from './components/common/legal/WelcomeNotice';
 
 // Lazy load all routes
 const routes = {
@@ -129,7 +130,7 @@ function App() {
             <div className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
               <header>
                 <CookieConsent />
-                <NewDomain />
+                <WelcomeNotice />
                 <SystemAnnouncement />
               </header>
 
@@ -158,7 +159,7 @@ function App() {
                   <Route path="/fan-favorites" element={<FanFavoritesPage />} /> 
                   <Route path="/collection/:id" element={<CollectionsPage />} />
                   <Route path="/continue-watching" element={<ContinueWatchingPage />} />
-                  <Route path="/settings" element={<SettingsPage />} />
+                  <Route path="/user-settings" element={<SettingsPage />} />
                   <Route path="/airing-shows" element={<AiringShowsPage />} />
                   
                   {/* Actor routes */}

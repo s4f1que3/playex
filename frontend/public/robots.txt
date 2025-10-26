@@ -8,4 +8,4 @@ Sitemap: https://playex.com/sitemap.xml
 # Disallow paths
 Disallow: /api/
 Disallow: /admin/
-Disallow: /settings/
+Disallow: /user-settings/
