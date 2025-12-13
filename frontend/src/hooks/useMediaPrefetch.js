@@ -16,8 +16,8 @@ export const useMediaPrefetch = (playerType, mediaType, tmdbId, season, episode)
         : `https://embed.su/embed/tv/${tmdbId}/${season}/${episode}`;
     } else if (playerType === 'vidsrc') {
       url = mediaType === 'movie'
-        ? `https://vidsrc.to/embed/movie/${tmdbId}`
-        : `https://vidsrc.to/embed/tv/${tmdbId}/${season}/${episode}`;
+        ? `https://vidsrc-embed.su/embed/movie/${tmdbId}`
+        : `https://vidsrc-embed.su/embed/tv/${tmdbId}/${season}/${episode}`;
     }
     setPrefetchUrl(url);
   }, [playerType, mediaType, tmdbId, season, episode]);

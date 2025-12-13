@@ -16,9 +16,14 @@ const PlayerPage = ({ mediaType }) => {
   const { id, loading: slugLoading } = useSlugResolver(mediaType, slug);
   const navigate = useNavigate();
   
+  // Set to true to show Nova as temporarily unavailable
+  const NOVA_TEMPORARILY_UNAVAILABLE = true;
+  
   const [playerType, setPlayerType] = useState(() => {
     return localStorage.getItem('preferredPlayer') || 'vidlink';
   });
+  
+  const [showUnavailableModal, setShowUnavailableModal] = useState(false);
 
   useEffect(() => {
     if (mediaType === 'tv') {
@@ -29,6 +34,10 @@ const PlayerPage = ({ mediaType }) => {
   }, [mediaType, slug, season, episode, navigate]);
 
   const handlePlayerChange = (type) => {
+    if (type === 'vidlink' && NOVA_TEMPORARILY_UNAVAILABLE) {
+      setShowUnavailableModal(true);
+      return;
+    }
     localStorage.setItem('preferredPlayer', type);
     window.location.reload();
   };
@@ -36,6 +45,9 @@ const PlayerPage = ({ mediaType }) => {
   const { data, isLoading, error } = useQuery({
     queryKey: ['playerMedia', mediaType, id, season, episode],
     queryFn: async () => {
+      if (playerType === 'vidlink' && NOVA_TEMPORARILY_UNAVAILABLE) {
+        throw new Error('Nova is temporarily unavailable');
+      }
       if (mediaType === 'movie') {
         return tmdbApi.get(`/movie/${id}`).then(res => res.data);
       } else if (mediaType === 'tv') {
@@ -54,7 +66,8 @@ const PlayerPage = ({ mediaType }) => {
         return { ...tvData, episode: episodeData, seasonData };
       }
     },
-    staleTime: 300000
+    staleTime: 300000,
+    enabled: !(playerType === 'vidlink' && NOVA_TEMPORARILY_UNAVAILABLE || playerType === 'embedsu' && NOVA_TEMPORARILY_UNAVAILABLE)
   });
   
   useEffect(() => {
@@ -115,6 +128,86 @@ const PlayerPage = ({ mediaType }) => {
 
   return (
     <>
+      {/* Unavailable Modal */}
+      <AnimatePresence>
+        {showUnavailableModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowUnavailableModal(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            />
+            
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+              className="fixed inset-0 z-50 flex items-center justify-center px-4"
+            >
+              <div className="relative w-full max-w-md">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/20 to-[#E4D981]/20 rounded-2xl filter blur-xl" />
+                
+                <div className="relative bg-gray-900/95 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+                  {/* Gradient accent top */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#82BC87] via-[#E4D981] to-transparent" />
+                  
+                  <div className="p-8 space-y-6">
+                    {/* Icon */}
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                      className="flex justify-center"
+                    >
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 border border-red-500/30 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </motion.div>
+
+                    {/* Content */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                      className="text-center space-y-3"
+                    >
+                      <h2 className="text-2xl font-bold text-white">Nova is Temporarily Unavailable</h2>
+                      <p className="text-gray-300 leading-relaxed">
+                        We apologize for any inconvenience. Our team is working to restore this player as quickly as possible.
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        Please try using <span className="text-[#82BC87] font-medium">Surge</span> or <span className="text-[#82BC87] font-medium">Orion</span> instead.
+                      </p>
+                    </motion.div>
+
+                    {/* Divider */}
+                    <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+                    {/* Button */}
+                    <motion.button
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      onClick={() => setShowUnavailableModal(false)}
+                      className="w-full py-3 rounded-lg bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white font-medium hover:shadow-lg hover:shadow-[#82BC87]/50 transition-all duration-300 active:scale-95"
+                    >
+                      Got it
+                    </motion.button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <SEO 
         title={`Watch ${data?.title || data?.name}`}
         description={`Stream ${data?.title || data?.name} in high quality on Playex`}
@@ -164,11 +257,12 @@ const PlayerPage = ({ mediaType }) => {
                     
                     <button
                       onClick={() => handlePlayerChange(id)}
+                      disabled={(id === 'vidlink' || id === 'embedsu') && NOVA_TEMPORARILY_UNAVAILABLE}
                       className={`relative group px-6 py-3 rounded-xl transition-all duration-500 ${
                         playerType === id
                           ? 'bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white shadow-lg'
                           : 'hover:bg-white/5'
-                      }`}
+                      } ${(id === 'vidlink' || id === 'embedsu') && NOVA_TEMPORARILY_UNAVAILABLE ? 'opacity-60 cursor-not-allowed' : ''}`}
                     >
                       <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[#82BC87]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
                         playerType === id ? 'opacity-100' : ''
@@ -189,7 +283,7 @@ const PlayerPage = ({ mediaType }) => {
                           playerType === id
                             ? 'translate-x-0.5'
                             : 'text-gray-400 group-hover:text-white'
-                        }`}>
+                        } ${(id === 'vidlink' || id === 'embedsu') && NOVA_TEMPORARILY_UNAVAILABLE ? 'line-through' : ''}`}>
                           {id === 'vidlink' ? 'Nova' : id === 'embedsu' ? 'Surge' : 'Orion'}
                         </span>
                       </div>
@@ -233,6 +327,24 @@ const PlayerPage = ({ mediaType }) => {
                 </motion.div>
               )}
             </AnimatePresence>
+
+            {NOVA_TEMPORARILY_UNAVAILABLE && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="mt-3 flex justify-center"
+              >
+                <div className="px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 backdrop-blur-sm">
+                  <div className="flex items-center gap-2 text-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-amber-100">Nova & Surge are temporarily unavailable. Please use Orion.</span>
+                  </div>
+                </div>
+              </motion.div>
+            )}
           </div>
         </div>
 

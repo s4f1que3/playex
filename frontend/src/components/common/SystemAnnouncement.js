@@ -56,7 +56,7 @@ const SystemAnnouncement = () => {
                           animate={{ opacity: 1 }}
                           className="text-[#82BC87] font-medium tracking-wide"
                         >
-                          New Movie release
+                          New episode release
                         </motion.span>
                       </div>
                       <div className="h-4 w-px bg-gray-700" />
@@ -114,10 +114,10 @@ const SystemAnnouncement = () => {
                           <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
                             <div className="flex-1">
                               <p className="text-white mb-2">
-                                🎬 <span className="font-medium">The new Conjuring is available in HD!</span>
+                                🎬 <span className="font-medium">IT: Welcome to derry</span>
                               </p>
                               <p className="text-gray-300 text-sm leading-relaxed">
-                                The latest conjuring movie "Last Rights" was just released in HD</p> 
+                                Episode 7 of IT: Welcome to derry is available!</p> 
                             </div>
                             <div className="flex-shrink-0">
                               <motion.button
@@ -126,7 +126,7 @@ const SystemAnnouncement = () => {
                                 className="px-6 py-2 bg-gradient-to-r from-[#82BC87] to-[#6da972] rounded-lg 
                                          text-white font-medium shadow-lg shadow-[#82BC87]/20 
                                          hover:shadow-[#82BC87]/30 transition-all duration-300">
-                                <a href="/player/movie/1038392-the-conjuring-last-rites">
+                                <a href="/player/tv/200875-it-welcome-to-derry/1/7">
                                 Watch Now</a>
                               </motion.button>
                             </div>

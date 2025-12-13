@@ -19,9 +19,9 @@ const VideoPlayer = ({ tmdbId, mediaType, season, episode, playerType = 'vidlink
     }
   } else if (playerType === 'vidsrc') {
     if (mediaType === 'movie') {
-      embedUrl = `https://vidsrc.to/embed/movie/${tmdbId}`;
+      embedUrl = `https://vidsrc-embed.su/embed/movie/${tmdbId}`;
     } else if (mediaType === 'tv' && season && episode) {
-      embedUrl = `https://vidsrc.to/embed/tv/${tmdbId}/${season}/${episode}`;
+      embedUrl = `https://vidsrc-embed.su/embed/tv/${tmdbId}/${season}/${episode}`;
     }
   }
   
