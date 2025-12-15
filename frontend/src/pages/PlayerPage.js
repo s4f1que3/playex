@@ -67,7 +67,7 @@ const PlayerPage = ({ mediaType }) => {
       }
     },
     staleTime: 300000,
-    enabled: !(playerType === 'vidlink' && NOVA_TEMPORARILY_UNAVAILABLE || playerType === 'embedsu' && NOVA_TEMPORARILY_UNAVAILABLE)
+    enabled: !(playerType === 'vidlink' && NOVA_TEMPORARILY_UNAVAILABLE)
   });
   
   useEffect(() => {
@@ -236,11 +236,11 @@ const PlayerPage = ({ mediaType }) => {
             <div className="flex justify-center">
               <div className="inline-flex gap-3 p-1 rounded-2xl bg-black/40 backdrop-blur-xl border border-white/5 shadow-2xl">
                 {[
+                  { id: 'mapple', displayName: 'Surge', icon: (
+                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
+                  )},
                   { id: 'vidlink', displayName: 'Nova', icon: (
                     <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-                  )},
-                  { id: 'embedsu', displayName: 'Surge', icon: (
-                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
                   )},
                   { id: 'vidsrc', displayName: 'Orion', icon: (
                     <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
@@ -257,16 +257,26 @@ const PlayerPage = ({ mediaType }) => {
                     
                     <button
                       onClick={() => handlePlayerChange(id)}
-                      disabled={(id === 'vidlink' || id === 'embedsu') && NOVA_TEMPORARILY_UNAVAILABLE}
+                      disabled={(id === 'vidlink') && NOVA_TEMPORARILY_UNAVAILABLE}
                       className={`relative group px-6 py-3 rounded-xl transition-all duration-500 ${
                         playerType === id
                           ? 'bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white shadow-lg'
                           : 'hover:bg-white/5'
-                      } ${(id === 'vidlink' || id === 'embedsu') && NOVA_TEMPORARILY_UNAVAILABLE ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      } ${(id === 'vidlink') && NOVA_TEMPORARILY_UNAVAILABLE ? 'opacity-60 cursor-not-allowed' : ''}`}
+                      title={(id === 'vidlink') && NOVA_TEMPORARILY_UNAVAILABLE ? 'Nova is currently being improved by our team' : ''}
                     >
                       <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[#82BC87]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
                         playerType === id ? 'opacity-100' : ''
                       }`} />
+
+                      {((id === 'vidlink') && NOVA_TEMPORARILY_UNAVAILABLE) && (
+                        <div className="absolute -top-14 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                          <div className="relative px-4 py-3 bg-gradient-to-r from-purple-600/90 to-blue-600/90 rounded-xl whitespace-nowrap text-xs font-semibold text-white shadow-2xl backdrop-blur-sm border border-purple-400/30 animate-pulse">
+                            ✨ Nova is taking a nap... Come back soon! 💤
+                            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-3 h-3 bg-gradient-to-b from-purple-600/90 to-blue-600/90 rotate-45 border-r border-b border-purple-400/30"></div>
+                          </div>
+                        </div>
+                      )}
                       
                       <div className="relative flex items-center gap-3">
                         <svg
@@ -283,8 +293,8 @@ const PlayerPage = ({ mediaType }) => {
                           playerType === id
                             ? 'translate-x-0.5'
                             : 'text-gray-400 group-hover:text-white'
-                        } ${(id === 'vidlink' || id === 'embedsu') && NOVA_TEMPORARILY_UNAVAILABLE ? 'line-through' : ''}`}>
-                          {id === 'vidlink' ? 'Nova' : id === 'embedsu' ? 'Surge' : 'Orion'}
+                        } ${(id === 'vidlink') && NOVA_TEMPORARILY_UNAVAILABLE ? 'line-through' : ''}`}>
+                          {id === 'vidlink' ? 'Nova' : id === 'mapple' ? 'Surge' : 'Orion'}
                         </span>
                       </div>
                     </button>
@@ -294,7 +304,7 @@ const PlayerPage = ({ mediaType }) => {
             </div>
 
             <AnimatePresence>
-              {(playerType === 'vidlink' || playerType === 'embedsu') && (
+              {(playerType === 'vidlink' || playerType === 'mapple' || playerType === 'vidsrc') && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -308,11 +318,7 @@ const PlayerPage = ({ mediaType }) => {
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                       </svg>
                       <span className="text-gray-300">
-                        If {playerType === 'vidlink' ? 'Nova' : playerType === 'embedsu' ? 'Surge' : ''} isn't working, try our most reliable player: 
-                        <span className="text-[#82BC87] font-medium ml-1 hover:text-[#6da972] cursor-pointer transition-colors duration-300" 
-                              onClick={() => handlePlayerChange('vidsrc')}>
-                          Orion
-                        </span>
+                        If {playerType === 'vidlink' ? 'Nova' : playerType === 'mapple' ? 'Surge' : playerType === 'vidsrc' ? 'Orion' : ''} isn't working, please try another player: 
                         <span> Ensure you have an</span>
                         <span className="
                         text-[#82BC87] font-medium ml-1 hover:text-[#6da972] 
@@ -328,23 +334,7 @@ const PlayerPage = ({ mediaType }) => {
               )}
             </AnimatePresence>
 
-            {NOVA_TEMPORARILY_UNAVAILABLE && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="mt-3 flex justify-center"
-              >
-                <div className="px-4 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 backdrop-blur-sm">
-                  <div className="flex items-center gap-2 text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-amber-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                    </svg>
-                    <span className="text-amber-100">Nova & Surge are temporarily unavailable. Please use Orion.</span>
-                  </div>
-                </div>
-              </motion.div>
-            )}
+
           </div>
         </div>
 

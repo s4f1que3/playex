@@ -11,11 +11,11 @@ const VideoPlayer = ({ tmdbId, mediaType, season, episode, playerType = 'vidlink
     } else if (mediaType === 'tv' && season && episode) {
       embedUrl = `https://vidlink.pro/tv/${tmdbId}/${season}/${episode}?primaryColor=82BC87&secondaryColor=161616&iconColor=E4D981&title=true&poster=true&autoplay=true&nextbutton=true`;
     }
-  } else if (playerType === 'embedsu') {
+  } else if (playerType === 'mapple') {
     if (mediaType === 'movie') {
-      embedUrl = `https://embed.su/embed/movie/${tmdbId}`;
+      embedUrl = `https://mapple.uk/watch/movie/${tmdbId}`;
     } else if (mediaType === 'tv' && season && episode) {
-      embedUrl = `https://embed.su/embed/tv/${tmdbId}/${season}/${episode}`;
+      embedUrl = `https://mapple.uk/watch/tv/${tmdbId}/${season}/${episode}`;
     }
   } else if (playerType === 'vidsrc') {
     if (mediaType === 'movie') {
@@ -86,7 +86,7 @@ const VideoPlayer = ({ tmdbId, mediaType, season, episode, playerType = 'vidlink
         allowFullScreen
         title={
           playerType === 'vidlink' ? "Nova" : 
-          playerType === 'embedsu' ? "Surge" : 
+          playerType === 'mapple' ? "Surge" : 
           "Orion"
         }
       ></iframe>

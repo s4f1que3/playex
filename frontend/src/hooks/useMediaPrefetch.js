@@ -10,7 +10,7 @@ export const useMediaPrefetch = (playerType, mediaType, tmdbId, season, episode)
       url = mediaType === 'movie'
         ? `https://vidlink.pro/movie/${tmdbId}`
         : `https://vidlink.pro/tv/${tmdbId}/${season}/${episode}`;
-    } else if (playerType === 'embedsu') {
+    } else if (playerType === 'mapple') {
       url = mediaType === 'movie'
         ? `https://embed.su/embed/movie/${tmdbId}`
         : `https://embed.su/embed/tv/${tmdbId}/${season}/${episode}`;
