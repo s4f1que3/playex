@@ -19,18 +19,18 @@ const BreadcrumbItem = ({ children, to, isLast }) => {
         {!isLast ? (
           <Link
             to={to}
-            className="group flex items-center px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 
-                       backdrop-blur-sm border border-white/10 hover:border-[#82BC87]/20 transition-all duration-300"
+            className="group flex items-center px-3 py-1.5 rounded-lg glass-effect-light hover:bg-accent-500/10 
+                       border-accent-500/10 hover:border-accent-500/30 transition-all duration-300"
           >
-            {children}
+            <span className="text-slate-light group-hover:text-accent-light transition-colors">{children}</span>
             <div className="ml-2 transform transition-transform duration-300 group-hover:translate-x-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400 group-hover:text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-medium group-hover:text-accent-light" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a 1 1 0 010 1.414l-4 4a 1 1 0 01-1.414 0z" clipRule="evenodd" />
               </svg>
             </div>
           </Link>
         ) : (
-          <div className="px-3 py-1.5 rounded-lg bg-[#82BC87]/10 border border-[#82BC87]/20 text-[#82BC87]">
+          <div className="px-3 py-1.5 rounded-lg bg-accent-500/10 border border-accent-500/30 text-accent-light font-medium">
             {children}
           </div>
         )}

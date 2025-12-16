@@ -8,6 +8,7 @@ import { prefetchRoute, prefetchInitialData } from './utils/prefetchRoutes';
 import { HelmetProvider } from 'react-helmet-async';
 import { useSecurityProtection } from './hooks/useSecurityProtection';
 import { useCollectionsPrefetch } from './hooks/useCollectionsPrefetch';
+import { useDevToolsDetection } from './hooks/useDevToolsDetection';
 import { categoryKeywords } from './constants/categoryKeywords'; // Move categoryKeywords to a separate file
 
 // Layouts
@@ -58,6 +59,9 @@ const routes = {
 };
 
 function App() {
+  // Activate DevTools detection
+  useDevToolsDetection();
+  
   useSecurityProtection();
   
   // Start prefetching as soon as the app loads

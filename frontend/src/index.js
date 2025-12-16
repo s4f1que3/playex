@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
 import './index.css';
+import { initializeSourceCodeProtection, sanitizeSourceMaps } from './utils/sourceCodeProtection';
+
+// Initialize source code protection
+initializeSourceCodeProtection();
+sanitizeSourceMaps();
 
 // Create a client
 const queryClient = new QueryClient({
