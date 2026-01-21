@@ -236,6 +236,14 @@ const Footer = () => {
               </motion.span>
             </div>
 
+            <div className="flex flex-col md:flex-row justify-between items-center gap-5">
+             <div className="flex items-center gap-4">
+              <span className="text-sm text-gray-400">
+                <p>Created by <a href="https://www.linkedin.com/company/safique-solutions" target= "_blank" className="text-[#82BC87] hover:text-[#E4D981]">NOVA</a></p>
+              </span>
+              </div>
+            </div>
+
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-gray-400">
                 <span className="relative flex h-2 w-2">

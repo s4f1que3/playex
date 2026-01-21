@@ -1,11 +1,41 @@
 # https://www.robotstxt.org/robotstxt.html
+# Advanced robots.txt - Restrictive policy
+
+# Block all bots except search engines
 User-agent: *
-Allow: /
+Disallow: /
 
-# Sitemaps
-Sitemap: https://playex.com/sitemap.xml
-
-# Disallow paths
-Disallow: /api/
+# Allow Google, Bing, and other major search engines
+User-agent: Googlebot
 Disallow: /admin/
+Disallow: /api/
 Disallow: /user-settings/
+Crawl-delay: 2
+Request-rate: 1/5
+
+User-agent: Bingbot
+Disallow: /admin/
+Disallow: /api/
+Disallow: /user-settings/
+Crawl-delay: 2
+Request-rate: 1/5
+
+User-agent: Slurp
+Disallow: /
+
+User-agent: DuckDuckBot
+Disallow: /
+
+# Block specific bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+# Sitemaps (if allowing search engines)
+Sitemap: https://playex.com/sitemap.xml
+Sitemap: https://playex.com/sitemap-index.xml

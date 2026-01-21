@@ -76,6 +76,12 @@ const FAQItem = ({ question, answer, index }) => {
 const FAQ = () => {
   const faqData = [
     {
+      question: "Who created playex?",
+      answer: (
+        <p>Playex was created by <a href="https://www.linkedin.com/company/safique-solutions" className="text-[#82BC87] hover:text-[#E4D981]">NOVA</a></p>
+      )
+    },
+    {
       question: "How can I request to add Movies/TV-Shows?",
       answer: "As Playex doesn't manually host any media but rather uses an embedded player, we currently cannot add any movies or TV shows to our site. We are limited to the media that the embedded player has. However, in the future, we may add other embedded players that allow you to switch if one doesn't have what you want."
     },
@@ -90,10 +96,10 @@ const FAQ = () => {
             <li><strong>New media</strong> - If the Movie or TV-Show was just released, the selected embedded player may not yet have it.</li>
             <li><strong>WI-FI Issues</strong> - Ensure your internet connection is working.</li>
             <li><strong>Wait 2-3 Minutes</strong> - Sometimes, the player may have an interruption fetching the data to play the media. Give the player 2-3 minutes or reload the page to resolve this issue and play your media.</li>
-            <li>If none of these work, try reloading the page. If that still doesn't work, contact us at 
+            <li>If none of these work, try reloading the page. If that still doesn't work, contact us at  
             <ContactLink className="text-[#82BC87] hover:text-[#E4D981]"
             subject="Player Issues">
-              contact.playex@gmail.com</ContactLink>, describe your issue, 
+               contact.playex@gmail.com</ContactLink>, describe your issue, 
                 and we will resolve this to the best of our ability ASAP.</li>
           </ul>
         </>
@@ -109,7 +115,9 @@ const FAQ = () => {
     },
     {
       question: "How do I report a problem with a movie or TV show?",
-      answer: "You can contact us at <a href=\"mailto:contact.playex@gmail.com\" className=\"text-[#82BC87] hover:text-[#E4D981]\">contact.playex@gmail.com</a>. Be sure to include a brief description of the issue."
+      answer: (
+        <p>You can contact us at <a href="mailto:contact.playex@gmail.com" className="text-[#82BC87] hover:text-[#E4D981]">contact.playex@gmail.com</a>. Be sure to include a brief description of the issue.</p>
+      )
     },
     {
       question: "Will you add a download feature?",
