@@ -24,7 +24,7 @@ const Counter = ({ value, title, description, icon, color, link }) => {
     });
     return controls.stop;
     }
-  }, [count, value]);
+  }, [count, value, isNumeric]);
 
   const ContentWrapper = link ? Link : 'div';
 
@@ -185,7 +185,6 @@ const TrendingSection = ({ items, loading, error }) => {
 };
 
 const HomePage = () => {
-  const { currentUser } = useAuth();
   
   // Fetch trending movies and TV shows
 const { data: trendingData, isLoading: trendingLoading, error: trendingError } = useQuery({
@@ -204,20 +203,6 @@ const { data: popularMovies, isLoading: moviesLoading, error: moviesError } = us
 // Fetch popular TV shows
 const { data: popularTVShows, isLoading: tvLoading, error: tvError } = useQuery({
   queryKey: ['popularTVShows'],
-  queryFn: () => tmdbApi.get('/tv/top_rated').then(res => res.data.results),
-  staleTime: 600000 // 10 minutes
-});
-  
-  // Fetch top rated movies
-const { data: topRatedMovies, isLoading: topRatedMoviesLoading, error: topRatedMoviesError } = useQuery({
-  queryKey: ['topRatedMovies'],
-  queryFn: () => tmdbApi.get('/movie/top_rated').then(res => res.data.results),
-  staleTime: 600000 // 10 minutes
-});
-
-// Fetch top rated TV shows
-const { data: topRatedTVShows, isLoading: topRatedTVLoading, error: topRatedTVError } = useQuery({
-  queryKey: ['topRatedTVShows'],
   queryFn: () => tmdbApi.get('/tv/top_rated').then(res => res.data.results),
   staleTime: 600000 // 10 minutes
 });

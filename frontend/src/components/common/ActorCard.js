@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import PrefetchLink from './PrefetchLink';
 import { tmdbHelpers } from '../../utils/api';
 import { createMediaUrl } from '../../utils/slugify';

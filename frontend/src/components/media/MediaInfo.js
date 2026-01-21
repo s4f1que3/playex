@@ -1,7 +1,7 @@
 // File: frontend/src/components/media/MediaInfo.js
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { tmdbHelpers } from '../../utils/api';
 import { isShowCompleted } from '../../utils/LocalStorage';
 
@@ -59,7 +59,6 @@ const MediaInfo = ({ media, mediaType }) => {
   if (!media) return null;
   
   const {
-    id,
     title,
     name,
     overview,
@@ -70,7 +69,6 @@ const MediaInfo = ({ media, mediaType }) => {
     first_air_date,
     runtime,
     episode_run_time,
-    genres,
     production_companies,
     number_of_seasons,
     number_of_episodes,
@@ -93,17 +91,7 @@ const MediaInfo = ({ media, mediaType }) => {
   
   // Determine if overview needs "read more" toggle
   const isLongOverview = overview && overview.length > 300;
-  const displayOverview = showFullOverview ? overview : (isLongOverview ? `${overview.substring(0, 300)}...` : overview);
   
-  // Format media tag
-  const mediaTag = tmdbHelpers.getMediaTag(
-    mediaType,
-    releaseYear,
-    formattedRuntime,
-    number_of_seasons,
-    number_of_episodes
-  );
-
   // Add content rating parsing
   const getContentRating = (media) => {
     if (mediaType === 'movie') {

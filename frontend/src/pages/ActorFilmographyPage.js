@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
 import { useActorResolver } from '../hooks/useActorResolver';
-import PremiumLoader from '../components/common/PremiumLoader';
 import SEO from '../components/common/SEO';
 import MediaGrid from '../components/media/MediaGrid';
 import Pagination from '../components/common/Pagnation';
@@ -27,6 +26,7 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
   const { data: actorData, isLoading, error } = useQuery({
     queryKey: ['actor', id],
     queryFn: async () => {
+      // eslint-disable-next-line no-loop-func
       let attempts = 0;
       const maxAttempts = 3;
 
@@ -217,8 +217,6 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
     setCurrentPage(newPage);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const sortedCredits = sortCredits(credits);
 
   const filters = [
     { id: 'popularity', label: 'Popularity', icon: 'trending_up' },

@@ -1,18 +1,18 @@
 // File: frontend/src/components/common/CookieConsent.js
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import PrefetchLink from '../PrefetchLink';
+
+const ALLOWED_PATHS = ['/privacy', '/terms'];
 
 const CookieConsent = () => {
   const [showConsent, setShowConsent] = useState(false);
   const location = useLocation();
   
-  const allowedPaths = ['/privacy', '/terms'];
-  
   useEffect(() => {
     const hasConsented = localStorage.getItem('storageConsent');
-    const isAllowedPath = allowedPaths.includes(location.pathname);
+    const isAllowedPath = ALLOWED_PATHS.includes(location.pathname);
     
     if (!hasConsented) {
       setShowConsent(!isAllowedPath);
@@ -39,7 +39,7 @@ const CookieConsent = () => {
   
   const handleLearnMore = (e) => {
     const linkPath = e.currentTarget.getAttribute('href');
-    if (allowedPaths.includes(linkPath)) {
+    if (ALLOWED_PATHS.includes(linkPath)) {
       setShowConsent(false);
     }
   };

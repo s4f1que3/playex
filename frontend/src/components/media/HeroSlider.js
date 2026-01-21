@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { tmdbHelpers } from '../../utils/api';
@@ -136,13 +136,15 @@ const SlideContent = ({ item, isActive }) => {
 };
 
 const HeroSlider = ({ items = [] }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [imageLoaded, setImageLoaded] = useState(false);
   const sliderRef = React.useRef(null);
   
+  // Get the current item data to pass to content
+  const currentItem = items[currentSlide] || null;
+  
   const settings = {
-    dots: true, // Change back to true to show Slick dots
+    dots: true,
     infinite: true,
     speed: 1200,
     slidesToShow: 1,
@@ -152,10 +154,12 @@ const HeroSlider = ({ items = [] }) => {
     pauseOnHover: true,
     fade: true,
     lazyLoad: 'progressive',
-    beforeChange: (_, next) => {
+    beforeChange: (current, next) => {
       setCurrentSlide(next);
-      setCurrentIndex(next);
       setImageLoaded(false);
+    },
+    afterChange: (current) => {
+      setCurrentSlide(current);
     },
     customPaging: (i) => (
       <motion.div

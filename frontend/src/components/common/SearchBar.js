@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi } from '../../utils/api';
-import { searchCollections, formatCollectionResult } from '../../utils/tmdbHelpers';
+import { searchCollections } from '../../utils/tmdbHelpers';
 import { createMediaUrl } from '../../utils/slugify';
 import { findSimilarTitles, getSearchSuggestions } from '../../utils/search';
 
@@ -262,8 +262,6 @@ const SearchBar = ({ isMobile = false }) => {
                         {results.map((item, index) => {
                           const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
                           const title = item.title || item.name;
-                          const year = item.release_date || item.first_air_date;
-                          const mediaUrl = createMediaUrl(mediaType, item.id, title);
 
                           return (
                             <motion.button

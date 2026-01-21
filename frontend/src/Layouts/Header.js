@@ -1,8 +1,7 @@
 // File: frontend/src/components/layout/Header.js
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../contexts/AuthContext';
 import SearchBar from '../components/common/SearchBar';
 import DropdownMenu from '../components/navigation/DropdownMenu';
 import PrefetchLink from '../components/common/PrefetchLink';  // Update import
@@ -11,9 +10,6 @@ import HeaderAccountMenu from '../components/navigation/HeaderAccountMenu';
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const desktopMenuRef = useRef(null);
-  const navigate = useNavigate();
-  const location = useLocation();
 
   // Enhanced scroll effect with transparency
   useEffect(() => {

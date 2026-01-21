@@ -3,14 +3,13 @@ import { Link, useParams, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
-import { createMediaUrl } from '../utils/slugify';
 import { useSlugResolver } from '../hooks/useSlugResolver';
 import SEO from '../components/common/SEO';
 
 const EpisodesPage = () => {
   const location = useLocation();
   const { slug, season } = useParams();
-  const { id, loading } = useSlugResolver('tv', slug);
+  const { id } = useSlugResolver('tv', slug);
   
   // Add state for current episode
   const [currentEpisode, setCurrentEpisode] = useState(null);

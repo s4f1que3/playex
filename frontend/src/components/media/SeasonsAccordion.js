@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Listbox, Transition } from '@headlessui/react';
 import { tmdbApi, tmdbHelpers } from '../../utils/api';
 import { getLastWatchedEpisode } from '../../utils/LocalStorage';
-import Spinner from '../common/Spinner';
 import VideosButton from './VideosButton';
 import { createMediaUrl } from '../../utils/slugify';
 
@@ -324,7 +323,6 @@ const EpisodeIcon = () => (
 
 const SeasonsAccordion = ({ tvId, tvName, seasons, activeSeason, setActiveSeason }) => {
   const [isEpisodesExpanded, setIsEpisodesExpanded] = useState(true);
-  const [lastWatched, setLastWatched] = useState(null);
 
   const preloadImages = (episodes) => {
     episodes?.forEach(episode => {
@@ -334,11 +332,6 @@ const SeasonsAccordion = ({ tvId, tvName, seasons, activeSeason, setActiveSeason
       }
     });
   };
-
-  useEffect(() => {
-    const lastWatchedData = getLastWatchedEpisode(tvId);
-    setLastWatched(lastWatchedData);
-  }, [tvId]);
 
   const { data: seasonDetails, isLoading } = useQuery({
     queryKey: ['seasonDetails', tvId, activeSeason],

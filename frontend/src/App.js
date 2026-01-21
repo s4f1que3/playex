@@ -20,12 +20,10 @@ import FAQ from './components/common/legal/FAQ';
 import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
 import CookiesPolicyPage from './components/common/legal/CookiePolicyPage';
 import CookieConsent from './components/common/legal/CookiesConsent';
-import NewDomain from './components/common/legal/WelcomeNotice';
 import AdBlockPage from './components/common/legal/AdBlockPage';
 import SystemAnnouncement from './components/common/SystemAnnouncement';
 
 // Pages
-import HomePage from './pages/HomePage';
 import MoviesPage from './pages/MoviesPage';
 import TVShowsPage from './pages/TVShowsPage';
 import TrendingPage from './pages/TrendingPage';
@@ -35,9 +33,6 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import FavoritesPage from './pages/FavoritesPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ActorsPersonal from './pages/ActorsPersonal';
-import ActorCreditsPage from './pages/ActorCreditsPage';
-import RecommendedContentPage from './pages/RecommendedContentPage';
-import SimilarContentPage from './pages/SimilarContentPage';
 import EpisodesPage from './pages/EpisodesPage';
 import FanFavoritesPage from './pages/FanFavoritesPage';
 import CollectionsPage from './pages/CollectionsPage';

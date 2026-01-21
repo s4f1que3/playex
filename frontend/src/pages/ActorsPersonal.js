@@ -2,10 +2,9 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { tmdbApi, tmdbHelpers } from '../utils/api';
 import { parseMediaUrl } from '../utils/slugify';
-import Spinner from '../components/common/Spinner';
 import MediaCarousel from '../components/media/MediaCarousel';
 import { useActorResolver } from '../hooks/useActorResolver';
 import PremiumLoader from '../components/common/PremiumLoader';

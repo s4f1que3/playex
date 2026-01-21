@@ -1,6 +1,5 @@
 // File: frontend/src/components/media/MediaGrid.js
 import React, { lazy, Suspense } from 'react';
-import { Link } from 'react-router-dom';
 import Spinner from '../common/Spinner';
 import { useMediaQueries } from '../../hooks/useMediaQueries';
 import ActorCard from '../common/ActorCard';
@@ -33,8 +32,6 @@ const MediaGrid = ({
     if (isTablet) return 3;
     return 5;
   };
-  
-  const cols = getColumnCount();
   
   if (loading) {
     return (

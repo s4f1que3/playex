@@ -1,10 +1,9 @@
 // File: frontend/src/components/media/MediaActions.js
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../../utils/api';
 import ConfirmationDialog from '../common/ConfirmationDialog';
-import VideosButton from './VideosButton';
 import { 
   toggleFavorites, 
   toggleWatchlist, 
@@ -88,18 +87,6 @@ const MediaActions = ({
 }) => {
 
   const navigate = useNavigate();
-
-  const { data: firstEpisodeData } = useQuery({
-    queryKey: ['firstEpisode', media.id, activeSeason],
-    queryFn: async () => {
-      if (mediaType === 'tv') {
-        const response = await tmdbApi.get(`/tv/${media.id}/season/${activeSeason}`);
-        return response.data.episodes[0];
-      }
-      return null;
-    },
-    enabled: mediaType === 'tv'
-  });
   
   const [loading, setLoading] = useState({
     watchlist: false,
@@ -109,9 +96,7 @@ const MediaActions = ({
   const [favorites, setFavorites] = useState(isInFavorites(media.id, mediaType));
   const [dialog, setDialog] = useState({ isOpen: false, type: null });
   const [lastWatched, setLastWatched] = useState(null);
-  const [showVideosModal, setShowVideosModal] = useState(false);
   const [showVideosDialog, setShowVideosDialog] = useState(false);
-  const [selectedVideo, setSelectedVideo] = useState(null);
 
   const { data: videosData } = useQuery({
     queryKey: ['videos', media.id, mediaType],
@@ -121,7 +106,6 @@ const MediaActions = ({
   });
 
   const mediaProgress = getMediaProgress(media.id, mediaType);
-  const showContinueWatching = mediaProgress > 0 && mediaProgress < 100;
 
   useEffect(() => {
     const checkStatus = () => {

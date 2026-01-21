@@ -2,7 +2,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../../utils/api';
-import { useFilterParams } from '../../hooks/useFilterParams';
 
 const GenreFilter = ({ selectedGenres, setSelectedGenres, mediaType, showSelected }) => {
   const { data: genresData, isLoading } = useQuery({

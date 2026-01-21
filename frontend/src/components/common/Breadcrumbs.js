@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { tmdbApi } from '../../utils/api';
 
 const BreadcrumbItem = ({ children, to, isLast }) => {
@@ -99,8 +99,6 @@ const Breadcrumbs = () => {
         return 'Favorites';
       case 'movie':
         return 'Movie';
-      case 'tv':
-        return 'TV Show';
       case 'actor':
         return 'Actor';
       case 'player':

@@ -52,7 +52,7 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
   // Add effect to handle filter changes
   useEffect(() => {
     handleFilterChange();
-  }, [sortBy, selectedGenres, releaseYear]);
+  }, [sortBy, selectedGenres, releaseYear, handleFilterChange]);
 
   // Add click outside listener
   useEffect(() => {

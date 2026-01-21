@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { tmdbApi } from '../../utils/api';
-import Spinner from '../common/Spinner';
 import { AnimatePresence, motion } from 'framer-motion';
 
 const VideosButton = ({ mediaType, mediaId, seasonNumber = null }) => {

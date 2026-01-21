@@ -1,12 +1,10 @@
 // File: frontend/src/components/common/NewDomain.js
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import PrefetchLink from '../PrefetchLink';
 
 const WelcomeNotice = () => {
   const [showConsent, setShowConsent] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
     const hasConsented = localStorage.getItem('domainNoticeAccepted');
@@ -15,8 +13,6 @@ const WelcomeNotice = () => {
       setShowConsent(true);
     }
   }, []);
-  
-  const allowedPaths = ['/privacy', '/terms'];
   
   const handleAccept = () => {
     localStorage.setItem('domainNoticeAccepted', 'true');

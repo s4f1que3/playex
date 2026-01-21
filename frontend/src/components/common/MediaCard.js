@@ -1,6 +1,5 @@
 // File: frontend/src/components/common/MediaCard.js
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { tmdbHelpers } from '../../utils/api';
 import PrefetchLink from './PrefetchLink';
 import { commonStyles } from '../../styles/commonStyles';
@@ -24,9 +23,6 @@ const MediaCard = ({ media, showType = true }) => {
   const type = media_type || (title ? 'movie' : 'tv');
   const isPerson = type === 'person';
   
-  // Get appropriate route
-  const route = isPerson ? `/actor/${id}` : `/${type}/${id}`;
-  
   // Get appropriate image path
   const imagePath = isPerson ? profile_path : poster_path;
   
@@ -39,9 +35,6 @@ const MediaCard = ({ media, showType = true }) => {
     : (release_date || first_air_date 
         ? new Date(release_date || first_air_date).getFullYear() 
         : '');
-  
-  // Format rating (only for movies and TV shows)
-  const rating = !isPerson && vote_average ? (vote_average / 10) * 5 : 0;
   
   // Ensure we always use the TMDB ID when creating URLs
   const mediaUrl = createMediaUrl(

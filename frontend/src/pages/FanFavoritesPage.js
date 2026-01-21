@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { tmdbApi, getFanFavorites } from '../utils/api';
@@ -87,17 +87,6 @@ const FanFavoritesPage = () => {
       queryClient.invalidateQueries(['fanFavorites']);
     }
   }, [location.search]);
-
-  // Modify the URL handling function
-  const getUrlPath = (type) => {
-    return type === 'movies' ? 'movie' : 'tv';
-  };
-
-  // Add helper function to convert media type for URLs
-  const getMediaTypeForUrl = (type) => {
-    return type === 'movies' ? 'movie' : 'tv';
-  };
-
   const MediaTypeToggle = () => (
     <div className="w-full sm:w-auto flex items-center gap-3 bg-black/20 backdrop-blur-sm p-1.5 rounded-xl border border-white/5">
       <button

@@ -1,7 +1,6 @@
 //terms page
 import React from 'react';
 import { motion } from 'framer-motion';
-import ContactLink from '../ContactLink';
 import { Link } from 'react-router-dom';
 
 const Section = ({ title, children }) => (

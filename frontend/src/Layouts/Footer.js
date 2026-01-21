@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import PrefetchLink from '../components/common/PrefetchLink';
 import ContactLink from '../components/common/ContactLink';
 
@@ -67,7 +67,6 @@ const FooterSection = ({ title, links, delay }) => {
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const [hoveredSocial, setHoveredSocial] = useState(null);
 
   // Enhanced footer sections with icons
   const footerSections = [
@@ -239,7 +238,7 @@ const Footer = () => {
             <div className="flex flex-col md:flex-row justify-between items-center gap-5">
              <div className="flex items-center gap-4">
               <span className="text-sm text-gray-400">
-                <p>Created by <a href="https://www.linkedin.com/company/safique-solutions" target= "_blank" className="text-[#82BC87] hover:text-[#E4D981]">NOVA</a></p>
+                <p>Created by <a href="https://www.linkedin.com/company/safique-solutions" target="_blank" rel="noreferrer" className="text-[#82BC87] hover:text-[#E4D981]">NOVA</a></p>
               </span>
               </div>
             </div>
@@ -250,7 +249,7 @@ const Footer = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#82BC87]" />
                 </span>
-                <ContactLink className="hover:text-[#82BC87] transition-colors duration-300">
+                <ContactLink className="hover:text-[#82BC8i7] transition-colors duration-300">
                   contact.playex@gmail.com
                 </ContactLink>
               </div>

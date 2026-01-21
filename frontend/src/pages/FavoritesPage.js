@@ -7,7 +7,6 @@ import Spinner from '../components/common/Spinner';
 import ConfirmationDialog from '../components/common/ConfirmationDialog';
 import AlertDialog from '../components/common/AlertDialog';
 import { getFavorites, removeFromFavorites } from '../utils/LocalStorage';
-import { Link } from 'react-router-dom';
 
 const FavoritesPage = () => {
   const [mediaType, setMediaType] = useState('all');

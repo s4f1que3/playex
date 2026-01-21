@@ -2,10 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 const PremiumLoader = ({ size = 'default', text = 'Loading', overlay = false }) => {
-  const containerClasses = overlay 
-    ? "fixed inset-0 bg-black/90 backdrop-blur-xl z-50 flex items-center justify-center"
-    : "flex items-center justify-center";
-
   const getSizeClasses = () => {
     switch(size) {
       case 'small': return 'w-16 h-16';
