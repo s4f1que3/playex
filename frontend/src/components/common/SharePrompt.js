@@ -37,8 +37,7 @@ const SharePrompt = () => {
 
       // Send email notification
       try {
-        const apiBaseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-        await fetch(`${apiBaseUrl}/api/shares/share-notification`, {
+        await fetch('/api/shares/share-notification', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
