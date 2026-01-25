@@ -26,12 +26,15 @@ app.use(compression({
 app.use(cors({
   origin: [
     'http://localhost:3000',
+    'http://localhost:5000',
     'https://playex.vercel.app',
     'https://playex-frontend.vercel.app',
     'https://playex-backend.vercel.app',
+    'https://playex.cc',
+    'https://www.playex.cc',
     /\.vercel\.app$/  // Allow all Vercel subdomains
   ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   maxAge: 86400 // 24 hours
