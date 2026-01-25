@@ -1,35 +1,21 @@
 {
   "version": 2,
-  "buildCommand": "npm run build --prefix frontend",
+  "buildCommand": "cd frontend && npm run build",
   "outputDirectory": "frontend/build",
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "frontend/build"
-      }
-    },
-    {
-      "src": "backend/server.js",
-      "use": "@vercel/node"
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "@vercel/node@3"
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "backend/server.js"
-    }
-  ],
+  },
   "routes": [
     {
-      "src": "/api/:path*",
-      "dest": "/backend/server.js",
+      "src": "/api/(.*)",
+      "dest": "backend/server.js",
       "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"]
     },
     {
-      "src": "/:path*",
-      "dest": "/frontend/build/:path*"
+      "src": "/(.*)",
+      "dest": "frontend/build/$1"
     }
   ]
 }
