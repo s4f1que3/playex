@@ -152,9 +152,6 @@ const HeroSlider = ({ items = [] }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const sliderRef = React.useRef(null);
   
-  // Get the current item data to pass to content
-  const currentItem = items[currentSlide] || null;
-  
   const settings = {
     dots: true,
     infinite: true,

@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Listbox, Transition } from '@headlessui/react';
 import { tmdbApi, tmdbHelpers } from '../../utils/api';
-import { getLastWatchedEpisode } from '../../utils/LocalStorage';
 import VideosButton from './VideosButton';
 import { createMediaUrl } from '../../utils/slugify';
 
