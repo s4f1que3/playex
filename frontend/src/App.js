@@ -19,8 +19,8 @@ import TermsPage from './components/common/legal/TermsPage';
 import FAQ from './components/common/legal/FAQ';
 import PrivacyPolicyPage from './components/common/legal/PrivacyPolicyPage';
 import CookiesPolicyPage from './components/common/legal/CookiePolicyPage';
-import CookieConsent from './components/common/legal/CookiesConsent';
 import AdBlockPage from './components/common/legal/AdBlockPage';
+import SharePrompt from './components/common/SharePrompt';
 import SystemAnnouncement from './components/common/SystemAnnouncement';
 
 // Pages
@@ -128,10 +128,11 @@ function App() {
           <Router>
             <div className={`transition-opacity duration-500 ${loading ? 'opacity-0' : 'opacity-100'}`}>
               <header>
-                <CookieConsent />
                 <WelcomeNotice />
                 <SystemAnnouncement />
               </header>
+
+              <SharePrompt />
 
               <Routes>
                 {/* general routes */}

@@ -17,16 +17,28 @@ const RatingBadge = ({ rating }) => (
 );
 
 const SlideContent = ({ item, isActive }) => {
+  // Ensure item exists before trying to access properties
+  if (!item) {
+    return null;
+  }
+
   const mediaType = item.media_type || (item.title ? 'movie' : 'tv');
   const releaseYear = item.release_date || item.first_air_date 
     ? new Date(item.release_date || item.first_air_date).getFullYear() 
     : '';
 
   const getMediaLink = (type) => {
-    const slug = createMediaUrl(mediaType, item.id, item.title || item.name).split('/').pop();
-    return type === 'info' 
-      ? `/${mediaType}/${slug}`
-      : `/player/${mediaType}${mediaType === 'tv' ? `/${slug}/1/1` : `/${slug}`}`;
+    const title = item.title || item.name;
+    const id = item.id;
+    const slug = createMediaUrl(mediaType, id, title).split('/').pop();
+    
+    if (type === 'info') {
+      return `/${mediaType}/${slug}`;
+    } else {
+      return mediaType === 'tv' 
+        ? `/player/${mediaType}/${slug}/1/1`
+        : `/player/${mediaType}/${slug}`;
+    }
   };
 
   return (
@@ -34,9 +46,9 @@ const SlideContent = ({ item, isActive }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="container mx-auto px-4"
+      className="container mx-auto px-4 relative z-40"
     >
-      <div className="max-w-xl">
+      <div className="max-w-xl relative z-40">
         {/* Media Type Badge */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -90,12 +102,12 @@ const SlideContent = ({ item, isActive }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
           transition={{ delay: 0.9, duration: 0.5 }}
-          className="flex flex-wrap gap-4"
+          className="flex flex-wrap gap-4 relative z-50"
         >
           <Link
             to={getMediaLink('info')}
             className="group relative overflow-hidden px-8 py-4 rounded-xl bg-[#82BC87] hover:bg-[#6da972] 
-                     transition-all duration-500 flex items-center gap-2"
+                     transition-all duration-500 flex items-center gap-2 z-50 cursor-pointer"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent 
                           transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -114,7 +126,7 @@ const SlideContent = ({ item, isActive }) => {
           <Link
             to={getMediaLink('watch')}
             className="group relative overflow-hidden px-8 py-4 rounded-xl bg-white/10 hover:bg-white/20 
-                     backdrop-blur-sm transition-all duration-500 flex items-center gap-2"
+                     backdrop-blur-sm transition-all duration-500 flex items-center gap-2 z-50 cursor-pointer"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent 
                           transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
@@ -182,29 +194,33 @@ const HeroSlider = ({ items = [] }) => {
     <div className="relative min-h-screen overflow-hidden">
       <Slider {...settings}>
         {items.map((item, index) => (
-          <div key={item.id} className="relative min-h-screen"> {/* Changed from min-h-[80vh] to min-h-screen */}
+          <div key={`${item.id}-${index}`} className="relative min-h-screen">
             {/* Backdrop Container */}
-            <div className="absolute inset-0 w-full h-screen"> {/* Added w-full h-screen */}
+            <div className="absolute inset-0 w-full h-screen">
               <motion.div
                 initial={{ scale: 1.1 }}
                 animate={{ 
                   scale: currentSlide === index ? 1 : 1.1,
-                  filter: imageLoaded ? 'none' : 'blur(10px)'
+                  filter: imageLoaded && currentSlide === index ? 'none' : 'blur(10px)'
                 }}
                 transition={{ 
                   scale: { duration: 8, ease: "easeOut" },
                   filter: { duration: 0.5 }
                 }}
-                className="relative h-full w-full" // Added w-full
+                className="relative h-full w-full"
               >
                 <img
                   src={tmdbHelpers.getImageUrl(item.backdrop_path, 'original')}
                   alt={item.title || item.name}
                   className="w-full h-full object-cover"
                   loading={index === 0 ? "eager" : "lazy"}
-                  onLoad={() => setImageLoaded(true)}
+                  onLoad={() => {
+                    if (currentSlide === index) {
+                      setImageLoaded(true);
+                    }
+                  }}
                   style={{ 
-                    objectPosition: '50% 15%', // Adjusted to show more of the upper part
+                    objectPosition: '50% 15%',
                     imageRendering: 'crisp-edges',
                     WebkitBackfaceVisibility: 'hidden',
                     backfaceVisibility: 'hidden'
@@ -230,9 +246,11 @@ const HeroSlider = ({ items = [] }) => {
               </motion.div>
             </div>
 
-            {/* Content Container */}
-            <div className="absolute inset-0 flex items-center">
-              <SlideContent item={item} isActive={currentSlide === index} />
+            {/* Content Container - Render all slides but only show active one */}
+            <div className="absolute inset-0 flex items-center z-30">
+              <div className={`w-full ${currentSlide === index ? 'pointer-events-auto' : 'pointer-events-none'}`}>
+                <SlideContent item={item} isActive={currentSlide === index} />
+              </div>
             </div>
           </div>
         ))}

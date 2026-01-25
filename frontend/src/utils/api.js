@@ -14,74 +14,60 @@ const API_URL = process.env.NODE_ENV === 'production'
   ? 'https://playex-backend.vercel.app'
   : 'http://localhost:5000';
 
-// Remove any cached values that might be using the old URL
-localStorage.removeItem('api_url');
+// Request deduplication cache
+const requestCache = new Map();
+const REQUEST_DEDUP_TTL = 500; // 500ms window for request deduplication
 
-// Add more detailed logging
-console.log('Environment:', process.env.NODE_ENV);
-console.log('API URL:', API_URL);
-console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
-
-// Log the API URL for debugging
-console.log('API connecting to:', API_URL);
-
-// Create the axios instance
+// Create the axios instance with optimized config
 const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
   },
-  withCredentials: true
+  withCredentials: true,
+  timeout: 10000 // 10s timeout
 });
 
-// Add a request interceptor to dynamically set token for each request
+// Request interceptor - add token and implement request deduplication
 axiosInstance.interceptors.request.use(
   (config) => {
-    // Get the current token for every request (will grab the most recent token)
     const token = localStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    console.log('Request:', {
-      url: config.url,
-      method: config.method,
-      data: config.data,
-      baseURL: config.baseURL
-    });
+    
+    // Deduplication for GET requests
+    if (config.method === 'get') {
+      const cacheKey = `${config.method}:${config.url}`;
+      const cached = requestCache.get(cacheKey);
+      
+      if (cached && Date.now() - cached.time < REQUEST_DEDUP_TTL) {
+        config.__cachedResponse = cached.promise;
+      } else {
+        const promise = Promise.resolve(null);
+        requestCache.set(cacheKey, { promise, time: Date.now() });
+        
+        // Clean up old entries
+        if (requestCache.size > 100) {
+          const firstKey = requestCache.keys().next().value;
+          requestCache.delete(firstKey);
+        }
+      }
+    }
+    
     return config;
   },
-  (error) => {
-    console.error('Request Error:', error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Add a response interceptor to handle token expiration
+// Response interceptor - handle errors and token expiration
 axiosInstance.interceptors.response.use(
-  (response) => {
-    console.log('Response:', {
-      status: response.status,
-      data: response.data,
-      url: response.config.url
-    });
-    return response;
-  },
+  (response) => response,
   (error) => {
-    // Log detailed error information
-    console.error('Response Error:', {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-      url: error.config?.url
-    });
-    
-    if (error.response && error.response.status === 401) {
-      // Token expired or invalid, log the user out
-      console.log('Authentication error - logging out user');
+    if (error.response?.status === 401) {
       localStorage.removeItem('token');
       
-      // Redirect to login page if not already there
-      if (!window.location.pathname.includes('/login')) {
+      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
         window.location.href = '/login';
       }
     }
@@ -202,14 +188,47 @@ export const api = {
   }
 };
 
-// TMDB API client
+// TMDB API client with built-in caching
+const tmdbCache = new Map();
+const TMDB_CACHE_TTL = 1000 * 60 * 60; // 1 hour
+
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
   headers: {
     'accept': 'application/json',
     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NzlhNjBmYmU3YzRlNTg3NzI3OWNhZTU1OWQ5Y2Y1YyIsIm5iZiI6MTczODQ3NTAzNS4xOTcsInN1YiI6IjY3OWYwNjFiYWM1YTc5NTFiOWNiNWNhYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.w0q9fpYLs93YSUdkNENpaR3kWjfk27kFhQj6ypEkrzE'
-  }
+  },
+  timeout: 10000
 });
+
+// Add caching interceptor to TMDB API
+tmdbApi.interceptors.response.use(
+  (response) => {
+    // Cache successful GET requests
+    if (response.config.method === 'get') {
+      const cacheKey = `${response.config.url}`;
+      tmdbCache.set(cacheKey, {
+        data: response.data,
+        timestamp: Date.now()
+      });
+    }
+    return response;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Wrap tmdbApi.get to check cache first
+const originalGet = tmdbApi.get.bind(tmdbApi);
+tmdbApi.get = function(url, config) {
+  const cacheKey = url;
+  const cached = tmdbCache.get(cacheKey);
+  
+  if (cached && Date.now() - cached.timestamp < TMDB_CACHE_TTL) {
+    return Promise.resolve({ data: cached.data, config, status: 200, statusText: 'OK (cached)' });
+  }
+  
+  return originalGet(url, config);
+};
 
 // Helper functions for common TMDB API calls
 export const tmdbHelpers = {
@@ -258,7 +277,15 @@ export const tmdbHelpers = {
 
 const getFanFavorites = async (mediaType = 'tv') => {
   try {
-    // First fetch to get total pages
+    // Use cache first
+    const cacheKey = `fanFavorites_${mediaType}`;
+    const cached = tmdbCache.get(cacheKey);
+    
+    if (cached && Date.now() - cached.timestamp < TMDB_CACHE_TTL) {
+      return cached.data;
+    }
+    
+    // Fetch first page to determine pagination
     const firstResponse = await tmdbApi.get(`/account/679f061bac5a7951b9cb5caa/watchlist/${mediaType}`, {
       params: {
         language: 'en-US',
@@ -270,23 +297,34 @@ const getFanFavorites = async (mediaType = 'tv') => {
     const totalPages = firstResponse.data.total_pages;
     let allResults = [...firstResponse.data.results];
 
-    // Fetch remaining pages if any
+    // Batch remaining pages (max 3 concurrent requests)
     if (totalPages > 1) {
+      const batchSize = 3;
       const remainingPages = Array.from({ length: totalPages - 1 }, (_, i) => i + 2);
-      const pagePromises = remainingPages.map(page =>
-        tmdbApi.get(`/account/679f061bac5a7951b9cb5caa/watchlist/${mediaType}`, {
-          params: {
-            language: 'en-US',
-            page: page,
-            sort_by: 'created_at.asc'
-          }
-        })
-      );
+      
+      for (let i = 0; i < remainingPages.length; i += batchSize) {
+        const batch = remainingPages.slice(i, i + batchSize);
+        const pagePromises = batch.map(page =>
+          tmdbApi.get(`/account/679f061bac5a7951b9cb5caa/watchlist/${mediaType}`, {
+            params: {
+              language: 'en-US',
+              page: page,
+              sort_by: 'created_at.asc'
+            }
+          })
+        );
 
-      const responses = await Promise.all(pagePromises);
-      const additionalResults = responses.flatMap(response => response.data.results);
-      allResults = [...allResults, ...additionalResults];
+        const responses = await Promise.all(pagePromises);
+        const additionalResults = responses.flatMap(response => response.data.results);
+        allResults = [...allResults, ...additionalResults];
+      }
     }
+
+    // Cache the results
+    tmdbCache.set(cacheKey, {
+      data: allResults,
+      timestamp: Date.now()
+    });
 
     return allResults;
   } catch (error) {
@@ -295,26 +333,29 @@ const getFanFavorites = async (mediaType = 'tv') => {
   }
 };
 
-// Add prefetch helper
+// Add prefetch helper - only prefetch when explicitly called
 export const prefetchInitialData = async () => {
   try {
-    const promises = [
-      tmdbApi.get('/movie/popular'),
-      tmdbApi.get('/tv/popular'),
-      tmdbApi.get('/trending/all/day'),
-      tmdbApi.get('/genre/movie/list'),
-      tmdbApi.get('/genre/tv/list')
-    ];
-    await Promise.all(promises);
+    // Only prefetch if not already cached
+    const requiredKeys = ['/movie/popular', '/tv/popular', '/trending/all/day', '/genre/movie/list', '/genre/tv/list'];
+    const allCached = requiredKeys.every(key => tmdbCache.has(key));
+    
+    if (!allCached) {
+      const promises = [
+        tmdbApi.get('/movie/popular'),
+        tmdbApi.get('/tv/popular'),
+        tmdbApi.get('/trending/all/day'),
+        tmdbApi.get('/genre/movie/list'),
+        tmdbApi.get('/genre/tv/list')
+      ];
+      await Promise.all(promises);
+    }
   } catch (error) {
-    console.error('Error prefetching initial data:', error);
+    // Silent fail - prefetch is non-critical
   }
 };
 
-// Initialize prefetch on module load
-prefetchInitialData();
-
-// Add to exports
+// Export helper
 export {
   getFanFavorites
 };

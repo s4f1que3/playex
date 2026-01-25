@@ -4,14 +4,25 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const compression = require('compression');
 const emailRoutes = require('./routes/emailRoutes');
+const sharesRoutes = require('./routes/sharesRoutes');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
 const app = express();
 
-// Middleware
-app.use(helmet());
+// Middleware - ordered for optimal performance
+app.use(helmet({
+  contentSecurityPolicy: false, // Configure this based on your needs
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
+
+app.use(compression({
+  level: 6, // Balance between compression and CPU
+  threshold: 1024 // Only compress responses larger than 1KB
+}));
+
 app.use(cors({
   origin: [
     'http://localhost:3000',
@@ -26,22 +37,28 @@ app.use(cors({
   maxAge: 86400 // 24 hours
 }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan('dev'));
+// Body parsing with size limits
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
-// Debug middleware
+// Conditional logging - only in development
+if (!isProduction) {
+  app.use(morgan('dev'));
+}
+
+// Request ID middleware for tracking
 app.use((req, res, next) => {
-  console.log('Incoming request:', {
-    method: req.method,
-    path: req.path,
-    body: req.body,
-    headers: req.headers
-  });
+  req.id = Math.random().toString(36).substr(2, 9);
+  res.setHeader('X-Request-ID', req.id);
   next();
 });
 
-// Routes
+// Health check route (no logging)
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// Root route
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Playex API is running',
@@ -50,18 +67,34 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/health', (req, res) => {
-  res.status(200).send('OK');
+// API routes
+app.use('/api/email', emailRoutes);
+app.use('/api/shares', sharesRoutes);
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ 
+    message: 'Route not found',
+    path: req.path
+  });
 });
 
-app.use('/api/email', emailRoutes);
-
-// Error handler
+// Error handler - improved
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
-  res.status(500).json({ 
-    message: 'Something went wrong!',
-    error: process.env.NODE_ENV === 'development' ? err.message : null
+  const status = err.status || 500;
+  const message = isProduction ? 'Internal Server Error' : err.message;
+  
+  console.error(`[${req.id}] Error:`, {
+    status,
+    message: err.message,
+    path: req.path,
+    method: req.method
+  });
+  
+  res.status(status).json({ 
+    message,
+    requestId: req.id,
+    ...(process.env.NODE_ENV === 'development' && { error: err.message })
   });
 });
 
@@ -85,9 +118,8 @@ const startServer = async (initialPort) => {
 
   try {
     const port = await findAvailablePort(initialPort);
-    app.listen(port, () => {
+    app.listen(port, '0.0.0.0', () => {
       console.log(`Server running on port ${port}`);
-      console.log(`API URL: http://localhost:${port}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

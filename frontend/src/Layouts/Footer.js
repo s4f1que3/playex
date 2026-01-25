@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import PrefetchLink from '../components/common/PrefetchLink';
 import ContactLink from '../components/common/ContactLink';
 
-const FooterSection = ({ title, links, delay }) => {
+// Memoize FooterSection to prevent re-renders
+const FooterSection = React.memo(({ title, links, delay }) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
 
   return (
     <motion.div
@@ -13,8 +17,8 @@ const FooterSection = ({ title, links, delay }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay }}
       className="relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Premium section header */}
       <div className="flex items-center gap-3 mb-6">
@@ -28,7 +32,7 @@ const FooterSection = ({ title, links, delay }) => {
         <div className="h-px flex-1 bg-gradient-to-l from-[#82BC87]/20 to-transparent" />
       </div>
 
-      {/* Enhanced navigation links */}
+      {/* Navigation links */}
       <div className="space-y-3">
         {links.map((link, idx) => (
           <motion.div
@@ -63,13 +67,20 @@ const FooterSection = ({ title, links, delay }) => {
       </div>
     </motion.div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison: only re-render if title, links content, or delay changes meaningfully
+  return prevProps.title === nextProps.title && 
+         prevProps.delay === nextProps.delay &&
+         JSON.stringify(prevProps.links) === JSON.stringify(nextProps.links);
+});
+
+FooterSection.displayName = 'FooterSection';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
 
-  // Enhanced footer sections with icons
-  const footerSections = [
+  // Memoize footer sections to prevent re-creation on each render
+  const footerSections = useMemo(() => [
     {
       title: "Quick Links",
       links: [
@@ -78,7 +89,6 @@ const Footer = () => {
         { to: "/trending", label: "Trending", icon: "🔥" },
         { to: "/fan-favorites", label: "Fan Favorites", icon: "⭐" },
         { to: "/AdBlockers", label: "Ad Blockers", icon: "🚫" }
-
       ]
     },
     {
@@ -97,7 +107,13 @@ const Footer = () => {
         { to: "/cookies", label: "Cookies Policy", icon: "🍪" }
       ]
     }
-  ];
+  ], []);
+
+  const socialLinks = useMemo(() => [
+    { icon: "github", url: "#" },
+    { icon: "twitter", url: "#" },
+    { icon: "discord", url: "#" }
+  ], []);
 
   return (
     <footer className="relative">
@@ -105,7 +121,7 @@ const Footer = () => {
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,...')] opacity-[0.02]" />
         
-        {/* Enhanced gradient orbs */}
+        {/* Enhanced gradient orbs - using reduced motion for performance */}
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -186,11 +202,7 @@ const Footer = () => {
               Your premier destination for streaming movies and TV shows with an immersive experience.
             </p>
             <div className="pt-4 flex items-center gap-4">
-              {[
-                { icon: "github", url: "#" },
-                { icon: "twitter", url: "#" },
-                { icon: "discord", url: "#" }
-              ].map((social) => (
+              {socialLinks.map((social) => (
                 <motion.a
                   key={social.icon}
                   whileHover={{ scale: 1.1, y: -2 }}
@@ -249,7 +261,7 @@ const Footer = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-[#82BC87]" />
                 </span>
-                <ContactLink className="hover:text-[#82BC8i7] transition-colors duration-300">
+                <ContactLink className="hover:text-[#82BC87] transition-colors duration-300">
                   contact.playex@gmail.com
                 </ContactLink>
               </div>
@@ -261,4 +273,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default React.memo(Footer);

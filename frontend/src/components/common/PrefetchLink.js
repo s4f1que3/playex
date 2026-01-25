@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { api, tmdbApi } from '../../utils/api';
-import { cacheManager } from '../../utils/cacheManager';
+import cacheManager from '../../utils/cacheManager';
 
 const PrefetchLink = ({ to, children, className, prefetch = true, ...props }) => {
   const handlePrefetch = useCallback(async () => {
