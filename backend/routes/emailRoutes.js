@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   secure: true,
   auth: {
     user: 'contact.playex@gmail.com',
-    pass: process.env.EMAIL_PASSWORD
+    pass: process.env.GMAIL_PASSWORD
   },
   tls: {
     // Do not fail on invalid certs
@@ -35,10 +35,10 @@ router.get('/test-connection', async (req, res) => {
 // Comprehensive email test route
 router.get('/test-email', async (req, res) => {
   try {
-    // First check if EMAIL_PASSWORD is loaded
+    // First check if GMAIL_PASSWORD is loaded
     console.log('Environment check:', {
-      EMAIL_PASSWORD_EXISTS: !!process.env.EMAIL_PASSWORD,
-      EMAIL_PASSWORD_LENGTH: process.env.EMAIL_PASSWORD ? process.env.EMAIL_PASSWORD.length : 0,
+      GMAIL_PASSWORD_EXISTS: !!process.env.GMAIL_PASSWORD,
+      GMAIL_PASSWORD_LENGTH: process.env.GMAIL_PASSWORD ? process.env.GMAIL_PASSWORD.length : 0,
       NODE_ENV: process.env.NODE_ENV
     });
     
@@ -104,7 +104,7 @@ router.post('/send-request', async (req, res) => {
       host: 'smtp.gmail.com',
       port: 465,
       user: 'contact.playex@gmail.com',
-      passwordLength: process.env.EMAIL_PASSWORD?.length
+      passwordLength: process.env.GMAIL_PASSWORD?.length
     });
 
     const info = await transporter.sendMail({
