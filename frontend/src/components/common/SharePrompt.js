@@ -37,7 +37,9 @@ const SharePrompt = () => {
 
       // Send email notification
       try {
-        const apiBaseUrl = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        const apiBaseUrl = process.env.NODE_ENV === 'production'
+          ? 'https://playex-backend.vercel.app'
+          : 'http://localhost:5000';
         await fetch(`${apiBaseUrl}/api/shares/share-notification`, {
           method: 'POST',
           headers: {
