@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const TMDB_API_KEY = process.env.TMDB_API_KEY || '879a60fbe7c4e5877279cae559d9cf5c';
+const TMDB_API_KEY = process.env.TMDB_API_KEY || '08e475403f00932401951b7995894d17';
 const TMDB_API_URL = process.env.TMDB_API_URL || 'https://api.themoviedb.org/3';
 
 const tmdbClient = axios.create({

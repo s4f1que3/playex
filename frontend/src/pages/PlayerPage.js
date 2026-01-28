@@ -20,7 +20,7 @@ const PlayerPage = ({ mediaType }) => {
   const NOVA_TEMPORARILY_UNAVAILABLE = true;
   
   const [playerType, setPlayerType] = useState(() => {
-    return localStorage.getItem('preferredPlayer') || 'vidlink';
+    return localStorage.getItem('preferredPlayer') || 'mapple';
   });
   
   const [showUnavailableModal, setShowUnavailableModal] = useState(false);

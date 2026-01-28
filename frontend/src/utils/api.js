@@ -192,11 +192,23 @@ export const api = {
 const tmdbCache = new Map();
 const TMDB_CACHE_TTL = 1000 * 60 * 60; // 1 hour
 
+// Get TMDB API key from environment variables
+const TMDB_API_KEY = process.env.REACT_APP_TMDB_API_KEY || 
+                      process.env.NEXT_PUBLIC_TMDB_API_KEY || 
+                      '';
+
+// Validate API key is set
+if (!TMDB_API_KEY) {
+  console.warn('TMDB API Key is not configured. Set REACT_APP_TMDB_API_KEY or NEXT_PUBLIC_TMDB_API_KEY environment variable.');
+}
+
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
+  params: {
+    api_key: TMDB_API_KEY
+  },
   headers: {
-    'accept': 'application/json',
-    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NzlhNjBmYmU3YzRlNTg3NzI3OWNhZTU1OWQ5Y2Y1YyIsIm5iZiI6MTczODQ3NTAzNS4xOTcsInN1YiI6IjY3OWYwNjFiYWM1YTc5NTFiOWNiNWNhYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.w0q9fpYLs93YSUdkNENpaR3kWjfk27kFhQj6ypEkrzE'
+    'accept': 'application/json'
   },
   timeout: 10000
 });
