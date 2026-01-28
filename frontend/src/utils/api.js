@@ -202,11 +202,18 @@ if (!TMDB_API_KEY) {
   console.warn('TMDB API Key is not configured. Set REACT_APP_TMDB_API_KEY or NEXT_PUBLIC_TMDB_API_KEY environment variable.');
 }
 
+// Use backend proxy in production, direct TMDB API in development
+const TMDB_BASE_URL = process.env.NODE_ENV === 'production'
+  ? `${API_URL}/api/tmdb`
+  : 'https://api.themoviedb.org/3';
+
+const TMDB_PARAMS = process.env.NODE_ENV === 'production'
+  ? {} // Backend proxy handles authentication
+  : { api_key: TMDB_API_KEY };
+
 export const tmdbApi = axios.create({
-  baseURL: 'https://api.themoviedb.org/3',
-  params: {
-    api_key: TMDB_API_KEY
-  },
+  baseURL: TMDB_BASE_URL,
+  params: TMDB_PARAMS,
   headers: {
     'accept': 'application/json'
   },
