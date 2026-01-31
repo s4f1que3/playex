@@ -230,7 +230,7 @@ tmdbApi.interceptors.response.use(
 
 // Wrap tmdbApi.get to check cache first
 const originalGet = tmdbApi.get.bind(tmdbApi);
-tmdbApi.get = function(url, config) {
+tmdbApi.get = function(url, config = {}) {
   const cacheKey = url;
   const cached = tmdbCache.get(cacheKey);
   
@@ -238,7 +238,16 @@ tmdbApi.get = function(url, config) {
     return Promise.resolve({ data: cached.data, config, status: 200, statusText: 'OK (cached)' });
   }
   
-  return originalGet(url, config);
+  // Ensure API key is always included in params
+  const mergedConfig = {
+    ...config,
+    params: {
+      api_key: '08e475403f00932401951b7995894d17',
+      ...config.params
+    }
+  };
+  
+  return originalGet(url, mergedConfig);
 };
 
 // Helper functions for common TMDB API calls
