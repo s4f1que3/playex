@@ -7,6 +7,7 @@ const morgan = require('morgan');
 const compression = require('compression');
 const emailRoutes = require('./routes/emailRoutes');
 const sharesRoutes = require('./routes/sharesRoutes');
+const tmdbRoutes = require('./routes/tmdbRoutes');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -73,6 +74,7 @@ app.get('/', (req, res) => {
 // API routes
 app.use('/api/email', emailRoutes);
 app.use('/api/shares', sharesRoutes);
+app.use('/api/tmdb', tmdbRoutes);
 
 // 404 handler
 app.use((req, res) => {

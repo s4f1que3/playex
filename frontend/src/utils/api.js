@@ -194,9 +194,11 @@ const TMDB_CACHE_TTL = 1000 * 60 * 60; // 1 hour
 
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
+  params: {
+    api_key: '08e475403f00932401951b7995894d17'
+  },
   headers: {
-    'accept': 'application/json',
-    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4NzlhNjBmYmU3YzRlNTg3NzI3OWNhZTU1OWQ5Y2Y1YyIsIm5iZiI6MTczODQ3NTAzNS4xOTcsInN1YiI6IjY3OWYwNjFiYWM1YTc5NTFiOWNiNWNhYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.w0q9fpYLs93YSUdkNENpaR3kWjfk27kFhQj6ypEkrzE'
+    'accept': 'application/json'
   },
   timeout: 10000
 });
@@ -214,7 +216,16 @@ tmdbApi.interceptors.response.use(
     }
     return response;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('TMDB API Error:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      message: error.message,
+      data: error.response?.data
+    });
+    return Promise.reject(error);
+  }
 );
 
 // Wrap tmdbApi.get to check cache first
