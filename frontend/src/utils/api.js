@@ -1,4 +1,3 @@
-// File: frontend/src/utils/api.js
 import axios from 'axios';
 import { 
   getFavorites, 
@@ -9,65 +8,101 @@ import {
   removeFromWatchlist
 } from './LocalStorage';
 
-// Force the API URL to always use Vercel in production
-const API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://playex-backend.vercel.app'
-  : 'http://localhost:5000';
+// Helper function to safely access localStorage
+const safeLocalStorage = {
+  getItem: (key) => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem(key);
+    }
+    return null;
+  },
+  setItem: (key, value) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(key, value);
+    }
+  },
+  removeItem: (key) => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem(key);
+    }
+  }
+};
 
-// Request deduplication cache
-const requestCache = new Map();
-const REQUEST_DEDUP_TTL = 500; // 500ms window for request deduplication
+// Update API URL configuration
+const API_URL = process.env.NEXT_PUBLIC_API_URL || (
+  process.env.NODE_ENV === 'production' 
+    ? 'https://playex-backend.vercel.app'
+    : 'http://localhost:5000'
+);
 
-// Create the axios instance with optimized config
+// Remove any cached values that might be using the old URL
+safeLocalStorage.removeItem('api_url');
+
+// Add more detailed logging
+console.log('Environment:', process.env.NODE_ENV);
+console.log('API URL:', API_URL);
+console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
+
+// Log the API URL for debugging
+console.log('API connecting to:', API_URL);
+
+// Create the axios instance with updated baseURL
 const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json'
   },
-  withCredentials: true,
-  timeout: 10000 // 10s timeout
+  withCredentials: true
 });
 
-// Request interceptor - add token and implement request deduplication
+// Add a request interceptor to dynamically set token for each request
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    // Get the current token for every request (will grab the most recent token)
+    const token = safeLocalStorage.getItem('token');
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    
-    // Deduplication for GET requests
-    if (config.method === 'get') {
-      const cacheKey = `${config.method}:${config.url}`;
-      const cached = requestCache.get(cacheKey);
-      
-      if (cached && Date.now() - cached.time < REQUEST_DEDUP_TTL) {
-        config.__cachedResponse = cached.promise;
-      } else {
-        const promise = Promise.resolve(null);
-        requestCache.set(cacheKey, { promise, time: Date.now() });
-        
-        // Clean up old entries
-        if (requestCache.size > 100) {
-          const firstKey = requestCache.keys().next().value;
-          requestCache.delete(firstKey);
-        }
-      }
-    }
-    
+    console.log('Request:', {
+      url: config.url,
+      method: config.method,
+      data: config.data,
+      baseURL: config.baseURL
+    });
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    console.error('Request Error:', error);
+    return Promise.reject(error);
+  }
 );
 
-// Response interceptor - handle errors and token expiration
+// Add a response interceptor to handle token expiration
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('Response:', {
+      status: response.status,
+      data: response.data,
+      url: response.config.url
+    });
+    return response;
+  },
   (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
+    // Log detailed error information
+    console.error('Response Error:', {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      url: error.config?.url
+    });
+    
+    if (error.response && error.response.status === 401) {
+      // Token expired or invalid, log the user out
+      console.log('Authentication error - logging out user');
+      safeLocalStorage.removeItem('token');
       
-      if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+      // Redirect to login page if not already there
+      if (!window.location.pathname.includes('/login')) {
         window.location.href = '/login';
       }
     }
@@ -194,14 +229,24 @@ const TMDB_CACHE_TTL = 1000 * 60 * 60; // 1 hour
 
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
-  params: {
-    api_key: '08e475403f00932401951b7995894d17'
-  },
   headers: {
     'accept': 'application/json'
   },
   timeout: 10000
 });
+
+// Add request interceptor to ensure API key is always included
+tmdbApi.interceptors.request.use(
+  (config) => {
+    // Always include the API key in params
+    config.params = {
+      api_key: '08e475403f00932401951b7995894d17',
+      ...config.params
+    };
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Add caching interceptor to TMDB API
 tmdbApi.interceptors.response.use(

@@ -9,7 +9,7 @@ const TMDB_API_URL = process.env.TMDB_API_URL || 'https://api.themoviedb.org/3';
 const tmdbClient = axios.create({
   baseURL: TMDB_API_URL,
   params: {
-    api_key: TMDB_API_KEY
+    api_key: '08e475403f00932401951b7995894d17'
   }
 });
 
