@@ -1,21 +1,5 @@
 {
-  "version": 2,
-  "buildCommand": "cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/build",
-  "installCommand": "npm install --prefix frontend",
-  "framework": null,
-  "routes": [
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-    {
-      "src": "/(.*\\.(js|css|ico|png|jpg|svg|json|txt|xml))",
-      "dest": "/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
+  "github": {
+    "silent": true
+  }
 }
