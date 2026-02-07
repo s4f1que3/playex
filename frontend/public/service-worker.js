@@ -1,7 +1,7 @@
 // Service Worker for offline caching and performance optimization
 // frontend/public/service-worker.js
 
-const CACHE_NAME = 'playex-v1';
+const CACHE_NAME = 'playex-v2-tmdb-fix'; // Updated to force cache clear
 const urlsToCache = [
   '/',
   '/index.html',

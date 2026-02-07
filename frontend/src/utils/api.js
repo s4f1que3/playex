@@ -230,7 +230,9 @@ const TMDB_CACHE_TTL = 1000 * 60 * 60; // 1 hour
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
   headers: {
-    'accept': 'application/json'
+    'accept': 'application/json',
+    'Authorization': undefined,  // Explicitly prevent Authorization header
+    'authorization': undefined   // Prevent lowercase version
   },
   timeout: 10000
 });
@@ -238,11 +240,26 @@ export const tmdbApi = axios.create({
 // Add request interceptor to ensure API key is always included
 tmdbApi.interceptors.request.use(
   (config) => {
+    // CRITICAL: Remove any Authorization header - TMDB v3 API uses api_key parameter only
+    if (config.headers.Authorization) {
+      delete config.headers.Authorization;
+    }
+    if (config.headers.authorization) {
+      delete config.headers.authorization;
+    }
+    
     // Always include the API key in params
     config.params = {
       api_key: '08e475403f00932401951b7995894d17',
       ...config.params
     };
+    
+    console.log('TMDB API Request:', {
+      url: config.url,
+      params: config.params,
+      headers: config.headers
+    });
+    
     return config;
   },
   (error) => Promise.reject(error)
@@ -283,12 +300,17 @@ tmdbApi.get = function(url, config = {}) {
     return Promise.resolve({ data: cached.data, config, status: 200, statusText: 'OK (cached)' });
   }
   
-  // Ensure API key is always included in params
+  // Ensure API key is always included in params and NO Authorization header
   const mergedConfig = {
     ...config,
     params: {
       api_key: '08e475403f00932401951b7995894d17',
       ...config.params
+    },
+    headers: {
+      ...config.headers,
+      Authorization: undefined,  // Explicitly remove Authorization
+      authorization: undefined   // Remove lowercase version too
     }
   };
   
