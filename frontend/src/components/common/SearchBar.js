@@ -6,6 +6,7 @@ import { tmdbApi } from '../../utils/api';
 import { searchCollections } from '../../utils/tmdbHelpers';
 import { createMediaUrl } from '../../utils/slugify';
 import { findSimilarTitles, getSearchSuggestions } from '../../utils/search';
+import i18n from '../../i18n';
 
 const SearchBar = ({ isMobile = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -167,7 +168,7 @@ const SearchBar = ({ isMobile = false }) => {
             <input
               ref={searchInputRef}
               type="text"
-              placeholder={isMobile ? "Search..." : "Search media, collections, actors..."}
+              placeholder={isMobile ? i18n.t('search', 'Search...') : i18n.t('searchPlaceholder', 'Search media, collections, actors...')}
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);

@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import PrefetchLink from '../components/common/PrefetchLink';
 import ContactLink from '../components/common/ContactLink';
+import LanguageSwitcher from '../components/common/LanguageSwitcher';
+import WinterToggle from '../components/common/WinterToggle';
+import TranslatedText from '../components/common/TranslatedText';
 
 // Memoize FooterSection to prevent re-renders
 const FooterSection = React.memo(({ title, links, delay }) => {
@@ -27,7 +30,7 @@ const FooterSection = React.memo(({ title, links, delay }) => {
           className="h-px flex-1 bg-gradient-to-r from-[#82BC87]/20 to-transparent"
         />
         <h3 className="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-          {title}
+          <TranslatedText textKey={title.toLowerCase().replace(/ /g, '')} defaultText={title} />
         </h3>
         <div className="h-px flex-1 bg-gradient-to-l from-[#82BC87]/20 to-transparent" />
       </div>
@@ -53,7 +56,7 @@ const FooterSection = React.memo(({ title, links, delay }) => {
                 {link.icon}
               </motion.span>
               <span className="relative overflow-hidden group-hover:pl-2 transition-all duration-300">
-                {link.label}
+                <TranslatedText textKey={link.translationKey || link.label.toLowerCase().replace(/ /g, '')} defaultText={link.label} />
                 <motion.div
                   className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-[#82BC87] to-[#E4D981]"
                   initial={{ scaleX: 0, originX: 0 }}
@@ -84,27 +87,27 @@ const Footer = () => {
     {
       title: "Quick Links",
       links: [
-        { to: "/movies", label: "Movies", icon: "🎬" },
-        { to: "/tv-shows", label: "TV Shows", icon: "📺" },
-        { to: "/trending", label: "Trending", icon: "🔥" },
-        { to: "/fan-favorites", label: "Fan Favorites", icon: "⭐" },
-        { to: "/AdBlockers", label: "Ad Blockers", icon: "🚫" }
+        { to: "/movies", label: "Movies", translationKey: "movies", icon: "🎬" },
+        { to: "/tv-shows", label: "TV Shows", translationKey: "tvShows", icon: "📺" },
+        { to: "/trending", label: "Trending", translationKey: "trending", icon: "🔥" },
+        { to: "/fan-favorites", label: "Fan Favorites", translationKey: "fanFavorites", icon: "⭐" },
+        { to: "/AdBlockers", label: "Ad Blockers", translationKey: "adBlockers", icon: "🚫" }
       ]
     },
     {
       title: "Account",
       links: [
-        { to: "/watchlist", label: "Watchlist", icon: "📋" },
-        { to: "/favorites", label: "Favorites", icon: "❤️" }
+        { to: "/watchlist", label: "Watchlist", translationKey: "watchlist", icon: "📋" },
+        { to: "/favorites", label: "Favorites", translationKey: "favorites", icon: "❤️" }
       ]
     },
     {
       title: "Legal",
       links: [
-        { to: "/terms", label: "Terms of Service", icon: "📜" },
-        { to: "/privacy", label: "Privacy Policy", icon: "🔒" },
-        { to: "/FAQ", label: "FAQ", icon: "❓" },
-        { to: "/cookies", label: "Cookies Policy", icon: "🍪" }
+        { to: "/terms", label: "Terms of Service", translationKey: "termsOfService", icon: "📜" },
+        { to: "/privacy", label: "Privacy Policy", translationKey: "privacyPolicy", icon: "🔒" },
+        { to: "/FAQ", label: "FAQ", translationKey: "faq", icon: "❓" },
+        { to: "/cookies", label: "Cookies Policy", translationKey: "cookiesPolicy", icon: "🍪" }
       ]
     }
   ], []);
@@ -245,6 +248,12 @@ const Footer = () => {
               >
                 Terms & Privacy
               </motion.span>
+            </div>
+
+            {/* Language Switcher & Winter Theme Toggle */}
+            <div className="flex items-center gap-4">
+              <WinterToggle />
+              <LanguageSwitcher />
             </div>
 
             <div className="flex flex-col md:flex-row justify-between items-center gap-5">

@@ -1,0 +1,125 @@
+/* Winter Theme Styles */
+
+/* Frosted glass effect for cards */
+.winter-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(130, 188, 135, 0.03) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+/* Ice crystal shimmer effect */
+@keyframes ice-shimmer {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(180deg);
+  }
+}
+
+.ice-shimmer {
+  animation: ice-shimmer 4s ease-in-out infinite;
+}
+
+/* Snow accumulation on elements */
+.snow-top {
+  position: relative;
+}
+
+.snow-top::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(to right, 
+    transparent, 
+    rgba(255, 255, 255, 0.8) 20%, 
+    rgba(255, 255, 255, 0.8) 80%, 
+    transparent
+  );
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+/* Frost border effect */
+.frost-border {
+  border: 2px solid transparent;
+  background: 
+    linear-gradient(#161616, #161616) padding-box,
+    linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.4), 
+      rgba(130, 188, 135, 0.3), 
+      rgba(228, 217, 129, 0.3)
+    ) border-box;
+  border-radius: 1rem;
+}
+
+/* Winter glow effect */
+.winter-glow {
+  box-shadow: 
+    0 0 20px rgba(130, 188, 135, 0.15),
+    0 0 40px rgba(130, 188, 135, 0.1),
+    0 0 60px rgba(228, 217, 129, 0.05);
+}
+
+/* Snowflake cursor trail (optional) */
+@keyframes cursor-snow {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0, 50px) rotate(360deg);
+  }
+}
+
+/* Ice crack pattern overlay */
+.ice-pattern {
+  background-image: 
+    linear-gradient(30deg, rgba(255, 255, 255, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.02) 87.5%, rgba(255, 255, 255, 0.02)),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.02) 87.5%, rgba(255, 255, 255, 0.02)),
+    linear-gradient(30deg, rgba(255, 255, 255, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.02) 87.5%, rgba(255, 255, 255, 0.02)),
+    linear-gradient(150deg, rgba(255, 255, 255, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(255, 255, 255, 0.02) 87.5%, rgba(255, 255, 255, 0.02));
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+}
+
+/* Frozen text effect */
+.frozen-text {
+  background: linear-gradient(135deg, #ffffff 0%, #82BC87 50%, #E4D981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 8px rgba(130, 188, 135, 0.5));
+}
+
+/* Winter button hover effect */
+.winter-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.winter-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.3), 
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.winter-button:hover::before {
+  left: 100%;
+}

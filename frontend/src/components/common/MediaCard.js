@@ -4,8 +4,9 @@ import { tmdbHelpers } from '../../utils/api';
 import PrefetchLink from './PrefetchLink';
 import { commonStyles } from '../../styles/commonStyles';
 import { createMediaUrl } from '../../utils/slugify';
+import OptimizedImage from './OptimizedImage';
 
-const MediaCard = ({ media, showType = true }) => {
+const MediaCard = React.memo(({ media, showType = true, priority = false }) => {
   const {
     id,
     poster_path,
@@ -52,12 +53,14 @@ const MediaCard = ({ media, showType = true }) => {
     >
       <div className={commonStyles.card}>
         {/* Image Container - Fixed aspect ratio */}
-        <div className="aspect-[2/3] relative overflow-hidden">
-          <img
+        <div className="relative">
+          <OptimizedImage
             src={tmdbHelpers.getImageUrl(imagePath) || 'https://via.placeholder.com/300x450?text=No+Image'}
             alt={displayTitle}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-            loading="lazy"
+            className="transition-transform duration-700 group-hover:scale-110"
+            aspectRatio="2/3"
+            priority={priority}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 200px"
           />
           
           {/* Rating Badge */}
@@ -85,6 +88,14 @@ const MediaCard = ({ media, showType = true }) => {
       </div>
     </PrefetchLink>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison function for React.memo
+  // Only re-render if media ID changes
+  return prevProps.media?.id === nextProps.media?.id && 
+         prevProps.showType === nextProps.showType &&
+         prevProps.priority === nextProps.priority;
+});
+
+MediaCard.displayName = 'MediaCard';
 
 export default MediaCard;

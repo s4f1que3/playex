@@ -6,6 +6,7 @@ import SearchBar from '../components/common/SearchBar';
 import DropdownMenu from '../components/navigation/DropdownMenu';
 import PrefetchLink from '../components/common/PrefetchLink';  // Update import
 import HeaderAccountMenu from '../components/navigation/HeaderAccountMenu';
+import TranslatedText from '../components/common/TranslatedText';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -111,7 +112,7 @@ const Header = () => {
                   {/* Quick Actions Section */}
                   <div className="mb-4">
                     <div className="px-4 py-2">
-                      <p className="text-xs font-medium text-gray-400">Quick Actions</p>
+                      <p className="text-xs font-medium text-gray-400"><TranslatedText textKey="quickActions" defaultText="Quick Actions" /></p>
                     </div>
                     <Link
                       to="/"
@@ -121,14 +122,14 @@ const Header = () => {
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                       </svg>
-                      <span className="font-medium">Home</span>
+                      <span className="font-medium"><TranslatedText textKey="home" defaultText="Home" /></span>
                     </Link>
                   </div>
 
                   {/* Featured Section */}
                   <div className="mb-4">
                     <div className="px-4 py-2">
-                      <p className="text-xs font-medium text-gray-400">Featured</p>
+                      <p className="text-xs font-medium text-gray-400"><TranslatedText textKey="featured" defaultText="Featured" /></p>
                     </div>
                     <div className="space-y-1">
                       <Link
@@ -139,7 +140,7 @@ const Header = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
                         </svg>
-                        <span className="font-medium">Fan Favorites</span>
+                        <span className="font-medium"><TranslatedText textKey="fanFavorites" defaultText="Fan Favorites" /></span>
                       </Link>
                       
                     </div>
@@ -148,7 +149,7 @@ const Header = () => {
                   {/* Main Navigation Section */}
                   <div className="mb-4">
                     <div className="px-4 py-2">
-                      <p className="text-xs font-medium text-gray-400">Navigation</p>
+                      <p className="text-xs font-medium text-gray-400"><TranslatedText textKey="navigation" defaultText="Navigation" /></p>
                     </div>
                     <div className="space-y-1">
                       <Link
@@ -159,7 +160,7 @@ const Header = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 4v16M17 4v16M3 8h18M3 16h18" />
                         </svg>
-                        <span className="font-medium">Movies</span>
+                        <span className="font-medium"><TranslatedText textKey="movies" defaultText="Movies" /></span>
                       </Link>
                       <Link
                         to="/tv-shows"
@@ -169,7 +170,7 @@ const Header = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                         </svg>
-                        <span className="font-medium">TV Shows</span>
+                        <span className="font-medium"><TranslatedText textKey="tvShows" defaultText="TV Shows" /></span>
                       </Link>
                       <Link
                         to="/trending"
@@ -179,7 +180,7 @@ const Header = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
-                        <span className="font-medium">Trending</span>
+                        <span className="font-medium"><TranslatedText textKey="trending" defaultText="Trending" /></span>
                       </Link>
                     </div>
                   </div>

@@ -1,0 +1,14 @@
+# Playex - Vercel/Netlify Redirects Configuration
+# For platforms like Vercel, Netlify, etc.
+
+# Redirect www to non-www
+https://www.playex.com/* https://playex.com/:splat 301!
+
+# SPA fallback - serve index.html for all routes
+/*  /index.html  200
+
+# API proxy (if using)
+/api/*  https://playex-backend.vercel.app/:splat  200
+
+# Force HTTPS (Vercel handles this automatically usually)
+http://playex.com/* https://playex.com/:splat 301!

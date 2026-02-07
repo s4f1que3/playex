@@ -1,30 +1,30 @@
 // File: frontend/src/components/media/MediaCarousel.js
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MediaCard from '../common/MediaCard';
 import PremiumLoader from '../common/PremiumLoader';
 
-const MediaCarousel = ({ items = [], loading, error, showType = false }) => {
+const MediaCarousel = React.memo(({ items = [], loading, error, showType = false }) => {
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const containerRef = useRef(null);
 
   const safeItems = Array.isArray(items) ? items : [];
 
-  const checkScroll = () => {
+  const checkScroll = useCallback(() => {
     if (containerRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10); // 10px threshold
     }
-  };
+  }, []);
 
-  const scroll = (direction) => {
+  const scroll = useCallback((direction) => {
     if (containerRef.current) {
       const scrollAmount = direction === 'left' ? -400 : 400;
       containerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
-  };
+  }, []);
 
   if (loading) {
     return (
@@ -99,12 +99,20 @@ const MediaCarousel = ({ items = [], loading, error, showType = false }) => {
             transition={{ delay: index * 0.1 }}
             className="flex-shrink-0 w-[200px]"
           >
-            <MediaCard media={item} showType={showType} />
+            <MediaCard media={item} showType={showType} priority={index < 3} />
           </motion.div>
         ))}
       </div>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Only re-render if items or loading state changes
+  return prevProps.items === nextProps.items && 
+         prevProps.loading === nextProps.loading &&
+         prevProps.error === nextProps.error &&
+         prevProps.showType === nextProps.showType;
+});
+
+MediaCarousel.displayName = 'MediaCarousel';
 
 export default MediaCarousel;

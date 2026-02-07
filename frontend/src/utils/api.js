@@ -38,14 +38,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || (
 // Remove any cached values that might be using the old URL
 safeLocalStorage.removeItem('api_url');
 
-// Add more detailed logging
-console.log('Environment:', process.env.NODE_ENV);
-console.log('API URL:', API_URL);
-console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
-
-// Log the API URL for debugging
-console.log('API connecting to:', API_URL);
-
 // Create the axios instance with updated baseURL
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -63,16 +55,12 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
-    console.log('Request:', {
-      url: config.url,
-      method: config.method,
-      data: config.data,
-      baseURL: config.baseURL
-    });
     return config;
   },
   (error) => {
-    console.error('Request Error:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Request Error:', error);
+    }
     return Promise.reject(error);
   }
 );
@@ -80,21 +68,18 @@ axiosInstance.interceptors.request.use(
 // Add a response interceptor to handle token expiration
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log('Response:', {
-      status: response.status,
-      data: response.data,
-      url: response.config.url
-    });
     return response;
   },
   (error) => {
-    // Log detailed error information
-    console.error('Response Error:', {
-      message: error.message,
-      response: error.response?.data,
-      status: error.response?.status,
-      url: error.config?.url
-    });
+    // Log detailed error information only in development
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Response Error:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        url: error.config?.url
+      });
+    }
     
     if (error.response && error.response.status === 401) {
       // Token expired or invalid, log the user out
@@ -227,6 +212,17 @@ export const api = {
 const tmdbCache = new Map();
 const TMDB_CACHE_TTL = 1000 * 60 * 60; // 1 hour
 
+// Clear old cache on app load (one-time migration for the cache key fix)
+if (typeof window !== 'undefined') {
+  const cacheVersion = 'v2-with-params';
+  const currentVersion = localStorage.getItem('tmdb_cache_version');
+  if (currentVersion !== cacheVersion) {
+    tmdbCache.clear();
+    localStorage.setItem('tmdb_cache_version', cacheVersion);
+    console.log('TMDB cache cleared - updated to version', cacheVersion);
+  }
+}
+
 export const tmdbApi = axios.create({
   baseURL: 'https://api.themoviedb.org/3',
   headers: {
@@ -248,9 +244,13 @@ tmdbApi.interceptors.request.use(
       delete config.headers.authorization;
     }
     
-    // Always include the API key in params
+    // Get user's selected language from localStorage, default to en-US
+    const language = localStorage.getItem('tmdbLanguage') || 'en-US';
+    
+    // Always include the API key and language in params
     config.params = {
       api_key: '08e475403f00932401951b7995894d17',
+      language: language,
       ...config.params
     };
     
@@ -270,7 +270,7 @@ tmdbApi.interceptors.response.use(
   (response) => {
     // Cache successful GET requests
     if (response.config.method === 'get') {
-      const cacheKey = `${response.config.url}`;
+      const cacheKey = `${response.config.url}?${new URLSearchParams(response.config.params).toString()}`;
       tmdbCache.set(cacheKey, {
         data: response.data,
         timestamp: Date.now()
@@ -293,18 +293,15 @@ tmdbApi.interceptors.response.use(
 // Wrap tmdbApi.get to check cache first
 const originalGet = tmdbApi.get.bind(tmdbApi);
 tmdbApi.get = function(url, config = {}) {
-  const cacheKey = url;
-  const cached = tmdbCache.get(cacheKey);
+  // Get user's selected language from localStorage, default to en-US
+  const language = localStorage.getItem('tmdbLanguage') || 'en-US';
   
-  if (cached && Date.now() - cached.timestamp < TMDB_CACHE_TTL) {
-    return Promise.resolve({ data: cached.data, config, status: 200, statusText: 'OK (cached)' });
-  }
-  
-  // Ensure API key is always included in params and NO Authorization header
+  // Ensure API key and language are always included in params and NO Authorization header
   const mergedConfig = {
     ...config,
     params: {
       api_key: '08e475403f00932401951b7995894d17',
+      language: language,
       ...config.params
     },
     headers: {
@@ -313,6 +310,13 @@ tmdbApi.get = function(url, config = {}) {
       authorization: undefined   // Remove lowercase version too
     }
   };
+  
+  const cacheKey = `${url}?${new URLSearchParams(mergedConfig.params).toString()}`;
+  const cached = tmdbCache.get(cacheKey);
+  
+  if (cached && Date.now() - cached.timestamp < TMDB_CACHE_TTL) {
+    return Promise.resolve({ data: cached.data, config: mergedConfig, status: 200, statusText: 'OK (cached)' });
+  }
   
   return originalGet(url, mergedConfig);
 };

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './i18n'; // Initialize i18n
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import PremiumLoader from './components/common/PremiumLoader';
@@ -43,6 +44,7 @@ import AiringShowsPage from './pages/AiringShowsPage';
 import ActorFilmographyPage from './pages/ActorFilmographyPage';
 import WatchListPage from './pages/WatchListPage';
 import WelcomeNotice from './components/common/legal/WelcomeNotice';
+import ProviderPage from './pages/ProviderPage';
 
 // Lazy load all routes
 const routes = {
@@ -161,6 +163,9 @@ function App() {
                   <Route path="/continue-watching" element={<ContinueWatchingPage />} />
                   <Route path="/user-settings" element={<SettingsPage />} />
                   <Route path="/airing-shows" element={<AiringShowsPage />} />
+                  
+                  {/* Provider routes */}
+                  <Route path="/provider/:providerId" element={<ProviderPage />} />
                   
                   {/* Actor routes */}
                   <Route path="/actor/:slug" element={<ActorsPersonal />} />

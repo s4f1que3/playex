@@ -10,6 +10,7 @@ import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import { getContinueWatching } from '../utils/LocalStorage';
 import EpisodeGuide from '../components/sections/EpisodeGuide';
 import SEO from '../components/common/SEO';
+import StreamingProviders from '../components/sections/StreamingProviders';
 
 const Counter = ({ value, title, description, icon, color, link }) => {
   const isNumeric = typeof value === 'number';
@@ -269,9 +270,25 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
   return (
     <>
       <SEO 
-        title="Home"
-        description="Watch the latest movies and TV shows on Playex - your premium streaming platform"
+        title="Watch Free Movies & TV Shows Online"
+        description="Playex - Stream thousands of free movies, TV shows, and series online in HD. Watch the latest releases, trending content, classics, and exclusive entertainment. Your ultimate destination for free streaming - play movies and shows instantly!"
         url={window.location.href}
+        keywords={[
+          'playex streaming',
+          'free movies today',
+          'watch tv shows free',
+          'new movies 2026',
+          'trending movies',
+          'popular tv shows',
+          'movie streaming platform',
+          'binge watch',
+          'netflix alternative',
+          'free netflix',
+          'movies and shows',
+          'watch online free',
+          'hd streaming',
+          'latest releases'
+        ]}
       />
       <div className="-mt-[72px] overflow-hidden">
         {/* Hero Section - Updated to use filtered items */}
@@ -548,6 +565,9 @@ const validTrendingItems = trendingData?.filter(item => item.backdrop_path) || [
                   </div>
                 </div>
               </motion.div>
+
+          {/* Streaming Providers Section */}
+          <StreamingProviders />
 
           <div className="container mx-auto px-4">
             <div className="space-y-20">

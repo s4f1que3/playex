@@ -1,32 +1,42 @@
 # https://www.robotstxt.org/robotstxt.html
-# Advanced robots.txt - Restrictive policy
+# Playex - Optimized for Search Engine Crawling
 
-# Block all bots except search engines
+# Allow all good bots - Open policy for better SEO
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /user/settings/
+Disallow: /private/
+Crawl-delay: 1
 
-# Allow Google, Bing, and other major search engines
+# Google
 User-agent: Googlebot
+Allow: /
 Disallow: /admin/
 Disallow: /api/
-Disallow: /user-settings/
-Crawl-delay: 2
-Request-rate: 1/5
 
+# Google Images
+User-agent: Googlebot-Image
+Allow: /
+
+# Bing
 User-agent: Bingbot
+Allow: /
 Disallow: /admin/
 Disallow: /api/
-Disallow: /user-settings/
-Crawl-delay: 2
-Request-rate: 1/5
 
+# Yahoo
 User-agent: Slurp
-Disallow: /
+Allow: /
+Disallow: /admin/
 
+# DuckDuckGo
 User-agent: DuckDuckBot
-Disallow: /
+Allow: /
+Disallow: /admin/
 
-# Block specific bad bots
+# Block malicious bots only
 User-agent: AhrefsBot
 Disallow: /
 
