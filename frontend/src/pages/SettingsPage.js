@@ -9,7 +9,7 @@ const SettingsCard = ({ icon, title, subtitle, children }) => (
   >
     <div className="p-6 border-b border-white/5">
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
+        <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
           {icon}
         </div>
         <div>
@@ -92,7 +92,7 @@ const SettingsPage = () => {
             className="text-center z-10"
           >
             <h1 className="text-4xl md:text-6xl font-bold mb-4">
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981]">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500">
                 Profile Settings
               </span>
             </h1>
@@ -112,19 +112,19 @@ const SettingsPage = () => {
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="bg-[#82BC87]/20 border border-[#82BC87]/30 rounded-xl p-4"
+                  className="bg-cyan-500/20 border border-cyan-500/30 rounded-xl p-4"
                 >
                   <div className="flex items-center gap-3 justify-center">
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="w-6 h-6 rounded-full bg-[#82BC87] flex items-center justify-center"
+                      className="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-black" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </motion.div>
-                    <span className="text-[#82BC87] font-medium">Changes saved successfully!</span>
+                    <span className="text-cyan-400 font-medium">Changes saved successfully!</span>
                   </div>
                 </motion.div>
               )}
@@ -133,7 +133,7 @@ const SettingsPage = () => {
             {/* Profile Section */}
             <SettingsCard
               icon={
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                 </svg>
               }
@@ -150,8 +150,8 @@ const SettingsPage = () => {
                       className="w-24 h-24 rounded-xl object-cover"
                     />
                   ) : (
-                    <div className="w-24 h-24 rounded-xl bg-[#82BC87]/20 flex items-center justify-center">
-                      <span className="text-[#82BC87] text-3xl font-medium">
+                    <div className="w-24 h-24 rounded-xl bg-cyan-500/20 flex items-center justify-center">
+                      <span className="text-cyan-400 text-3xl font-medium">
                         {(pendingUsername || 'G')[0].toUpperCase()}
                       </span>
                     </div>
@@ -159,7 +159,7 @@ const SettingsPage = () => {
                   <div className="flex flex-col gap-2">
                     <button
                       onClick={() => fileInputRef.current.click()}
-                      className="px-4 py-2 rounded-lg bg-[#82BC87]/10 text-[#82BC87] hover:bg-[#82BC87]/20 transition-all duration-300"
+                      className="px-4 py-2 rounded-lg bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 transition-all duration-300"
                     >
                       Choose Image
                     </button>
@@ -188,7 +188,7 @@ const SettingsPage = () => {
                   type="text"
                   value={pendingUsername}
                   onChange={handleUsernameChange}
-                  className="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/5 text-white focus:border-[#82BC87]/50 focus:ring-1 focus:ring-[#82BC87]/50 transition-all duration-300"
+                  className="w-full px-4 py-3 rounded-xl bg-black/20 border border-white/5 text-white focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all duration-300"
                   placeholder="Enter username"
                 />
               </div>
@@ -201,7 +201,7 @@ const SettingsPage = () => {
                 >
                   <button
                     onClick={handleSaveChanges}
-                    className="w-full px-4 py-3 rounded-xl bg-[#82BC87] hover:bg-[#6da972] text-white font-medium transition-all duration-300 flex items-center justify-center gap-2"
+                    className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-medium transition-all duration-300 flex items-center justify-center gap-2"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />

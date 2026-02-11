@@ -32,7 +32,7 @@ const SearchSuggestionItem = ({ item, onClick, variants }) => {
         )}
       </div>
       <div className="flex-grow min-w-0">
-        <div className="text-white font-medium truncate group-hover:text-[#82BC87] transition-colors">
+        <div className="text-white font-medium truncate group-hover:text-cyan-400 transition-colors">
           {title}
         </div>
         <div className="flex items-center gap-2">

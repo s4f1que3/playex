@@ -16,8 +16,8 @@ const EpisodeCard = ({ episode }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="group relative rounded-xl overflow-hidden backdrop-blur-sm bg-gradient-to-br from-black/40 to-black/60
-                 border border-white/5 hover:border-[#82BC87]/20 transition-all duration-500
-                 hover:shadow-lg hover:shadow-[#82BC87]/10"
+                 border border-white/5 hover:border-cyan-500/20 transition-all duration-500
+                 hover:shadow-lg hover:shadow-cyan-500/10"
     >
       <div className="aspect-[16/9] relative overflow-hidden">
         {/* Background Image */}
@@ -35,7 +35,7 @@ const EpisodeCard = ({ episode }) => {
         <div className="absolute top-4 left-4">
           <div className="bg-black/40 backdrop-blur-md rounded-lg p-2 border border-white/10
                         transform group-hover:scale-105 transition-all duration-500">
-            <div className="text-[#82BC87] text-xs font-medium">
+            <div className="text-cyan-400 text-xs font-medium">
               {new Date(episode.air_date).toLocaleDateString('en-US', { month: 'short' })}
             </div>
             <div className="text-white text-lg font-bold -mt-1">
@@ -50,8 +50,8 @@ const EpisodeCard = ({ episode }) => {
           <div className="space-y-3">
             {/* Episode Badge */}
             <div className="flex items-center gap-2 text-sm">
-              <span className="px-2 py-1 rounded-md bg-[#82BC87]/20 text-[#82BC87] backdrop-blur-sm
-                           border border-[#82BC87]/20 transform group-hover:scale-105 transition-all duration-500">
+              <span className="px-2 py-1 rounded-md bg-cyan-500/20 text-cyan-400 backdrop-blur-sm
+                           border border-cyan-500/20 transform group-hover:scale-105 transition-all duration-500">
                 Episode {episode.episode_number}
               </span>
               <motion.div 
@@ -69,12 +69,12 @@ const EpisodeCard = ({ episode }) => {
 
             {/* Title and Show Name */}
             <div className="space-y-1">
-              <h3 className="text-lg font-bold text-white line-clamp-1 group-hover:text-[#82BC87] transition-colors duration-300">
+              <h3 className="text-lg font-bold text-white line-clamp-1 group-hover:text-cyan-400 transition-colors duration-300">
                 {episode.name}
               </h3>
               <Link 
                 to={showLink}
-                className="text-sm text-gray-400 hover:text-[#82BC87] transition-colors duration-300 flex items-center gap-1"
+                className="text-sm text-gray-400 hover:text-cyan-400 transition-colors duration-300 flex items-center gap-1"
               >
                 <span>{episode.show.name}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -93,8 +93,8 @@ const EpisodeCard = ({ episode }) => {
           <motion.div
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="w-14 h-14 rounded-full bg-[#82BC87] flex items-center justify-center
-                     shadow-lg shadow-[#82BC87]/20 border border-white/20"
+            className="w-14 h-14 rounded-full bg-cyan-500 flex items-center justify-center
+                     shadow-lg shadow-cyan-500/20 border border-white/20"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
@@ -183,8 +183,8 @@ const EpisodeGuide = () => {
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-b from-[#161616] via-transparent to-[#161616]" />
         <div className="absolute inset-0 bg-pattern-grid opacity-5 transform rotate-45 scale-150" />
-        <div className="absolute -top-20 left-1/4 w-96 h-96 bg-[#82BC87]/10 rounded-full filter blur-[100px] animate-pulse" />
-        <div className="absolute -bottom-20 right-1/4 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[100px] animate-pulse" />
+        <div className="absolute -top-20 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full filter blur-[100px] animate-pulse" />
+        <div className="absolute -bottom-20 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-[100px] animate-pulse" />
       </div>
 
       <div className="container mx-auto px-4 relative">
@@ -196,16 +196,16 @@ const EpisodeGuide = () => {
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 w-full lg:w-auto">
             <div className="relative hidden sm:block">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#82BC87] to-[#E4D981] p-[2px]
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 p-[2px]
                            rotate-3 hover:rotate-6 transition-transform duration-500">
                 <div className="w-full h-full rounded-2xl bg-gray-900/90 backdrop-blur-xl 
                              flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
                   </svg>
                 </div>
               </div>
-              <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-[#82BC87] 
+              <div className="absolute -bottom-2 -right-2 w-6 h-6 rounded-full bg-cyan-500 
                            flex items-center justify-center animate-pulse">
                 <span className="text-xs font-bold text-white">📺</span>
               </div>
@@ -215,10 +215,10 @@ const EpisodeGuide = () => {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 mb-2">
                 <h2 className="text-2xl sm:text-3xl font-bold text-white">Latest Episodes</h2>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-[#82BC87]/10 text-[#82BC87] text-sm">
+                  <span className="px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 text-sm">
                     Today's Lineup
                   </span>
-                  <span className="px-3 py-1 rounded-full bg-[#E4D981]/10 text-[#E4D981] text-sm">
+                  <span className="px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-sm">
                     {episodes.length} of {totalCount}
                   </span>
                 </div>
@@ -230,17 +230,17 @@ const EpisodeGuide = () => {
           {/* View All Button - Updated for mobile */}
           <Link
             to="/airing-shows"
-            className="group relative px-4 py-2 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r from-[#82BC87]/10 to-transparent 
-                      hover:from-[#82BC87]/20 transition-all duration-300 flex items-center gap-2 
+            className="group relative px-4 py-2 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r from-cyan-500/10 to-transparent 
+                      hover:from-cyan-500/20 transition-all duration-300 flex items-center gap-2 
                       w-full sm:w-auto justify-center sm:justify-start"
           >
             <div className="flex items-center gap-2">
-              <span className="text-[#82BC87] font-medium whitespace-nowrap">View All</span>
-              <span className="text-[#82BC87]/60 text-sm">({totalCount})</span>
+              <span className="text-cyan-400 font-medium whitespace-nowrap">View All</span>
+              <span className="text-cyan-400/60 text-sm">({totalCount})</span>
             </div>
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
-              className="h-5 w-5 text-[#82BC87] transform group-hover:translate-x-1 transition-transform duration-300"
+              className="h-5 w-5 text-cyan-400 transform group-hover:translate-x-1 transition-transform duration-300"
               viewBox="0 0 20 20" 
               fill="currentColor"
             >
@@ -266,8 +266,8 @@ const EpisodeGuide = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="w-full mt-6 px-4 py-3 rounded-xl bg-[#82BC87]/10 border border-[#82BC87]/20 
-                         text-[#82BC87] font-medium flex items-center justify-center gap-2"
+              className="w-full mt-6 px-4 py-3 rounded-xl bg-cyan-500/10 border border-cyan-500/20 
+                         text-cyan-400 font-medium flex items-center justify-center gap-2"
             >
               {isCollapsed ? (
                 <>
@@ -308,7 +308,7 @@ const EpisodeGuide = () => {
             >
               <Link
                 to="/airing-shows"
-                className="flex flex-col items-center gap-2 text-[#82BC87] hover:text-[#6da972] transition-colors duration-300"
+                className="flex flex-col items-center gap-2 text-cyan-400 hover:text-blue-600 transition-colors duration-300"
               >
                 <motion.div
                   animate={{ y: [0, 5, 0] }}
@@ -331,7 +331,7 @@ const EpisodeGuide = () => {
             <motion.div
               animate={{ x: [0, 10, 0] }}
               transition={{ duration: 2, repeat: Infinity }}
-              className="text-[#82BC87]"
+              className="text-cyan-400"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 opacity-50" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />

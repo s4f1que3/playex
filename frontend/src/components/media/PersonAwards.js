@@ -28,8 +28,8 @@ const PersonAwards = ({ awards }) => {
           {/* Header */}
           <div className="p-6 border-b border-white/5">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#E4D981]/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
+              <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zm7-10a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L11 3.414V9a1 1 0 11-2 0V3.414L5.707 6.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0112 2z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -51,11 +51,11 @@ const PersonAwards = ({ awards }) => {
                   transition={{ delay: index * 0.1 }}
                   className="bg-black/20 rounded-xl p-4"
                 >
-                  <h3 className="text-[#E4D981] font-medium mb-3">{category}</h3>
+                  <h3 className="text-indigo-400 font-medium mb-3">{category}</h3>
                   <div className="space-y-2">
                     {items.map((award) => (
                       <div key={award.id} className="flex items-center gap-3">
-                        <div className={`w-2 h-2 rounded-full ${award.won ? 'bg-[#82BC87]' : 'bg-gray-500'}`} />
+                        <div className={`w-2 h-2 rounded-full ${award.won ? 'bg-cyan-500' : 'bg-gray-500'}`} />
                         <div>
                           <div className="text-white">{award.title}</div>
                           <div className="text-sm text-gray-400 flex items-center gap-2">
@@ -63,7 +63,7 @@ const PersonAwards = ({ awards }) => {
                             {award.won && (
                               <>
                                 <span className="text-gray-500">•</span>
-                                <span className="text-[#82BC87]">Winner</span>
+                                <span className="text-cyan-500">Winner</span>
                               </>
                             )}
                           </div>
@@ -78,8 +78,8 @@ const PersonAwards = ({ awards }) => {
             {awards.length > 3 && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="mt-6 w-full px-4 py-3 rounded-xl bg-[#E4D981]/10 hover:bg-[#E4D981]/20 
-                         text-[#E4D981] transition-all duration-300 flex items-center justify-center gap-2"
+                className="mt-6 w-full px-4 py-3 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 
+                         text-indigo-400 transition-all duration-300 flex items-center justify-center gap-2"
               >
                 <span>{expanded ? 'Show Less' : `Show All ${awards.length} Awards`}</span>
                 <motion.svg

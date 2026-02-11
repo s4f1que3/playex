@@ -15,7 +15,7 @@ const MailToSuccessAnimation = () => (
             opacity: [1, 1, 0.5, 0]
           }}
           transition={{ duration: 1 }}
-          className="absolute text-[#82BC87]"
+          className="absolute text-cyan-500"
         >
           <svg className="w-16 h-16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -29,7 +29,7 @@ const MailToSuccessAnimation = () => (
           transition={{ delay: 0.8 }}
           className="absolute"
         >
-          <div className="bg-[#82BC87] rounded-full p-4">
+          <div className="bg-cyan-500 rounded-full p-4">
             <svg className="w-8 h-8 text-white" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
             </svg>
@@ -44,7 +44,7 @@ const MailToSuccessAnimation = () => (
         transition={{ delay: 1 }}
         className="text-center mt-6"
       >
-        <h3 className="text-[#82BC87] font-medium text-lg">Message Sent!</h3>
+        <h3 className="text-cyan-500 font-medium text-lg">Message Sent!</h3>
         <p className="text-gray-400 mt-2 text-sm">
           We'll get back to you as soon as possible.
         </p>
@@ -108,8 +108,8 @@ export const ContactFormModal = ({ isOpen, onClose, subject = "" }) => {
         >
           {/* Decorative Elements */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl">
-            <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-            <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[120px]" />
+            <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+            <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-[120px]" />
           </div>
 
           <div className="p-8 relative">
@@ -122,11 +122,11 @@ export const ContactFormModal = ({ isOpen, onClose, subject = "" }) => {
             >
               <div className="flex items-center gap-2 bg-gray-800/50 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/5">
                 <img src="/logo.png" alt="Playex" className="h-6 w-6" />
-                <span className="text-lg font-bold bg-gradient-to-r from-[#82BC87] to-[#E4D981] bg-clip-text text-transparent">
+                <span className="text-lg font-bold bg-gradient-to-r from-cyan-500 to-indigo-500 bg-clip-text text-transparent">
                   Playex
                 </span>
               </div>
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-[#82BC87]/20 to-transparent" />
+              <div className="h-[1px] flex-1 bg-gradient-to-r from-cyan-500/20 to-transparent" />
             </motion.div>
 
             {/* Close Button with animation */}
@@ -150,10 +150,10 @@ export const ContactFormModal = ({ isOpen, onClose, subject = "" }) => {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20"
+                  className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20"
                 >
-                  <span className="h-2 w-2 rounded-full bg-[#82BC87]" />
-                  <span className="text-[#82BC87]">{subject}</span>
+                  <span className="h-2 w-2 rounded-full bg-cyan-500" />
+                  <span className="text-cyan-500">{subject}</span>
                 </motion.div>
               )}
               <p className="text-gray-400 mt-4">
@@ -170,7 +170,7 @@ export const ContactFormModal = ({ isOpen, onClose, subject = "" }) => {
                   placeholder="Your message..."
                   className="w-full h-40 px-6 py-4 rounded-xl bg-gray-800/50 border border-white/5 
                            text-white placeholder-gray-400 focus:outline-none focus:ring-2 
-                           focus:ring-[#82BC87]/50 focus:border-transparent transition-all duration-300 resize-none"
+                           focus:ring-cyan-500/50 focus:border-transparent transition-all duration-300 resize-none"
                   required
                 />
                 <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-gray-900/50 border border-white/10 text-xs text-gray-400">
@@ -183,7 +183,7 @@ export const ContactFormModal = ({ isOpen, onClose, subject = "" }) => {
                 disabled={!message || isSubmitting}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-[#82BC87] to-[#6da972] 
+                className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 
                          hover:from-[#75b07a] hover:to-[#619665]
                          text-white font-medium transition-all duration-300 
                          flex items-center justify-center gap-3 relative overflow-hidden group

@@ -62,14 +62,14 @@ const SeasonPicker = ({ seasons, activeSeason, setActiveSeason }) => {
           onClick={updatePosition}
           className="relative w-full md:w-80 cursor-pointer rounded-lg bg-gray-900/90 backdrop-blur-xl 
                      py-3.5 pl-4 pr-8 text-left border border-white/10 
-                     hover:border-[#82BC87]/30 hover:shadow-[0_0_30px_rgba(130,188,135,0.1)]
+                     hover:border-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.1)]
                      transition-all duration-500 group"
         >
           <div className="flex items-center gap-4">
             <motion.div 
               whileHover={{ scale: 1.05 }}
-              className="w-12 h-[4.5rem] rounded-lg bg-[#82BC87]/10 overflow-hidden flex-shrink-0
-                         relative group-hover:ring-1 group-hover:ring-[#82BC87]/30 
+              className="w-12 h-[4.5rem] rounded-lg bg-cyan-500/10 overflow-hidden flex-shrink-0
+                         relative group-hover:ring-1 group-hover:ring-cyan-500/30 
                          transition-all duration-300 shadow-lg"
             >
               {activeSeasionInfo?.poster_path ? (
@@ -85,8 +85,8 @@ const SeasonPicker = ({ seasons, activeSeason, setActiveSeason }) => {
                   <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
                 </>
               ) : (
-                <div className="w-full h-full flex items-center justify-center bg-[#82BC87]/10">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                <div className="w-full h-full flex items-center justify-center bg-cyan-500/10">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M7 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm0 4a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z"/>
                   </svg>
                 </div>
@@ -94,7 +94,7 @@ const SeasonPicker = ({ seasons, activeSeason, setActiveSeason }) => {
             </motion.div>
             
             <div className="flex-1 min-w-0">
-              <span className="block text-xs text-[#82BC87] group-hover:text-[#82BC87] transition-colors duration-300">
+              <span className="block text-xs text-cyan-400 group-hover:text-cyan-400 transition-colors duration-300">
                 Currently Selected
               </span>
               <span className="block text-base font-semibold text-white truncate group-hover:text-white transition-colors duration-300">
@@ -108,7 +108,7 @@ const SeasonPicker = ({ seasons, activeSeason, setActiveSeason }) => {
               animate={{ rotate: 180 }}
               transition={{ duration: 0.3 }}
               xmlns="http://www.w3.org/2000/svg" 
-              className="h-5 w-5 text-[#82BC87]" 
+              className="h-5 w-5 text-cyan-500" 
               viewBox="0 0 20 20" 
               fill="currentColor"
             >
@@ -148,8 +148,8 @@ const SeasonPicker = ({ seasons, activeSeason, setActiveSeason }) => {
                     value={season.season_number}
                     className={({ active, selected }) => `
                       relative cursor-pointer select-none py-2 px-3 rounded-lg
-                      ${active ? 'bg-[#82BC87]/10' : ''}
-                      ${selected ? 'bg-[#82BC87]/20' : ''}
+                      ${active ? 'bg-cyan-500/10' : ''}
+                      ${selected ? 'bg-cyan-500/20' : ''}
                     `}
                   >
                     {({ active, selected }) => (
@@ -171,7 +171,7 @@ const SeasonPicker = ({ seasons, activeSeason, setActiveSeason }) => {
                             </div>
                           )}
                           {selected && (
-                            <div className="absolute -top-1 -right-1 w-5 h-5 bg-[#82BC87] rounded-full flex items-center justify-center">
+                            <div className="absolute -top-1 -right-1 w-5 h-5 bg-cyan-500 rounded-full flex items-center justify-center">
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
                                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                               </svg>
@@ -219,7 +219,7 @@ const EpisodeCard = ({ episode, seasonNumber, tvId, tvName, index }) => {
         className="group relative block bg-gray-800/30 hover:bg-gray-700/30 backdrop-blur-sm 
                    rounded-lg overflow-hidden transition-all duration-500 h-full
                    hover:shadow-[0_0_30px_rgba(130,188,135,0.1)] border border-white/10 
-                   hover:border-[#82BC87]/30"
+                   hover:border-cyan-500/30"
       >
         <div className="flex flex-col md:flex-row h-full">
           {/* Episode Thumbnail */}
@@ -244,7 +244,7 @@ const EpisodeCard = ({ episode, seasonNumber, tvId, tvName, index }) => {
             <div className="absolute top-2 left-2">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-[#82BC87]/90 backdrop-blur-sm text-white px-2 py-1 
+                className="bg-cyan-500/90 backdrop-blur-sm text-white px-2 py-1 
                            rounded-lg text-xs font-medium shadow-lg"
               >
                 Episode {episode.episode_number}
@@ -261,7 +261,7 @@ const EpisodeCard = ({ episode, seasonNumber, tvId, tvName, index }) => {
               <motion.div
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="bg-[#82BC87] rounded-full p-3 shadow-[0_0_30px_rgba(130,188,135,0.3)]"
+                className="bg-cyan-500 rounded-full p-3 shadow-[0_0_30px_rgba(6,182,212,0.3)]"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
@@ -274,7 +274,7 @@ const EpisodeCard = ({ episode, seasonNumber, tvId, tvName, index }) => {
           <div className="flex-1 p-3 md:p-4 flex flex-col justify-between">
             <div>
               <motion.h3 
-                className="text-base md:text-lg font-bold text-white group-hover:text-[#82BC87] 
+                className="text-base md:text-lg font-bold text-white group-hover:text-cyan-500 
                            transition-colors duration-300 line-clamp-1"
               >
                 {episode.name}
@@ -295,7 +295,7 @@ const EpisodeCard = ({ episode, seasonNumber, tvId, tvName, index }) => {
               )}
               {episode.vote_average > 0 && (
                 <span className="text-gray-400 text-sm flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8-2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                   {episode.vote_average.toFixed(1)}
@@ -310,12 +310,12 @@ const EpisodeCard = ({ episode, seasonNumber, tvId, tvName, index }) => {
 };
 
 const EpisodeIcon = () => (
-  <div className="w-10 h-10 rounded-lg bg-[#82BC87]/10 flex items-center justify-center relative group">
-    <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#82BC87]/10 to-transparent opacity-50" />
+  <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center relative group">
+    <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-cyan-500/10 to-transparent opacity-50" />
     <div className="relative flex items-center gap-[3px]">
-      <div className="w-[3px] h-4 rounded-full bg-[#82BC87]/40 group-hover:bg-[#82BC87]/60 transition-colors duration-300" />
-      <div className="w-[3px] h-3 rounded-full bg-[#82BC87] group-hover:bg-[#82BC87] transition-colors duration-300" />
-      <div className="w-[3px] h-4 rounded-full bg-[#82BC87]/40 group-hover:bg-[#82BC87]/60 transition-colors duration-300" />
+      <div className="w-[3px] h-4 rounded-full bg-cyan-500/40 group-hover:bg-cyan-500/60 transition-colors duration-300" />
+      <div className="w-[3px] h-3 rounded-full bg-cyan-500 group-hover:bg-cyan-500 transition-colors duration-300" />
+      <div className="w-[3px] h-4 rounded-full bg-cyan-500/40 group-hover:bg-cyan-500/60 transition-colors duration-300" />
     </div>
   </div>
 );
@@ -399,8 +399,8 @@ const SeasonsAccordion = ({ tvId, tvName, seasons, activeSeason, setActiveSeason
             className="relative mt-6"
           >
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-              <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[120px]" />
+              <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+              <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-[120px]" />
             </div>
 
             <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-xl border border-white/5 overflow-hidden">
@@ -445,7 +445,7 @@ const SeasonsAccordion = ({ tvId, tvName, seasons, activeSeason, setActiveSeason
             </span>
             <Link 
               to={`/player/tv/${createMediaUrl('tv', tvId, tvName).split('/').pop()}/${activeSeason}/1`}
-              className="bg-[#82BC87] hover:bg-[#6da972] text-white px-4 py-2 rounded-lg transition duration-300 flex items-center gap-2"
+              className="bg-cyan-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-300 flex items-center gap-2"
             >
               Play Episode 1
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -463,7 +463,7 @@ const SeasonsAccordion = ({ tvId, tvName, seasons, activeSeason, setActiveSeason
           className="flex items-center justify-center py-12"
         >
           <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 flex items-center gap-4">
-            <div className="w-6 h-6 border-2 border-[#82BC87] border-t-transparent rounded-full animate-spin" />
+            <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
             <span className="text-gray-400">Loading episodes...</span>
           </div>
         </motion.div>

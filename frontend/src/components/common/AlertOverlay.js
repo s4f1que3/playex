@@ -14,7 +14,7 @@ const AlertOverlay = ({ title, message, onClose }) => {
           <div className="flex justify-end mt-4">
             <button
               onClick={onClose}
-              className="bg-[#82BC87] hover:bg-opacity-80 text-white px-6 py-2 rounded"
+              className="bg-cyan-500 hover:bg-opacity-80 text-white px-6 py-2 rounded"
             >
               OK
             </button>

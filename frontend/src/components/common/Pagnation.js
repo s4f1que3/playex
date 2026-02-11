@@ -10,14 +10,14 @@ const PageButton = ({ children, active, disabled, onClick }) => (
     disabled={disabled}
     className={`relative group px-4 py-2 rounded-xl backdrop-blur-sm transition-all duration-500
       ${active 
-        ? 'bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white shadow-lg shadow-[#82BC87]/20' 
+        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/20' 
         : disabled
           ? 'bg-gray-800/30 text-gray-600 cursor-not-allowed'
           : 'bg-gray-800/50 hover:bg-gray-700/50 text-gray-400 hover:text-white'
       }`}
   >
     {/* Gradient Hover Effect */}
-    <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-[#82BC87]/20 to-transparent 
+    <div className={`absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-500/20 to-transparent 
       opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${active ? 'opacity-100' : ''}`} 
     />
     
@@ -75,8 +75,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className }) => {
     >
       {/* Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-20 left-1/4 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-        <div className="absolute -bottom-20 right-1/4 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
+        <div className="absolute -top-20 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+        <div className="absolute -bottom-20 right-1/4 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
       </div>
 
       {/* Main Container */}

@@ -20,7 +20,7 @@ const SuccessAnimation = () => (
             opacity: [0.5, 0]
           }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="absolute inset-0 rounded-full bg-[#82BC87]/30"
+          className="absolute inset-0 rounded-full bg-cyan-500/30"
         />
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
@@ -29,11 +29,11 @@ const SuccessAnimation = () => (
             opacity: [0.5, 0]
           }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-          className="absolute inset-0 rounded-full bg-[#82BC87]/30"
+          className="absolute inset-0 rounded-full bg-cyan-500/30"
         />
 
         {/* Success checkmark */}
-        <div className="bg-[#82BC87] rounded-full p-4 relative">
+        <div className="bg-cyan-500 rounded-full p-4 relative">
           <motion.svg 
             xmlns="http://www.w3.org/2000/svg" 
             className="h-12 w-12 text-white"
@@ -73,8 +73,8 @@ const SuccessAnimation = () => (
             delay: Math.random() * 0.2
           }}
           className={`absolute w-2 h-2 rounded-full ${
-            i % 3 === 0 ? 'bg-[#82BC87]' : 
-            i % 3 === 1 ? 'bg-[#E4D981]' : 
+            i % 3 === 0 ? 'bg-cyan-500' : 
+            i % 3 === 1 ? 'bg-indigo-500' : 
             'bg-white'
           }`}
         />
@@ -96,7 +96,7 @@ const MailToSuccessAnimation = () => (
             opacity: [1, 1, 0.5, 0]
           }}
           transition={{ duration: 1 }}
-          className="absolute text-[#82BC87]"
+          className="absolute text-cyan-400"
         >
           <svg className="w-16 h-16" viewBox="0 0 24 24" fill="currentColor">
             <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -110,7 +110,7 @@ const MailToSuccessAnimation = () => (
           transition={{ delay: 0.8 }}
           className="absolute"
         >
-          <div className="bg-[#82BC87] rounded-full p-4">
+          <div className="bg-cyan-500 rounded-full p-4">
             <svg className="w-8 h-8 text-white" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
             </svg>
@@ -125,7 +125,7 @@ const MailToSuccessAnimation = () => (
         transition={{ delay: 1 }}
         className="text-center mt-6"
       >
-        <h3 className="text-[#82BC87] font-medium text-lg">Request Submitted!</h3>
+        <h3 className="text-cyan-400 font-medium text-lg">Request Submitted!</h3>
         <p className="text-gray-400 mt-2 text-sm">
           We'll review your request and add the show to our collection.
         </p>
@@ -186,16 +186,16 @@ const RequestForm = ({
     >
       {/* Decorative Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[120px]" />
+        <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-[120px]" />
       </div>
 
       <div className="container mx-auto px-4">
         <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-xl sm:rounded-2xl border border-white/5 overflow-hidden">
           <div className="p-4 sm:p-6 md:p-8"> {/* Adjusted padding for mobile */}
             <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-[#82BC87]/10 flex items-center justify-center mb-4 sm:mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 sm:h-8 sm:w-8 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4 sm:mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 sm:h-8 sm:w-8 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                 </svg>
               </div>
@@ -219,7 +219,7 @@ const RequestForm = ({
                     className="w-full px-4 sm:px-6 py-4 sm:py-5 pr-[120px] sm:pr-[160px] rounded-lg sm:rounded-xl 
                              bg-gray-800/50 border border-white/5 text-sm sm:text-base
                              text-white placeholder-gray-400 focus:outline-none focus:ring-2 
-                             focus:ring-[#82BC87]/50 focus:border-transparent transition-all duration-300
+                             focus:ring-cyan-500/50 focus:border-transparent transition-all duration-300
                              resize-none overflow-hidden leading-relaxed"
                     style={{
                       minHeight: '80px',  // Increased minimum height
@@ -238,7 +238,7 @@ const RequestForm = ({
                     type="submit"
                     disabled={!request || isSubmitting}
                     className={`absolute right-2 top-2 px-3 sm:px-6 py-2 rounded-lg text-sm sm:text-base
-                              ${request ? 'bg-[#82BC87] hover:bg-[#6da972]' : 'bg-gray-700'} 
+                              ${request ? 'bg-cyan-500 hover:bg-blue-600' : 'bg-gray-700'} 
                               text-white transition-all duration-300 flex items-center gap-2
                               disabled:opacity-50 disabled:cursor-not-allowed min-w-[100px] sm:min-w-[140px]
                               justify-center`}
@@ -261,7 +261,7 @@ const RequestForm = ({
                                 transition-all duration-300">
                     <span className={`${
                       request.length >= 190 ? 'text-yellow-400' : 
-                      request.length >= 195 ? 'text-[#82BC87]' : 'text-gray-400'
+                      request.length >= 195 ? 'text-cyan-500' : 'text-gray-400'
                     } transition-colors duration-300`}>
                       {request.length}
                     </span>

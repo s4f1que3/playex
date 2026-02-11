@@ -18,7 +18,7 @@ const FilterButton = ({ isOpen, onClick, filterCount }) => (
       </svg>
       <span className="text-white font-medium">Filters</span>
       {filterCount > 0 && (
-        <div className="w-6 h-6 rounded-full bg-[#82BC87] flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center">
           <span className="text-white text-sm font-medium">{filterCount}</span>
         </div>
       )}
@@ -221,7 +221,7 @@ const FilterPanel = ({ mediaType }) => {
                   <div className="mt-6 pt-6 border-t border-white/5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                         <span>Check out some fan favorites</span>
@@ -229,8 +229,8 @@ const FilterPanel = ({ mediaType }) => {
                       <Link
                         to="/fan-favorites"
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg 
-                                 bg-[#E4D981]/10 text-[#E4D981] text-sm
-                                 hover:bg-[#E4D981]/20 transition-all duration-300"
+                                 bg-indigo-500/10 text-indigo-400 text-sm
+                                 hover:bg-indigo-500/20 transition-all duration-300"
                       >
                         Fan Favorites
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
@@ -252,7 +252,7 @@ const FilterPanel = ({ mediaType }) => {
                     {/* Sort By */}
                     <div className="space-y-3">
                       <label className="text-white font-medium flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M3 3a1 1 0 000 2h11a1 1 0 100-2H3zM3 7a1 1 0 000 2h7a1 1 0 100-2H3zM3 11a1 1 0 100 2h4a1 1 0 100-2H3z" />
                         </svg>
                         Sort By
@@ -264,13 +264,13 @@ const FilterPanel = ({ mediaType }) => {
                             onClick={() => setLocalFilters(prev => ({ ...prev, sort_by: option.value }))}
                             className={`px-4 py-2.5 rounded-xl text-sm transition-all duration-300 relative group overflow-hidden
                               ${localFilters.sort_by === option.value
-                                ? 'bg-[#82BC87] text-white shadow-lg shadow-[#82BC87]/20'
+                                ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/20'
                                 : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                               }`}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                           >
-                            <div className={`absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent opacity-0 transition-opacity duration-300 ${
+                            <div className={`absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-transparent opacity-0 transition-opacity duration-300 ${
                               localFilters.sort_by === option.value ? 'opacity-100' : 'group-hover:opacity-100'
                             }`} />
                             <span className="relative flex items-center justify-center gap-2">
@@ -302,12 +302,12 @@ const FilterPanel = ({ mediaType }) => {
                           onChange={(e) => setYearInput(e.target.value.replace(/\D/g, '').slice(0, 4))}
                           placeholder="Search year... (e.g., 2024)"
                           className="w-full px-4 py-2 rounded-xl bg-white/5 border border-white/10 
-                                   text-white outline-none focus:border-[#82BC87] transition-all duration-300
+                                   text-white outline-none focus:border-cyan-500 transition-all duration-300
                                    placeholder-gray-500"
                         />
                         {localFilters.primary_release_year && (
                           <div className="mt-2 flex items-center gap-2">
-                            <span className="px-3 py-1 rounded-lg bg-[#82BC87]/20 text-[#82BC87] text-sm">
+                            <span className="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-400 text-sm">
                               {localFilters.primary_release_year}
                             </span>
                             <button
@@ -335,7 +335,7 @@ const FilterPanel = ({ mediaType }) => {
                               onClick={() => toggleGenre(genre.id)}
                               className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-300 
                                 ${isGenreSelected(genre.id)
-                                  ? 'bg-[#82BC87] text-white shadow-lg shadow-[#82BC87]/20'
+                                  ? 'bg-cyan-500 text-white shadow-lg shadow-cyan-500/20'
                                   : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
                                 }`}
                               whileHover={{ scale: 1.05 }}
@@ -375,8 +375,8 @@ const FilterPanel = ({ mediaType }) => {
                     </motion.button>
                     <motion.button
                       onClick={applyFilters}
-                      className="px-6 py-2 rounded-xl bg-[#82BC87] text-white 
-                               hover:bg-[#6da972] transition-all duration-300"
+                      className="px-6 py-2 rounded-xl bg-cyan-500 text-white 
+                               hover:bg-blue-600 transition-all duration-300"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >

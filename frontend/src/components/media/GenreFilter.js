@@ -33,7 +33,7 @@ const GenreFilter = ({ selectedGenres, setSelectedGenres, mediaType, showSelecte
           <button
             key={genreId}
             onClick={() => toggleGenre(genreId)}
-            className="bg-[#82BC87] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-[#6ea973] transition-colors"
+            className="bg-cyan-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-blue-600 transition-colors"
           >
             {getGenreName(genreId)}
             <span className="ml-1">×</span>
@@ -57,7 +57,7 @@ const GenreFilter = ({ selectedGenres, setSelectedGenres, mediaType, showSelecte
             onClick={() => toggleGenre(genre.id)}
             className={`px-3 py-1 rounded-full text-sm transition duration-300 ${
               selectedGenres.includes(genre.id)
-                ? 'bg-[#82BC87] text-white'
+                ? 'bg-cyan-500 text-white'
                 : 'bg-gray-800 text-white hover:bg-gray-700'
             }`}
           >

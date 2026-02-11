@@ -190,19 +190,19 @@ const MediaDetailsPage = ({ mediaType }) => {
         >
           <Link
             to={`/collection/${movieDetails.belongs_to_collection.id}`}
-            className="group relative block p-4 sm:p-6 bg-gradient-to-br from-[#E4D981]/10 to-transparent 
-                       backdrop-blur-sm rounded-xl sm:rounded-2xl border border-[#E4D981]/20 overflow-hidden
-                       transition-all duration-500 hover:border-[#E4D981]/40 w-full"
+            className="group relative block p-4 sm:p-6 bg-gradient-to-br from-indigo-500/10 to-transparent 
+                       backdrop-blur-sm rounded-xl sm:rounded-2xl border border-indigo-500/20 overflow-hidden
+                       transition-all duration-500 hover:border-indigo-500/40 w-full"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-[#E4D981]/0 via-[#E4D981]/5 to-[#E4D981]/0 
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/0 via-indigo-500/5 to-indigo-500/0 
                           opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
             
             <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-4">
               {/* Icon container */}
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-[#E4D981]/10 
+              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-indigo-500/10 
                             flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
                 <svg xmlns="http://www.w3.org/2000/svg" 
-                     className="h-5 w-5 sm:h-6 sm:w-6 text-[#E4D981]" 
+                     className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-400" 
                      viewBox="0 0 20 20" 
                      fill="currentColor"
                 >
@@ -212,8 +212,8 @@ const MediaDetailsPage = ({ mediaType }) => {
 
               {/* Text content */}
               <div className="flex-grow min-w-0">
-                <h3 className="text-[#E4D981] text-sm sm:text-base font-medium mb-1">Part of the Collection</h3>
-                <p className="text-lg sm:text-xl text-white font-semibold truncate group-hover:text-[#E4D981] transition-colors duration-300">
+                <h3 className="text-indigo-400 text-sm sm:text-base font-medium mb-1">Part of the Collection</h3>
+                <p className="text-lg sm:text-xl text-white font-semibold truncate group-hover:text-indigo-400 transition-colors duration-300">
                   {movieDetails.belongs_to_collection.name}
                 </p>
               </div>
@@ -222,7 +222,7 @@ const MediaDetailsPage = ({ mediaType }) => {
               <div className="hidden sm:flex flex-shrink-0 items-center">
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
-                  className="h-5 w-5 sm:h-6 sm:w-6 text-[#E4D981] transform group-hover:translate-x-1 transition-transform duration-300"
+                  className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-400 transform group-hover:translate-x-1 transition-transform duration-300"
                   viewBox="0 0 20 20" 
                   fill="currentColor"
                 >
@@ -285,16 +285,16 @@ const MediaDetailsPage = ({ mediaType }) => {
           {recommendedResults.length > 0 && (
             <motion.div className="relative mt-20 pb-8">
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-                <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#82BC87]/10 rounded-full filter blur-[120px]" />
+                <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+                <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-cyan-500/10 rounded-full filter blur-[120px]" />
               </div>
 
               <div className="container mx-auto px-4">
                 <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden">
                   <div className="p-6 border-b border-white/5">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                      <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
                       </div>
@@ -330,8 +330,8 @@ const MediaDetailsPage = ({ mediaType }) => {
                         <motion.button
                           layout
                           onClick={() => setExpandedRecommended(!expandedRecommended)}
-                          className="flex-1 px-4 py-3 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
-                                     text-[#82BC87] transition-all duration-300 flex items-center justify-center gap-2"
+                          className="flex-1 px-4 py-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 
+                                     text-cyan-400 transition-all duration-300 flex items-center justify-center gap-2"
                         >
                           {expandedRecommended ? (
                             <>
@@ -364,8 +364,8 @@ const MediaDetailsPage = ({ mediaType }) => {
                           layout
                           onClick={handleLoadMoreRecommendations}
                           disabled={isFetchingMoreRecommendations}
-                          className="flex-1 px-4 py-3 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
-                                     text-[#82BC87] transition-all duration-300 flex items-center justify-center gap-2"
+                          className="flex-1 px-4 py-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 
+                                     text-cyan-400 transition-all duration-300 flex items-center justify-center gap-2"
                         >
                           {isFetchingMoreRecommendations ? (
                             <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
@@ -390,16 +390,16 @@ const MediaDetailsPage = ({ mediaType }) => {
           {similarResults.length > 0 && (
             <motion.div className="relative mt-12 pb-8">
               <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#E4D981]/20 rounded-full filter blur-[100px]" />
-                <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[120px]" />
+                <div className="absolute top-0 left-1/4 w-64 h-64 bg-indigo-500/20 rounded-full filter blur-[100px]" />
+                <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-[120px]" />
               </div>
 
               <div className="container mx-auto px-4">
                 <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden">
                   <div className="p-6 border-b border-white/5">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-[#E4D981]/10 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
+                      <div className="w-12 h-12 rounded-xl bg-indigo-500/10 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
                         </svg>
                       </div>
@@ -435,8 +435,8 @@ const MediaDetailsPage = ({ mediaType }) => {
                         <motion.button
                           layout
                           onClick={() => setExpandedSimilar(!expandedSimilar)}
-                          className="flex-1 px-4 py-3 rounded-xl bg-[#E4D981]/10 hover:bg-[#E4D981]/20 
-                                     text-[#E4D981] transition-all duration-300 flex items-center justify-center gap-2"
+                          className="flex-1 px-4 py-3 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 
+                                     text-indigo-400 transition-all duration-300 flex items-center justify-center gap-2"
                         >
                           {expandedSimilar ? (
                             <>
@@ -469,8 +469,8 @@ const MediaDetailsPage = ({ mediaType }) => {
                           layout
                           onClick={handleLoadMoreSimilar}
                           disabled={isFetchingMoreSimilar}
-                          className="flex-1 px-4 py-3 rounded-xl bg-[#E4D981]/10 hover:bg-[#E4D981]/20 
-                                     text-[#E4D981] transition-all duration-300 flex items-center justify-center gap-2"
+                          className="flex-1 px-4 py-3 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 
+                                     text-indigo-400 transition-all duration-300 flex items-center justify-center gap-2"
                         >
                           {isFetchingMoreSimilar ? (
                             <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />

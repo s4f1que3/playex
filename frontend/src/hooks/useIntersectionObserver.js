@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { getMobileRootMargin, getMobileThreshold } from '../utils/mobileOptimizations';
 
 /**
  * useIntersectionObserver - Observes when an element enters/exits the viewport
@@ -10,17 +11,25 @@ export const useIntersectionObserver = (ref, callback, options = {}) => {
   useEffect(() => {
     if (!ref.current) return;
 
+    // Merge mobile-optimized defaults with custom options
+    const defaultOptions = {
+      rootMargin: getMobileRootMargin(),
+      threshold: getMobileThreshold(),
+      ...options
+    };
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         callback(entry);
       });
-    }, options);
+    }, defaultOptions);
 
-    observer.observe(ref.current);
+    const element = ref.current;
+    observer.observe(element);
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (element) {
+        observer.unobserve(element);
       }
       observer.disconnect();
     };

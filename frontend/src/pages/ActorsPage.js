@@ -91,17 +91,17 @@ const ActorsPage = () => {
               transition={{ delay: 0.3, duration: 0.8 }}
               className="max-w-4xl mx-auto text-center"
             >
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-8 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-8 backdrop-blur-sm">
                 <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500" />
                 </span>
-                <span className="text-[#82BC87] font-medium tracking-wide">Discover Talent</span>
+                <span className="text-cyan-400 font-medium tracking-wide">Discover Talent</span>
               </div>
 
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
                 Explore Hollywood's
-                <span className="block mt-2 bg-gradient-to-r from-[#82BC87] to-[#E4D981] bg-clip-text text-transparent">
+                <span className="block mt-2 bg-gradient-to-r from-cyan-500 to-indigo-500 bg-clip-text text-transparent">
                   Finest Talents
                 </span>
               </h1>
@@ -128,7 +128,7 @@ const ActorsPage = () => {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
             <div className="flex items-center gap-4">
               <h2 className="text-2xl font-bold text-white flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                 </svg>
                 Popular Actors
@@ -136,7 +136,7 @@ const ActorsPage = () => {
               {data && (
                 <div className="px-4 py-2 rounded-xl bg-black/20 backdrop-blur-sm">
                   <span className="text-gray-400">
-                    Found <span className="text-[#82BC87] font-medium">{totalResults.toLocaleString()}</span> actors
+                    Found <span className="text-cyan-400 font-medium">{totalResults.toLocaleString()}</span> actors
                   </span>
                 </div>
               )}
@@ -157,7 +157,7 @@ const ActorsPage = () => {
           {isLoading && (
             <div className="absolute inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center rounded-2xl">
               <div className="bg-black/80 p-6 rounded-2xl flex items-center gap-3">
-                <div className="w-6 h-6 border-2 border-[#82BC87] border-t-transparent rounded-full animate-spin" />
+                <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
                 <span className="text-gray-300">Loading actors...</span>
               </div>
             </div>
@@ -187,7 +187,7 @@ const ActorsPage = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1 }}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-8 right-8 bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 group hover:-translate-y-1"
+        className="fixed bottom-8 right-8 bg-gradient-to-r from-cyan-500 to-blue-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 group hover:-translate-y-1"
       >
         <svg 
           xmlns="http://www.w3.org/2000/svg" 

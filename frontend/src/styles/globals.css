@@ -1,14 +1,14 @@
 @layer utilities {
   .shadow-glow {
-    box-shadow: 0 0 10px #fff, 0 0 20px #82BC87, 0 0 30px #82BC87;
+    box-shadow: 0 0 10px #fff, 0 0 20px rgb(139, 92, 246), 0 0 30px rgb(6, 182, 212);
   }
 }
 
 :root {
   /* Primary Colors */
-  --primary-from: #FF6B6B;
-  --primary-via: #FF8E53;
-  --primary-to: #FF4081;
+  --primary-from: rgb(139, 92, 246);
+  --primary-via: rgb(59, 130, 246);
+  --primary-to: rgb(6, 182, 212);
   
   /* Secondary Colors */
   --secondary-from: #4F46E5;
@@ -23,12 +23,12 @@
 
 @keyframes glow {
   0%, 100% {
-    filter: drop-shadow(0 0 2px rgba(255, 107, 107, 0.6))
-           drop-shadow(0 0 4px rgba(255, 64, 129, 0.4));
+    filter: drop-shadow(0 0 2px rgba(139, 92, 246, 0.6))
+           drop-shadow(0 0 4px rgba(6, 182, 212, 0.4));
   }
   50% {
-    filter: drop-shadow(0 0 3px rgba(255, 107, 107, 0.8))
-           drop-shadow(0 0 6px rgba(255, 64, 129, 0.6));
+    filter: drop-shadow(0 0 3px rgba(139, 92, 246, 0.8))
+           drop-shadow(0 0 6px rgba(6, 182, 212, 0.6));
   }
 }
 

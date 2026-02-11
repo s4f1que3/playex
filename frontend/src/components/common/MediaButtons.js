@@ -52,7 +52,7 @@ const MediaButtons = ({ mediaId, mediaType, details }) => {
           onClick={handleWatchlistClick}
           className={`px-4 py-2 rounded-lg transition duration-300 ${
             inWatchlist 
-              ? 'bg-[#82BC87] text-white' 
+              ? 'bg-cyan-500 text-white' 
               : 'bg-gray-800 text-white hover:bg-gray-700'
           }`}
         >
@@ -62,7 +62,7 @@ const MediaButtons = ({ mediaId, mediaType, details }) => {
           onClick={handleFavoritesClick}
           className={`px-4 py-2 rounded-lg transition duration-300 ${
             inFavorites 
-              ? 'bg-[#82BC87] text-white' 
+              ? 'bg-cyan-500 text-white' 
               : 'bg-gray-800 text-white hover:bg-gray-700'
           }`}
         >

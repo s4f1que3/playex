@@ -198,7 +198,9 @@ export const optimizeAnimationsForChrome = () => {
   });
 
   // Use Chrome's Composite After Paint (CAP) optimization
-  if (CSS.supports('content-visibility', 'auto')) {
+  // Disabled on mobile to prevent content disappearing
+  const isMobile = window.innerWidth <= 768;
+  if (!isMobile && CSS.supports('content-visibility', 'auto')) {
     const sections = document.querySelectorAll('section, .section');
     sections.forEach(section => {
       section.style.contentVisibility = 'auto';

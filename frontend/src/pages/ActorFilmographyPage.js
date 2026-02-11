@@ -114,13 +114,13 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
           <div className="flex gap-4 justify-center">
             <button 
               onClick={() => window.location.reload()} 
-              className="text-[#82BC87] hover:text-[#E4D981] transition duration-300"
+              className="text-cyan-400 hover:text-indigo-400 transition duration-300"
             >
               Try Again
             </button>
             <Link 
               to="/" 
-              className="text-[#82BC87] hover:text-[#E4D981] transition duration-300"
+              className="text-cyan-400 hover:text-indigo-400 transition duration-300"
             >
               Return Home
             </Link>
@@ -249,7 +249,7 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
         {mediaType === 'movie' && (
           <motion.div
             layoutId="activeTabBg"
-            className="absolute inset-0 bg-[#E4D981] rounded-md"
+            className="absolute inset-0 bg-cyan-500 rounded-md"
             initial={false}
             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
           />
@@ -272,7 +272,7 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
         {mediaType === 'tv' && (
           <motion.div
             layoutId="activeTabBg"
-            className="absolute inset-0 bg-[#E4D981] rounded-md"
+            className="absolute inset-0 bg-indigo-500 rounded-md"
             initial={false}
             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
           />
@@ -311,7 +311,7 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
             <div className="block sm:hidden mb-6">
               <Link
                 to={`/actor/${slug}`}
-                className="inline-flex items-center gap-2 text-[#82BC87] hover:text-[#E4D981]"
+                className="inline-flex items-center gap-2 text-cyan-400 hover:text-indigo-400"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -324,7 +324,7 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
             <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start">
               {/* Profile Image - Mobile Optimized */}
               <div className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 shrink-0 rounded-2xl overflow-hidden 
-                            border-2 border-[#82BC87]/20 shadow-xl order-1 md:order-2">
+                            border-2 border-cyan-500/20 shadow-xl order-1 md:order-2">
                 <img
                   src={tmdbHelpers.getImageUrl(actorData?.profile_path, 'w342')}
                   alt={actorData?.name}
@@ -338,7 +338,7 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
                 <div className="hidden sm:block mb-6">
                   <Link
                     to={`/actor/${slug}`}
-                    className="text-[#82BC87] hover:text-[#E4D981] transition duration-300 flex items-center gap-2 group w-fit"
+                    className="text-cyan-400 hover:text-indigo-400 transition duration-300 flex items-center gap-2 group w-fit"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -349,18 +349,18 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
 
                 {/* Badge */}
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full 
-                              bg-[#82BC87]/10 border border-[#82BC87]/20 mb-4">
+                              bg-cyan-500/10 border border-cyan-500/20 mb-4">
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87]" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#82BC87]" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500" />
                   </span>
-                  <span className="text-[#82BC87] text-sm font-medium">Actor Filmography</span>
+                  <span className="text-cyan-400 text-sm font-medium">Actor Filmography</span>
                 </div>
 
                 {/* Title */}
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight">
                   <span className="block">{actorData?.name}</span>
-                  <span className="block mt-2 bg-gradient-to-r from-[#82BC87] to-[#E4D981] bg-clip-text text-transparent">
+                  <span className="block mt-2 bg-gradient-to-r from-cyan-500 to-indigo-500 bg-clip-text text-transparent">
                     {mediaType === 'movie' ? 'Movies' : 'TV Shows'}
                   </span>
                 </h1>
@@ -387,7 +387,7 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
           <div className="flex mb-6">
             <button
               onClick={toggleFilters}
-              className="w-full sm:w-auto bg-[#82BC87]/10 hover:bg-[#82BC87]/20 text-[#82BC87] 
+              className="w-full sm:w-auto bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 
                        px-4 py-3 rounded-xl transition-all duration-300 flex items-center justify-center gap-2"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -406,11 +406,11 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
             {/* Stats Bar */}
             <div className="flex flex-wrap justify-center sm:justify-start gap-3 mb-6">
               <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-black/20">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
                 </svg>
                 <span className="text-gray-400">
-                  Found <span className="text-[#82BC87] font-medium">{credits.length.toLocaleString()}</span> {mediaType === 'movie' ? 'movies' : 'TV shows'}
+                  Found <span className="text-cyan-400 font-medium">{credits.length.toLocaleString()}</span> {mediaType === 'movie' ? 'movies' : 'TV shows'}
                 </span>
               </div>
             </div>
@@ -440,8 +440,8 @@ const ActorFilmographyPage = ({ mediaType = 'movie' }) => {
         {/* Scroll to Top Button - Better Mobile Position */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-[#82BC87] p-3 rounded-full 
-                   shadow-lg hover:bg-[#6da972] transition-all duration-300 z-50"
+          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-gradient-to-r from-cyan-500 to-blue-600 p-3 rounded-full 
+                   shadow-lg hover:shadow-xl transition-all duration-300 z-50 hover:-translate-y-1"
         >
           <svg 
             xmlns="http://www.w3.org/2000/svg" 

@@ -43,7 +43,7 @@ const SearchResults = ({ results = [], suggestions = [], isLoading, onSuggestion
       >
         {isLoading ? (
           <div className="p-4 text-center text-gray-400">
-            <div className="w-6 h-6 border-2 border-[#82BC87] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+            <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
             Searching...
           </div>
         ) : results.length === 0 ? (

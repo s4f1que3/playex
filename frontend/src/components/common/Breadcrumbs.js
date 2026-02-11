@@ -5,6 +5,18 @@ import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { tmdbApi } from '../../utils/api';
 
+// Provider name mapping for breadcrumbs
+const providerNames = {
+  8: 'Netflix',
+  9: 'Prime Video',
+  337: 'Disney+',
+  350: 'Apple TV+',
+  1899: 'HBO Max',
+  15: 'Hulu',
+  2303: 'Paramount+',
+  2616: 'Peacock',
+};
+
 const BreadcrumbItem = ({ children, to, isLast }) => {
   return (
     <motion.div
@@ -78,6 +90,13 @@ const Breadcrumbs = () => {
     // Add collection handling
     if (pathnames[0] === 'collection' && pathname === pathnames[1] && collectionData) {
       return collectionData.name;
+    }
+
+    // Add provider handling - show name instead of ID
+    if (pathnames[0] === 'provider' && pathname === pathnames[1]) {
+      const searchParams = new URLSearchParams(location.search);
+      const nameParam = searchParams.get('name');
+      return nameParam || providerNames[pathname] || 'Provider';
     }
     
     switch (pathname) {
@@ -196,9 +215,9 @@ const Breadcrumbs = () => {
       className="relative bg-gray-900/90 backdrop-blur-xl border-b border-white/5 pt-[72px]"
     >
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/5 to-transparent opacity-50" />
-        <div className="absolute top-0 left-1/4 w-96 h-32 bg-[#82BC87]/5 rounded-full filter blur-[100px] animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-32 bg-[#E4D981]/5 rounded-full filter blur-[100px] animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 to-transparent opacity-50" />
+        <div className="absolute top-0 left-1/4 w-96 h-32 bg-cyan-500/5 rounded-full filter blur-[100px] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-32 bg-indigo-500/5 rounded-full filter blur-[100px] animate-pulse" />
       </div>
 
       <div className="container relative mx-auto px-4 py-3">
@@ -207,7 +226,7 @@ const Breadcrumbs = () => {
             <motion.div
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="flex items-center gap-2 text-[#82BC87] hover:text-white transition-colors duration-300"
+              className="flex items-center gap-2 text-cyan-500 hover:text-white transition-colors duration-300"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
@@ -247,7 +266,7 @@ const Breadcrumbs = () => {
                       alt=""
                       onError={(e) => e.target.style.display = 'none'}
                     />
-                    <span className="text-sm font-medium text-[#82BC87] group-hover:text-white transition-colors duration-300">
+                    <span className="text-sm font-medium text-cyan-500 group-hover:text-white transition-colors duration-300">
                       {mediaDetails.title || mediaDetails.name}
                     </span>
                   </div>

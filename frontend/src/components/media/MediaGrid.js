@@ -95,7 +95,7 @@ const MediaGrid = ({
                 >
                   <div className={`w-8 h-8 rounded-lg shadow-lg transform transition-transform duration-200 ${
                     selectedItems[`${item.media_type}-${item.id}`] 
-                      ? 'bg-[#82BC87] scale-110' 
+                      ? 'bg-cyan-500 scale-110' 
                       : 'bg-gray-800 hover:bg-gray-700'
                   } flex items-center justify-center`}>
                     {selectedItems[`${item.media_type}-${item.id}`] ? (

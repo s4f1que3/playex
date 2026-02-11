@@ -30,16 +30,16 @@ const CastList = ({ cast }) => {
     >
       {/* Decorative Background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[120px]" />
+        <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+        <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-[120px]" />
       </div>
 
       <div className="container mx-auto px-4">
         <div className="relative bg-gray-900/90 backdrop-blur-xl rounded-2xl border border-white/5 overflow-hidden">
           <div className="p-6 border-b border-white/5">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+              <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                 </svg>
               </div>
@@ -80,7 +80,7 @@ const CastList = ({ cast }) => {
                       to={getActorLink(actor)}
                       className="block bg-gradient-to-br from-gray-800/90 to-gray-900/90 rounded-xl 
                                overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-xl 
-                               hover:shadow-[#82BC87]/10 relative group"
+                               hover:shadow-cyan-500/10 relative group"
                     >
                       <div className="aspect-[2/3] relative overflow-hidden">
                         <img
@@ -100,7 +100,7 @@ const CastList = ({ cast }) => {
                           <div className="space-y-1">
                             <h3 className="text-white font-bold leading-tight">{actor.name}</h3>
                             {actor.character && (
-                              <p className="text-[#82BC87] text-sm font-medium">
+                              <p className="text-cyan-500 text-sm font-medium">
                                 {actor.character}
                               </p>
                             )}
@@ -111,7 +111,7 @@ const CastList = ({ cast }) => {
                         <motion.div
                           initial={false}
                           animate={{ opacity: hoveredId === actor.id ? 1 : 0 }}
-                          className="absolute top-2 right-2 bg-[#82BC87] rounded-full p-2"
+                          className="absolute top-2 right-2 bg-cyan-500 rounded-full p-2"
                         >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M7.293 14.707a1 1 010-1.414L10.586 10 7.293 6.707a1 1 011.414-1.414l4 4a1 1 010 1.414l-4 4a1 1 01-1.414 0z" clipRule="evenodd" />
@@ -130,8 +130,8 @@ const CastList = ({ cast }) => {
                 <motion.button
                   layout
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="flex-1 px-4 py-3 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
-                           text-[#82BC87] transition-all duration-300 flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 
+                           text-cyan-400 transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   {isExpanded ? (
                     <>

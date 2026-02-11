@@ -32,7 +32,7 @@ const BackToTop = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 bg-[#82BC87] hover:bg-[#6da972] text-white p-4 rounded-full 
+          className="fixed bottom-8 right-8 bg-cyan-500 hover:bg-blue-600 text-white p-4 rounded-full 
                    shadow-lg hover:shadow-xl transition-all duration-300 z-50 group"
         >
           <svg

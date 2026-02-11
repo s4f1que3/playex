@@ -62,7 +62,7 @@ const MediaCarousel = React.memo(({ items = [], loading, error, showType = false
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 20 }}
             onClick={() => scroll('left')}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/80 hover:bg-black text-white p-3 rounded-full backdrop-blur-sm border border-white/10 hover:border-white/20 shadow-lg transform hover:scale-110 transition-all duration-300 group-hover:opacity-100 opacity-0"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-gradient-to-r from-cyan-500/20 to-blue-600/20 hover:from-cyan-500/30 hover:to-blue-600/30 text-cyan-400 hover:text-cyan-300 p-3 rounded-full backdrop-blur-sm border border-cyan-500/30 hover:border-cyan-400/50 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 transform hover:scale-110 transition-all duration-300 group-hover:opacity-100 opacity-0"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -76,7 +76,7 @@ const MediaCarousel = React.memo(({ items = [], loading, error, showType = false
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             onClick={() => scroll('right')}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/80 hover:bg-black text-white p-3 rounded-full backdrop-blur-sm border border-white/10 hover:border-white/20 shadow-lg transform hover:scale-110 transition-all duration-300 group-hover:opacity-100 opacity-0"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-gradient-to-r from-cyan-500/20 to-blue-600/20 hover:from-cyan-500/30 hover:to-blue-600/30 text-cyan-400 hover:text-cyan-300 p-3 rounded-full backdrop-blur-sm border border-cyan-500/30 hover:border-cyan-400/50 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 transform hover:scale-110 transition-all duration-300 group-hover:opacity-100 opacity-0"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

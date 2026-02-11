@@ -15,16 +15,16 @@ const PolicySection = ({ title, children, icon }) => {
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full group bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 text-left border border-white/5 
-                   hover:border-[#82BC87]/20 transition-all duration-500"
+                   hover:border-cyan-500/20 transition-all duration-500"
       >
         <div className="flex justify-between items-center gap-4">
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500
-              ${isExpanded ? 'bg-[#82BC87]/20' : 'bg-white/5'}`}
+              ${isExpanded ? 'bg-cyan-500/20' : 'bg-white/5'}`}
             >
               {icon}
             </div>
-            <h3 className="text-xl font-bold text-white group-hover:text-[#82BC87] transition-colors duration-300">
+            <h3 className="text-xl font-bold text-white group-hover:text-cyan-500 transition-colors duration-300">
               {title}
             </h3>
           </div>
@@ -32,7 +32,7 @@ const PolicySection = ({ title, children, icon }) => {
             animate={{ rotate: isExpanded ? 180 : 0 }}
             transition={{ duration: 0.3 }}
             className={`w-6 h-6 flex items-center justify-center transition-colors duration-300
-              ${isExpanded ? 'text-[#82BC87]' : 'text-gray-400'}`}
+              ${isExpanded ? 'text-cyan-500' : 'text-gray-400'}`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -57,7 +57,7 @@ const PolicySection = ({ title, children, icon }) => {
         </AnimatePresence>
       </button>
 
-      <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-[#82BC87]/20 to-transparent opacity-0 group-hover:opacity-100 blur transition-opacity duration-500 -z-10" />
+      <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-cyan-500/20 to-transparent opacity-0 group-hover:opacity-100 blur transition-opacity duration-500 -z-10" />
     </motion.div>
   );
 };
@@ -84,17 +84,17 @@ const PrivacyPolicyPage = () => {
               transition={{ delay: 0.2 }}
               className="max-w-4xl"
             >
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6 backdrop-blur-sm">
                 <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500" />
                 </span>
-                <span className="text-[#82BC87] font-medium">Legal Information</span>
+                <span className="text-cyan-500 font-medium">Legal Information</span>
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                 Privacy
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 ml-3">
                   Policy
                 </span>
               </h1>
@@ -106,7 +106,7 @@ const PrivacyPolicyPage = () => {
       {/* Main Content */}
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto space-y-6">
-          <div className="text-sm text-[#82BC87] mb-8">Last Updated: March 11, 2025</div>
+          <div className="text-sm text-cyan-500 mb-8">Last Updated: March 11, 2025</div>
 
           {/* Policy Sections */}
           <PolicySection title="1. Introduction" icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v4a1 1 0 001 1h2a1 1 0 100-2h-1V7z" clipRule="evenodd" /></svg>}>
@@ -209,7 +209,7 @@ const PrivacyPolicyPage = () => {
 
           <PolicySection title="8. Contact Us" icon={<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v4a1 1 0 001 1h2a1 1 0 100-2h-1V7z" clipRule="evenodd" /></svg>}>
             <p>If you have any questions about this Privacy Policy, please contact us at 
-            <ContactLink className="text-[#82BC87] hover:text-[#E4D981]"
+            <ContactLink className="text-cyan-500 hover:text-indigo-400"
             subject="Privacy Policy Inquires">
             contact.playex@gmail.com</ContactLink></p>
           </PolicySection>
@@ -223,7 +223,7 @@ const PrivacyPolicyPage = () => {
             <ContactLink
               buttonStyle={true}
               subject="Privacy Policy Inquiries"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#82BC87] text-white font-medium hover:bg-[#6da972] transition-colors duration-300"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan-500 text-white font-medium hover:bg-blue-600 transition-colors duration-300"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />

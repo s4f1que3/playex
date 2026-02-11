@@ -30,7 +30,7 @@ const SystemAnnouncement = () => {
         >
           <div className="relative">
             {/* Background Effects */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/20 via-[#E4D981]/20 to-[#82BC87]/20 animate-gradient-x" />
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-indigo-500/20 to-cyan-500/20 animate-gradient-x" />
             <div className="absolute inset-0 backdrop-blur-xl bg-black/80" />
 
             {/* Content Container */}
@@ -47,14 +47,14 @@ const SystemAnnouncement = () => {
                       <div className="flex items-center gap-2">
                         <div className="relative">
                           <span className="flex h-3 w-3">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]"></span>
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
                           </span>
                         </div>
                         <motion.span 
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          className="text-[#82BC87] font-medium tracking-wide"
+                          className="text-cyan-500 font-medium tracking-wide"
                         >
                           New season release
                         </motion.span>
@@ -123,9 +123,9 @@ const SystemAnnouncement = () => {
                               <motion.button
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="px-6 py-2 bg-gradient-to-r from-[#82BC87] to-[#6da972] rounded-lg 
-                                         text-white font-medium shadow-lg shadow-[#82BC87]/20 
-                                         hover:shadow-[#82BC87]/30 transition-all duration-300">
+                                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg 
+                                         text-white font-medium shadow-lg shadow-cyan-500/20 
+                                         hover:shadow-cyan-500/30 transition-all duration-300">
                                 <a href="/player/tv/259731-his-hers/1/1">
                                 Watch Now</a>
                               </motion.button>

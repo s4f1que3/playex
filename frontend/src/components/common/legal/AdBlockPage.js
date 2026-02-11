@@ -12,8 +12,8 @@ const Section = ({ title, children }) => (
     className="mb-8"
   >
     <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-      <div className="w-10 h-10 rounded-xl bg-[#82BC87]/10 flex items-center justify-center flex-shrink-0">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+      <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0h8v12H6V4z" clipRule="evenodd" />
         </svg>
       </div>
@@ -27,7 +27,7 @@ const Section = ({ title, children }) => (
 
 const Subsection = ({ title, children }) => (
   <div className="mb-6">
-    <h3 className="text-xl font-semibold text-[#E4D981] mb-3">{title}</h3>
+    <h3 className="text-xl font-semibold text-indigo-400 mb-3">{title}</h3>
     <div className="text-gray-300 space-y-4">
       {children}
     </div>
@@ -37,8 +37,8 @@ const Subsection = ({ title, children }) => (
 const AdBlockCard = ({ title, description, link }) => (
   <div className="bg-gray-800/50 rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 border border-white/5">
     <div className="flex items-start gap-4">
-      <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center flex-shrink-0">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+      <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
         </svg>
       </div>
@@ -53,7 +53,7 @@ const AdBlockCard = ({ title, description, link }) => (
             to={link}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white font-medium hover:from-[#75b07a] hover:to-[#619665] transition-all duration-300 shadow-lg hover:shadow-[#82BC87]/25"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-cyan-500/25"
           >
             <span>Add to Chrome</span>
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -88,17 +88,17 @@ const AdBlockPage = () => {
               transition={{ delay: 0.2 }}
               className="max-w-4xl"
             >
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6 backdrop-blur-sm">
                 <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500" />
                 </span>
-                <span className="text-[#82BC87] font-medium">Ad Blockers</span>
+                <span className="text-cyan-500 font-medium">Ad Blockers</span>
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                 Recommended
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 ml-3">
                   Blockers
                 </span>
               </h1>
@@ -117,12 +117,12 @@ const AdBlockPage = () => {
           >
             {/* Decorative Background */}
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-              <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[120px]" />
+              <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+              <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-[120px]" />
             </div>
 
             <div className="relative p-8">
-              <div className="text-sm text-[#82BC87] mb-8">Last Updated: October 23, 2025</div>
+              <div className="text-sm text-cyan-500 mb-8">Last Updated: October 23, 2025</div>
 
               <Section title="1. Introduction">
                 <p>

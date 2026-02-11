@@ -98,7 +98,7 @@ const GenreDropdown = ({ value, onChange, disabled }) => {
                         className={`
                           text-left px-3 py-2 rounded-lg flex items-center gap-2
                           hover:bg-white/5 transition-colors duration-200
-                          ${value === item.id ? 'bg-white/10 text-[#82BC87]' : 'text-white'}
+                          ${value === item.id ? 'bg-white/10 text-cyan-400' : 'text-white'}
                         `}
                       >
                         <span className="text-xl">{item.icon}</span>

@@ -24,14 +24,14 @@ const ProviderPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const providerName = searchParams.get('name') || providerInfo[providerId]?.name || 'Streaming Provider';
-  const provider = providerInfo[providerId] || { color: '#82BC87', gradient: 'from-green-600 to-emerald-700', shortName: 'SP' };
+  const provider = providerInfo[providerId] || { color: '#06b6d4', gradient: 'from-cyan-600 to-blue-700', shortName: 'SP' };
   
   const [mediaType, setMediaType] = useState('movie');
   const [page, setPage] = useState(1);
   const [allResults, setAllResults] = useState([]);
 
   // Fetch content by provider
-  const { data, isLoading, error, refetch } = useQuery({
+  const { data, isLoading, isFetching, error, refetch } = useQuery({
     queryKey: ['providerContent', providerId, mediaType, page],
     queryFn: async () => {
       console.log('Fetching provider content:', { providerId, mediaType, page });
@@ -122,7 +122,7 @@ const ProviderPage = () => {
               onClick={() => navigate('/')}
               className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors group"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:text-[#82BC87] transition-colors" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:text-cyan-400 transition-colors" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
               </svg>
               <span className="text-sm font-medium">Back to Home</span>
@@ -167,7 +167,7 @@ const ProviderPage = () => {
                     className="flex flex-wrap items-center gap-4"
                   >
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-white/5 to-white/10 border border-white/10">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
                       </svg>
                       <span className="text-white font-semibold">{data.total_results?.toLocaleString()}</span>
@@ -264,7 +264,7 @@ const ProviderPage = () => {
           </motion.div>
 
           {/* Content Grid */}
-          {isLoading && page === 1 ? (
+          {(isLoading || isFetching) && allResults.length === 0 ? (
             <PremiumLoader />
           ) : error ? (
             <motion.div
@@ -281,7 +281,7 @@ const ProviderPage = () => {
                   <p className="text-gray-400 mb-6">{String(error) || 'Please try again later'}</p>
                   <button 
                     onClick={() => refetch()}
-                    className="px-6 py-3 bg-gradient-to-r from-[#82BC87] to-[#E4D981] text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-[#82BC87]/50 transition-all duration-300"
+                    className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-indigo-500 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300"
                   >
                     Try Again
                   </button>
@@ -346,7 +346,7 @@ const ProviderPage = () => {
                   <button
                     onClick={handleLoadMore}
                     disabled={isLoading}
-                    className="group relative px-10 py-4 bg-gradient-to-r from-[#82BC87] to-[#E4D981] text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-[#82BC87]/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
+                    className="group relative px-10 py-4 bg-gradient-to-r from-cyan-500 to-indigo-500 text-white font-bold rounded-xl hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
                   >
                     <span className="relative z-10 flex items-center gap-2">
                       {isLoading ? (
@@ -389,7 +389,7 @@ const ProviderPage = () => {
                   className="text-center mt-16 py-8"
                 >
                   <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-white/5 to-white/10 border border-white/10">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                     <span className="text-gray-400 font-medium">You've reached the end of the library</span>

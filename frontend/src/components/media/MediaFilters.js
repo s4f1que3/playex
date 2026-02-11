@@ -156,7 +156,7 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
                 setSelectedGenres(selectedGenres.filter(id => id !== genreId));
                 handleFilterChange();
               }}
-              className="bg-[#82BC87] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-[#6ea973] transition-colors"
+              className="bg-cyan-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-blue-600 transition-colors"
             >
               {getGenreName(genreId)}
               <span>×</span>
@@ -168,7 +168,7 @@ const MediaFilters = ({ mediaType, onFilterChange, initialFilters = {} }) => {
                 setReleaseYear('');
                 handleFilterChange();
               }}
-              className="bg-[#82BC87] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-[#6ea973] transition-colors"
+              className="bg-cyan-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-blue-600 transition-colors"
             >
               {releaseYear}
               <span>×</span>

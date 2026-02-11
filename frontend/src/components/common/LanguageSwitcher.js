@@ -50,10 +50,10 @@ const LanguageSwitcher = () => {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gradient-to-r from-[#82BC87]/10 to-[#E4D981]/10 hover:from-[#82BC87]/20 hover:to-[#E4D981]/20 transition-all duration-300 border border-[#82BC87]/20 hover:border-[#82BC87]/40 backdrop-blur-sm"
+        className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gradient-to-r from-cyan-500/10 to-indigo-500/10 hover:from-cyan-500/20 hover:to-indigo-500/20 transition-all duration-300 border border-cyan-500/20 hover:border-cyan-500/40 backdrop-blur-sm"
         aria-label="Select Language"
       >
-        <GlobeAltIcon className="w-5 h-5 text-[#82BC87]" />
+        <GlobeAltIcon className="w-5 h-5 text-cyan-500" />
         <span className="flex items-center space-x-2 text-white text-sm font-medium">
           <span className="text-lg">{currentLanguage.flag}</span>
           <span>{currentLanguage.code.toUpperCase()}</span>
@@ -76,10 +76,10 @@ const LanguageSwitcher = () => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute right-0 bottom-full mb-2 w-56 bg-[#1a1a1a]/95 backdrop-blur-md rounded-xl shadow-2xl border border-[#82BC87]/20 overflow-hidden z-[9999]"
+              className="absolute right-0 bottom-full mb-2 w-56 bg-[#1a1a1a]/95 backdrop-blur-md rounded-xl shadow-2xl border border-cyan-500/20 overflow-hidden z-[9999]"
             >
               <div className="p-2">
-                <div className="px-3 py-2 text-xs font-semibold bg-gradient-to-r from-[#82BC87] to-[#E4D981] bg-clip-text text-transparent uppercase tracking-wide">
+                <div className="px-3 py-2 text-xs font-semibold bg-gradient-to-r from-cyan-500 to-indigo-500 bg-clip-text text-transparent uppercase tracking-wide">
                   Select Language
                 </div>
                 
@@ -92,7 +92,7 @@ const LanguageSwitcher = () => {
                       onClick={() => changeLanguage(language.code)}
                       className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg transition-all duration-300 ${
                         isSelected
-                          ? 'bg-gradient-to-r from-[#82BC87] to-[#E4D981] text-white shadow-lg shadow-[#82BC87]/20'
+                          ? 'bg-gradient-to-r from-cyan-500 to-indigo-500 text-white shadow-lg shadow-cyan-500/20'
                           : 'text-white/80 hover:bg-white/5 hover:text-white'
                       }`}
                     >

@@ -51,7 +51,7 @@ const Header = () => {
               whileHover={{ rotate: [0, -10, 10, -10, 0] }}
               transition={{ duration: 0.5 }}
             />
-            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[#82BC87] to-[#E4D981] bg-clip-text text-transparent transition-all duration-300 group-hover:from-[#E4D981] group-hover:to-[#82BC87]">
+            <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-500 to-indigo-500 bg-clip-text text-transparent transition-all duration-300 group-hover:from-indigo-500 group-hover:to-cyan-500">
               Playex
             </span>
           </PrefetchLink>
@@ -116,7 +116,7 @@ const Header = () => {
                     </div>
                     <Link
                       to="/"
-                      className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-[#82BC87] bg-[#82BC87]/10"
+                      className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-cyan-400 bg-cyan-500/10"
                       onClick={handleNavLinkClick}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -134,7 +134,7 @@ const Header = () => {
                     <div className="space-y-1">
                       <Link
                         to="/fan-favorites"
-                        className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-[#E4D981] bg-[#E4D981]/10"
+                        className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm text-indigo-400 bg-indigo-500/10"
                         onClick={handleNavLinkClick}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -27,7 +27,7 @@ const CollectionsPage = () => {
 
   if (resolverError || !collection) {
     return (
-      <div className="min-h-screen bg-[#161616] pt-24">
+      <div className="min-h-screen bg-[#141822] pt-24">
         <div className="container mx-auto px-4">
           <div className="bg-red-900/20 border border-red-900/50 rounded-xl p-8 text-center">
             <h2 className="text-2xl font-bold text-red-500 mb-2">Collection Not Found</h2>
@@ -49,13 +49,13 @@ const CollectionsPage = () => {
         url={window.location.href}
         type="website"
       />
-      <div className="min-h-screen bg-[#161616]">
+      <div className="min-h-screen bg-[#141822]">
         {/* Hero Section */}
         <div className="relative h-[60vh] min-h-[400px]">
           {/* Background Image */}
           <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#161616] to-transparent z-10" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#161616]/80 to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#141822] to-transparent z-10" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#141822]/80 to-transparent z-10" />
             <img 
               src={`https://image.tmdb.org/t/p/original${collection?.backdrop_path}`}
               alt={collection?.name}

@@ -280,6 +280,57 @@ router.get('/collection/:id', async (req, res) => {
   }
 });
 
+// Batch collections endpoint - fetch multiple collections in parallel
+router.post('/collections/batch', async (req, res) => {
+  try {
+    const { ids } = req.body;
+    const { language = 'en-US' } = req.query;
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ error: 'ids array is required' });
+    }
+
+    // Limit to 50 per batch to prevent abuse
+    const limitedIds = ids.slice(0, 50);
+
+    const results = await Promise.allSettled(
+      limitedIds.map(id =>
+        tmdbClient.get(`/collection/${id}`, { params: { language } })
+          .then(r => ({ id, ...r.data }))
+      )
+    );
+
+    const collections = results
+      .filter(r => r.status === 'fulfilled')
+      .map(r => r.value);
+
+    res.set('Cache-Control', 'public, max-age=7200'); // 2 hour cache
+    res.json({ results: collections });
+  } catch (error) {
+    handleTmdbError(error, res, 'Batch Collections');
+  }
+});
+
+// Search collections endpoint
+router.get('/search/collection', async (req, res) => {
+  try {
+    const { query, page = 1, language = 'en-US' } = req.query;
+
+    if (!query) {
+      return res.status(400).json({ error: 'query parameter is required' });
+    }
+
+    const response = await tmdbClient.get('/search/collection', {
+      params: { query, page, language, include_adult: false }
+    });
+
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.json(response.data);
+  } catch (error) {
+    handleTmdbError(error, res, 'Search Collection');
+  }
+});
+
 // Discover endpoint
 router.get('/discover/:mediaType', async (req, res) => {
   try {

@@ -128,17 +128,17 @@ const TrendingPage = () => {
                 transition={{ delay: 0.2 }}
                 className="max-w-4xl"
               >
-                <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6 backdrop-blur-sm">
+                <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6 backdrop-blur-sm">
                   <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500" />
                   </span>
-                  <span className="text-[#82BC87] font-medium">What's Hot</span>
+                  <span className="text-cyan-400 font-medium">What's Hot</span>
                 </div>
 
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                   Trending
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 ml-3">
                     Right Now
                   </span>
                 </h1>
@@ -161,7 +161,7 @@ const TrendingPage = () => {
                       {timeWindow === value && (
                         <motion.div
                           layoutId="timeWindow"
-                          className="absolute inset-0 bg-gradient-to-r from-[#82BC87] to-[#6da972] rounded-lg"
+                          className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg"
                           transition={{ type: "spring", duration: 0.6 }}
                         />
                       )}
@@ -195,11 +195,11 @@ const TrendingPage = () => {
             {/* Results Counter */}
             {trendingData && (
               <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-black/20 mb-6 w-fit">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118l-2.8-2.034c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
                 <span className="text-gray-400">
-                  Found <span className="text-[#82BC87] font-medium">{trendingData.pages[0].total_results.toLocaleString()}</span> trending items
+                  Found <span className="text-cyan-500 font-medium">{trendingData.pages[0].total_results.toLocaleString()}</span> trending items
                 </span>
               </div>
             )}

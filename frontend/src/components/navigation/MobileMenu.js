@@ -53,10 +53,10 @@ const MobileMenu = ({ isOpen, onClose }) => {
                   onClick={onClose}
                   className={({ isActive }) => `
                     px-4 py-3 rounded-xl flex items-center gap-3 transition-colors duration-300
-                    ${isActive ? 'bg-[#82BC87]/10 text-[#82BC87]' : 'text-gray-400 hover:text-white hover:bg-white/5'}
+                    ${isActive ? 'bg-cyan-500/10 text-cyan-400' : 'text-gray-400 hover:text-white hover:bg-white/5'}
                   `}
                 >
-                  <span className={`${isActive ? 'text-[#82BC87]' : 'text-gray-400'}`}>
+                  <span className={`${isActive ? 'text-cyan-400' : 'text-gray-400'}`}>
                     {item.icon}
                   </span>
                   <span className="font-medium">{item.label}</span>

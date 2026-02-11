@@ -175,17 +175,17 @@ const WatchlistPage = () => {
                 transition={{ delay: 0.2 }}
                 className="max-w-4xl"
               >
-                <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6">
+                <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
                   <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500" />
                   </span>
-                  <span className="text-[#82BC87] font-medium">My Collection</span>
+                  <span className="text-cyan-400 font-medium">My Collection</span>
                 </div>
 
                 <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                   My Watchlist
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 ml-3">
                     ({transformedData.length})
                   </span>
                 </h1>
@@ -225,7 +225,7 @@ const WatchlistPage = () => {
                     {mediaType === value && (
                       <motion.div
                         layoutId="mediaType"
-                        className="absolute inset-0 bg-gradient-to-r from-[#E4D981] to-[#d4c86e] rounded-lg"
+                        className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg"
                         transition={{ type: "spring", duration: 0.6 }}
                       />
                     )}
@@ -296,7 +296,7 @@ const WatchlistPage = () => {
                 transition={{ delay: 0.2 }}
                 className="text-center py-12"
               >
-                <div className="text-[#E4D981] mb-4">
+                <div className="text-indigo-400 mb-4">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                   </svg>

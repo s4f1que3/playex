@@ -35,7 +35,7 @@ const VideosButton = ({ mediaType, mediaId, seasonNumber = null }) => {
         onClick={() => setShowVideos(true)}
         className="group relative overflow-hidden px-6 py-2.5 rounded-lg bg-gray-800/50 backdrop-blur-sm hover:bg-gray-700/50 transition-all duration-300"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/10 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-transparent group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
         <div className="absolute inset-0 bg-gray-800/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <span className="relative flex items-center gap-2 text-gray-300 group-hover:text-white">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 transform group-hover:scale-110 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
@@ -78,9 +78,9 @@ const VideosButton = ({ mediaType, mediaId, seasonNumber = null }) => {
                     <motion.div 
                       initial={{ rotate: -180, opacity: 0 }}
                       animate={{ rotate: 0, opacity: 1 }}
-                      className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center"
+                      className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
                       </svg>
                     </motion.div>
@@ -141,7 +141,7 @@ const VideosButton = ({ mediaType, mediaId, seasonNumber = null }) => {
               <div className="mt-24 p-6 overflow-y-auto max-h-[calc(90vh-96px)]">
                 {isLoadingVideos ? (
                   <div className="flex justify-center py-12">
-                    <div className="w-12 h-12 border-2 border-[#82BC87] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-12 h-12 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
                   </div>
                 ) : videosData?.results?.length > 0 ? (
                   <AnimatePresence mode="wait">
@@ -173,7 +173,7 @@ const VideosButton = ({ mediaType, mediaId, seasonNumber = null }) => {
                               </div>
                             </div>
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-16 h-16 rounded-full bg-[#82BC87]/90 flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300">
+                              <div className="w-16 h-16 rounded-full bg-cyan-500/90 flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor">
                                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                                 </svg>
@@ -196,7 +196,7 @@ const VideosButton = ({ mediaType, mediaId, seasonNumber = null }) => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: index * 0.1 }}
                             className={`aspect-video rounded-xl overflow-hidden ${
-                              selectedVideo?.key === video.key ? 'ring-2 ring-[#82BC87]' : ''
+                              selectedVideo?.key === video.key ? 'ring-2 ring-cyan-500' : ''
                             }`}
                           >
                             <iframe
@@ -244,7 +244,7 @@ const VideosButton = ({ mediaType, mediaId, seasonNumber = null }) => {
                     ></iframe>
                     <button
                       onClick={() => setSelectedVideo(null)}
-                      className="absolute -top-12 right-0 p-2 text-white hover:text-[#82BC87] transition-colors duration-300"
+                      className="absolute -top-12 right-0 p-2 text-white hover:text-cyan-500 transition-colors duration-300"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

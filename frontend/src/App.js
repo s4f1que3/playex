@@ -8,9 +8,7 @@ import { lazyLoadRoute, routeConfig } from './utils/lazyLoad';
 import { prefetchRoute, prefetchInitialData } from './utils/prefetchRoutes';
 import { HelmetProvider } from 'react-helmet-async';
 import { useSecurityProtection } from './hooks/useSecurityProtection';
-import { useCollectionsPrefetch } from './hooks/useCollectionsPrefetch';
 import { useDevToolsDetection } from './hooks/useDevToolsDetection';
-import { categoryKeywords } from './constants/categoryKeywords'; // Move categoryKeywords to a separate file
 
 // Layouts
 import MainLayout from './Layouts/MainLayout';
@@ -37,6 +35,7 @@ import ActorsPersonal from './pages/ActorsPersonal';
 import EpisodesPage from './pages/EpisodesPage';
 import FanFavoritesPage from './pages/FanFavoritesPage';
 import CollectionsPage from './pages/CollectionsPage';
+import CollectionsBrowsePage from './pages/CollectionsBrowsePage';
 
 import ContinueWatchingPage from './pages/ContinueWatchingPage';
 import SettingsPage from './pages/SettingsPage';
@@ -60,9 +59,6 @@ function App() {
   useDevToolsDetection();
   
   useSecurityProtection();
-  
-  // Start prefetching as soon as the app loads
-  useCollectionsPrefetch(categoryKeywords);
 
   const [loading, setLoading] = useState(true);
   
@@ -123,7 +119,7 @@ function App() {
 
   return (
     <HelmetProvider>
-      <main className="min-h-screen bg-[#161616] text-white overflow-x-hidden">
+      <main className="min-h-screen bg-[#141822] text-white overflow-x-hidden">
         {loading && <PremiumLoader overlay={true} text="Welcome to Playex" size="large" />}
         
         <AuthProvider>
@@ -159,6 +155,7 @@ function App() {
                   <Route path="player/tv/:slug/:season/:episode" element={<PlayerPage mediaType="tv" />} />
                   <Route path="/tv/:slug/episodes/:season" element={<EpisodesPage />} />
                   <Route path="/fan-favorites" element={<FanFavoritesPage />} /> 
+                  <Route path="/collections" element={<CollectionsBrowsePage />} />
                   <Route path="/collection/:id" element={<CollectionsPage />} />
                   <Route path="/continue-watching" element={<ContinueWatchingPage />} />
                   <Route path="/user-settings" element={<SettingsPage />} />

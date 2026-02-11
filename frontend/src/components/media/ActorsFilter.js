@@ -60,16 +60,16 @@ const ActorsFilters = ({ onFilterChange, initialFilters }) => {
     >
       {/* Decorative Elements */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute -top-32 -left-32 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-        <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-[#E4D981]/20 rounded-full filter blur-[100px]" />
+        <div className="absolute -top-32 -left-32 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+        <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-indigo-500/20 rounded-full filter blur-[100px]" />
       </div>
 
       {/* Content */}
       <div className="relative p-6">
         <div className="flex items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
               </svg>
             </div>
@@ -117,7 +117,7 @@ const ActorsFilters = ({ onFilterChange, initialFilters }) => {
                     onClick={() => setFilters({ ...filters, sort_by: option.id })}
                     className={`relative group px-4 py-3 rounded-xl transition-all duration-300 
                       ${filters.sort_by === option.id
-                        ? 'bg-gradient-to-br from-[#82BC87] to-[#6da972] text-white'
+                        ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white'
                         : 'bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white'
                       }`}
                   >
@@ -129,7 +129,7 @@ const ActorsFilters = ({ onFilterChange, initialFilters }) => {
                     {filters.sort_by === option.id && (
                       <motion.div
                         layoutId="activeSort"
-                        className="absolute inset-0 bg-gradient-to-br from-[#82BC87] to-[#6da972] rounded-xl -z-10"
+                        className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-xl -z-10"
                       />
                     )}
                   </motion.button>

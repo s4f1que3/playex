@@ -94,17 +94,17 @@ const TVShowsPage = () => {
                 transition={{ delay: 0.2 }}
                 className="max-w-3xl"
               >
-                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6 backdrop-blur-sm">
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6 backdrop-blur-sm">
                   <span className="relative flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500" />
                   </span>
-                  <span className="text-[#82BC87] font-medium">Browse TV Shows</span>
+                  <span className="text-cyan-400 font-medium">Browse TV Shows</span>
                 </div>
                 
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
                   Discover
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 ml-3">
                     TV Series
                   </span>
                 </h1>
@@ -138,11 +138,11 @@ const TVShowsPage = () => {
             >
               {tvShowsData && (
                 <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-black/20 mb-6">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/>
                   </svg>
                   <span className="text-gray-400">
-                    Found <span className="text-[#82BC87] font-medium">1M+</span> TV shows
+                    Found <span className="text-cyan-400 font-medium">1M+</span> TV shows
                   </span>
                 </div>
               )}
@@ -182,7 +182,7 @@ const TVShowsPage = () => {
         {/* Floating Action Button */}
         <button
           onClick={handleScrollTop}
-          className="fixed bottom-8 right-8 bg-[#82BC87] hover:bg-[#6da972] text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 group"
+          className="fixed bottom-8 right-8 bg-gradient-to-r from-cyan-500 to-blue-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 z-50 group hover:-translate-y-1"
         >
           <svg 
             xmlns="http://www.w3.org/2000/svg" 

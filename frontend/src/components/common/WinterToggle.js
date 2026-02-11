@@ -27,7 +27,7 @@ const WinterToggle = () => {
         onClick={() => setIsWinterEnabled(!isWinterEnabled)}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        className="relative p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 hover:border-[#82BC87]/30 transition-all duration-300 backdrop-blur-xl group"
+        className="relative p-3 rounded-xl bg-gradient-to-br from-white/5 to-white/10 border border-white/10 hover:border-cyan-500/30 transition-all duration-300 backdrop-blur-xl group"
         aria-label="Toggle winter theme"
       >
         <motion.div

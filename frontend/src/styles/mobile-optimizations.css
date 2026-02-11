@@ -1,0 +1,93 @@
+/* Mobile-specific CSS optimizations */
+
+/* Prevent content from disappearing on mobile scrolling */
+@media (max-width: 768px) {
+  /* Disable aggressive optimizations on mobile */
+  * {
+    content-visibility: visible !important;
+  }
+  
+  /* Smoother scrolling on mobile */
+  html {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    overscroll-behavior-y: contain;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Prevent layout shifts on mobile */
+  img {
+    content-visibility: visible !important;
+  }
+  
+  /* Better touch handling */
+  .touch-device * {
+    -webkit-tap-highlight-color: rgba(130, 188, 135, 0.2);
+  }
+  
+  /* Optimize sections for mobile viewing */
+  section {
+    contain: layout style;
+    will-change: auto;
+  }
+  
+  /* Better intersection observer behavior */
+  [data-observe] {
+    contain: layout;
+  }
+}
+
+/* Ensure images load properly on mobile */
+@media (max-width: 768px) {
+  img[loading="lazy"] {
+    min-height: 200px; /* Prevent layout shift */
+  }
+}
+
+/* Improve carousel performance on mobile */
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .overflow-x-auto > * {
+    scroll-snap-align: start;
+  }
+}
+
+/* Better grid performance on mobile */
+@media (max-width: 768px) {
+  .grid {
+    contain: layout;
+  }
+}
+
+/* Prevent motion sickness on mobile */
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimize Framer Motion animations for mobile */
+@media (max-width: 768px) {
+  [data-framer-component-type] {
+    will-change: auto;
+  }
+}
+
+/* Better card visibility on mobile */
+@media (max-width: 768px) {
+  .media-card,
+  .actor-card {
+    contain: layout style paint;
+    will-change: auto;
+  }
+}

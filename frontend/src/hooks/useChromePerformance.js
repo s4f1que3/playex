@@ -69,11 +69,22 @@ export const useContentVisibility = (ref) => {
   useEffect(() => {
     if (!ref.current) return;
     
+    // Disable on mobile to prevent content disappearing
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return;
+    
     // Check if content-visibility is supported
     if (CSS.supports('content-visibility', 'auto')) {
       ref.current.style.contentVisibility = 'auto';
       ref.current.style.containIntrinsicSize = '0 500px';
     }
+    
+    return () => {
+      if (ref.current) {
+        ref.current.style.contentVisibility = '';
+        ref.current.style.containIntrinsicSize = '';
+      }
+    };
   }, [ref]);
 };
 

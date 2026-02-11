@@ -47,7 +47,7 @@ const RatingCircle = ({ rating }) => (
       </div>
       
       {/* Decorative outer ring */}
-      <div className="absolute -inset-1 rounded-full border border-[#82BC87]/20 blur-[1px]" />
+      <div className="absolute -inset-1 rounded-full border border-cyan-500/20 blur-[1px]" />
     </div>
   </div>
 );
@@ -151,7 +151,7 @@ const MediaInfo = ({ media, mediaType }) => {
             <div className="relative group">
               {/* Poster Container */}
               <div className="aspect-[2/3] rounded-xl overflow-hidden ring-1 ring-white/10 
-                            transform transition-all duration-500 group-hover:ring-[#82BC87]/50 
+                            transform transition-all duration-500 group-hover:ring-cyan-500/50 
                             group-hover:shadow-[0_0_30px_rgba(130,188,135,0.3)]">
                 <motion.img
                   initial={{ scale: 1.1 }}
@@ -170,7 +170,7 @@ const MediaInfo = ({ media, mediaType }) => {
                     <p className="text-white text-sm font-medium">
                       {mediaType === 'movie' ? 'Movie' : 'TV Series'}
                     </p>
-                    <p className="text-[#82BC87] text-xs">
+                    <p className="text-cyan-500 text-xs">
                       {releaseYear} • {formattedRuntime}
                     </p>
                   </div>
@@ -181,8 +181,8 @@ const MediaInfo = ({ media, mediaType }) => {
               <RatingCircle rating={vote_average} />
 
               {/* Decorative Corner Accents */}
-              <div className="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-[#82BC87]/20 rounded-tl-xl" />
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-[#82BC87]/20 rounded-br-xl" />
+              <div className="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-cyan-500/20 rounded-tl-xl" />
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-cyan-500/20 rounded-br-xl" />
             </div>
           </motion.div>
 
@@ -264,7 +264,7 @@ const MediaInfo = ({ media, mediaType }) => {
                 
                 {mediaType === 'tv' && isCompleted && (
                   <span className="px-3 py-1 rounded-full text-sm inline-flex items-center gap-1 
-                                   bg-[#82BC87]/20 text-[#82BC87] border border-[#82BC87]/20">
+                                   bg-cyan-500/20 text-cyan-400 border border-cyan-500/20">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
@@ -280,8 +280,8 @@ const MediaInfo = ({ media, mediaType }) => {
                         key={star} 
                         xmlns="http://www.w3.org/2000/svg" 
                         viewBox="0 0 24 24" 
-                        fill={star <= Math.round(rating) ? '#E4D981' : 'none'} 
-                        stroke={star <= Math.round(rating) ? '#E4D981' : '#6B7280'} 
+                        fill={star <= Math.round(rating) ? '#818cf8' : 'none'} 
+                        stroke={star <= Math.round(rating) ? '#818cf8' : '#6B7280'} 
                         className="w-4 h-4"
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -313,7 +313,7 @@ const MediaInfo = ({ media, mediaType }) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowFullOverview(!showFullOverview)}
-                  className="mt-2 text-[#82BC87] hover:text-[#E4D981] transition-colors duration-300 
+                  className="mt-2 text-cyan-500 hover:text-indigo-400 transition-colors duration-300 
                            flex items-center gap-2"
                 >
                   <span>{showFullOverview ? 'Show Less' : 'Read More'}</span>

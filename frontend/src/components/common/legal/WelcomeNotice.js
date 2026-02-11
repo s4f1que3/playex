@@ -49,15 +49,15 @@ const WelcomeNotice = () => {
             <div className="relative bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-y-auto">
               {/* Decorative Elements */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-32 -left-32 w-72 h-72 bg-[#82BC87]/20 rounded-full filter blur-[120px]" />
-                <div className="absolute -bottom-32 -right-32 w-72 h-72 bg-[#E4D981]/20 rounded-full filter blur-[120px]" />
+                <div className="absolute -top-32 -left-32 w-72 h-72 bg-cyan-500/20 rounded-full filter blur-[120px]" />
+                <div className="absolute -bottom-32 -right-32 w-72 h-72 bg-indigo-500/20 rounded-full filter blur-[120px]" />
               </div>
 
               <div className="relative flex flex-col h-full max-h-[calc(90vh-3rem)]">
                 {/* Header */}
                 <div className="relative p-6 border-b border-white/10">
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#82BC87] to-[#6da972] flex items-center justify-center">
+                    <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
                       </svg>
@@ -73,7 +73,7 @@ const WelcomeNotice = () => {
                 <div className="relative p-8 space-y-8 overflow-y-auto">
                   {/* Domain Change Notice */}
                   <div className="space-y-4">
-                    <h4 className="text-lg font-semibold text-[#E4D981]">Domain Update</h4>
+                    <h4 className="text-lg font-semibold text-indigo-400">Domain Update</h4>
                     <p className="text-gray-300">
                       We've moved from "playex.vercel.app" to "playex.cc" for an improved experience.
                       This change might affect your saved preferences and viewing history.
@@ -82,11 +82,11 @@ const WelcomeNotice = () => {
 
                   {/* Ad Blocker Notice */}
                   <div className="space-y-4">
-                    <h4 className="text-lg font-semibold text-[#E4D981]">Enhanced Viewing Experience</h4>
+                    <h4 className="text-lg font-semibold text-indigo-400">Enhanced Viewing Experience</h4>
                     <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                       <div className="flex items-start gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#82BC87]/10 flex items-center justify-center mt-1">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                        <div className="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center mt-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                           </svg>
                         </div>
@@ -99,7 +99,7 @@ const WelcomeNotice = () => {
                           <Link
                             to="/AdBlockers"
                             onClick={() => setShowConsent(false)}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#82BC87]/10 text-[#82BC87] hover:bg-[#82BC87]/20 transition-all duration-300"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyan-500/10 text-cyan-500 hover:bg-cyan-500/20 transition-all duration-300"
                           >
                             <span>View Recommended Ad Blockers</span>
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -118,8 +118,8 @@ const WelcomeNotice = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleAccept}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white font-medium 
-                             hover:shadow-lg hover:shadow-[#82BC87]/20 transition-all duration-300"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium 
+                             hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-300"
                   >
                     Got it, continue to site
                   </motion.button>

@@ -58,7 +58,7 @@ const HeaderAccountMenu = () => {
       title: 'Continue Watching',
       subtitle: 'Resume where you left off',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#E4D981]" viewBox="0 0 20 20" fill="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
           <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
@@ -91,7 +91,7 @@ const HeaderAccountMenu = () => {
       title: 'Settings',
       subtitle: 'Manage your profile',
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
           <path d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947z" />
         </svg>
       ),
@@ -112,8 +112,8 @@ const HeaderAccountMenu = () => {
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
         className="relative group overflow-hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 
-                   transition-all duration-700 border border-white/10 hover:border-[#82BC87]/30 
-                   hover:shadow-lg hover:shadow-[#82BC87]/20"
+                   transition-all duration-700 border border-white/10 hover:border-cyan-500/30 
+                   hover:shadow-lg hover:shadow-cyan-500/20"
       >
         <div className="relative z-10">
           {userProfile.avatar ? (
@@ -126,10 +126,10 @@ const HeaderAccountMenu = () => {
           ) : (
             <motion.div
               layoutId="profileAvatar"
-              className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#82BC87]/20 to-[#E4D981]/20 
+              className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500/20 to-indigo-500/20 
                          flex items-center justify-center backdrop-blur-sm"
             >
-              <span className="text-[#82BC87] font-medium">
+              <span className="text-cyan-500 font-medium">
                 {(userProfile.username || 'G')[0].toUpperCase()}
               </span>
             </motion.div>
@@ -171,8 +171,8 @@ const HeaderAccountMenu = () => {
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-lg bg-[#82BC87]/20 flex items-center justify-center">
-                      <span className="text-[#82BC87] text-lg font-medium">
+                    <div className="w-12 h-12 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                      <span className="text-cyan-500 text-lg font-medium">
                         {(userProfile.username || 'G')[0].toUpperCase()}
                       </span>
                     </div>
@@ -218,13 +218,13 @@ const HeaderAccountMenu = () => {
                             whileHover={{ scale: 1.1 }}
                             className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center 
                                     transition-all duration-500 group-hover:bg-gradient-to-br 
-                                    from-[#82BC87]/20 to-[#E4D981]/20"
+                                    from-cyan-500/20 to-indigo-500/20"
                           >
                             {item.icon}
                           </motion.div>
                           <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 
                                       transition-all duration-500 blur-xl bg-gradient-to-br 
-                                      from-[#82BC87]/10 to-[#E4D981]/10" />
+                                      from-cyan-500/10 to-indigo-500/10" />
                         </div>
 
                         {/* Text Content with Enhanced Hover */}

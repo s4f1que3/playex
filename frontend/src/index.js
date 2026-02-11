@@ -5,9 +5,11 @@ import App from './App';
 import './index.css';
 import './styles/winter.css';
 import './styles/chrome-optimizations.css';
+import './styles/mobile-optimizations.css';
 import './i18n'; // Initialize i18n
 import { initializeSourceCodeProtection, sanitizeSourceMaps } from './utils/sourceCodeProtection';
 import { initAllChromeOptimizations } from './utils/chromeOptimizations';
+import { initMobileOptimizations } from './utils/mobileOptimizations';
 
 // Initialize source code protection
 initializeSourceCodeProtection();
@@ -15,6 +17,9 @@ sanitizeSourceMaps();
 
 // Initialize Chrome-specific optimizations
 initAllChromeOptimizations();
+
+// Initialize mobile optimizations
+initMobileOptimizations();
 
 // Create a client with Chrome-optimized settings
 const queryClient = new QueryClient({

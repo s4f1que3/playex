@@ -75,8 +75,8 @@ const NavigationDropdown = () => (
                 <div className="relative">
                   {/* Decorative Elements */}
                   <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-[#82BC87]/10 rounded-full filter blur-[100px] transform translate-x-1/2 -translate-y-1/2" />
-                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[100px] transform -translate-x-1/2 translate-y-1/2" />
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full filter blur-[100px] transform translate-x-1/2 -translate-y-1/2" />
+                    <div className="absolute bottom-0 left-0 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-[100px] transform -translate-x-1/2 translate-y-1/2" />
                   </div>
 
                   {/* Content */}
@@ -90,7 +90,7 @@ const NavigationDropdown = () => (
                         className="relative"
                       >
                         <div className="flex items-center gap-4 mb-6">
-                          <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
                             {section.icon}
                           </div>
                           <div>
@@ -106,7 +106,7 @@ const NavigationDropdown = () => (
                                 <PrefetchLink
                                   to={link.to}
                                   className={`group relative px-4 py-3 rounded-xl transition-all duration-300
-                                            ${active ? 'bg-[#82BC87]/10' : 'hover:bg-gray-800/50'}`}
+                                            ${active ? 'bg-cyan-500/10' : 'hover:bg-gray-800/50'}`}
                                 >
                                   <motion.div
                                     initial={{ opacity: 0, x: -10 }}
@@ -119,14 +119,14 @@ const NavigationDropdown = () => (
                                     </span>
                                     
                                     {link.tag && (
-                                      <span className="px-2 py-1 text-xs rounded-full bg-[#82BC87]/20 text-[#82BC87]">
+                                      <span className="px-2 py-1 text-xs rounded-full bg-cyan-500/20 text-cyan-400">
                                         {link.tag}
                                       </span>
                                     )}
                                   </motion.div>
 
                                   <motion.div
-                                    className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-[#82BC87] to-[#E4D981]"
+                                    className="absolute bottom-0 left-0 h-px w-0 bg-gradient-to-r from-cyan-500 to-indigo-500"
                                     initial={false}
                                     animate={{ width: active ? '100%' : '0%' }}
                                     transition={{ duration: 0.3 }}
@@ -144,7 +144,7 @@ const NavigationDropdown = () => (
                   <div className="border-t border-white/5 p-4 bg-black/20">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-gray-400">Press <kbd className="px-2 py-0.5 rounded-md bg-gray-800 text-gray-400 text-xs">Esc</kbd> to close</span>
-                      <PrefetchLink to="/collections" className="text-[#82BC87] hover:text-[#E4D981] transition-colors">
+                      <PrefetchLink to="/collections" className="text-cyan-500 hover:text-indigo-400 transition-colors">
                         View All Collections →
                       </PrefetchLink>
                     </div>

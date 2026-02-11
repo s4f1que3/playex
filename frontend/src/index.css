@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --primary-green: #82BC87;
-  --accent-yellow: #E4D981;
+  --primary-green: #06b6d4;
+  --accent-yellow: #3b82f6;
   --neutral-pink: #E6C6BB;
-  --dark-bg: #161616;
+  --dark-bg: #141822;
 }
 
 body {
@@ -22,11 +22,11 @@ body {
 
 @layer components {
   .btn-primary {
-    @apply bg-[#82BC87] hover:bg-opacity-80 text-white font-medium py-2 px-4 rounded transition duration-300;
+    @apply bg-cyan-500 hover:bg-cyan-600 text-white font-medium py-2 px-4 rounded transition duration-300;
   }
   
   .btn-secondary {
-    @apply bg-[#E4D981] hover:bg-opacity-80 text-[#161616] font-medium py-2 px-4 rounded transition duration-300;
+    @apply bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition duration-300;
   }
   
   .btn-accent {
@@ -34,11 +34,11 @@ body {
   }
   
   .card {
-    @apply bg-[#161616] border border-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl;
+    @apply bg-[#141822] border border-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl;
   }
   
   .form-input {
-    @apply bg-gray-900 border border-gray-700 rounded-md px-4 py-2 w-full text-white focus:outline-none focus:ring-2 focus:ring-[#82BC87];
+    @apply bg-gray-900 border border-gray-700 rounded-md px-4 py-2 w-full text-white focus:outline-none focus:ring-2 focus:ring-cyan-500;
   }
   
   .form-label {
@@ -82,16 +82,16 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #141822;
 }
 
 
 
 ::-webkit-scrollbar-thumb {
-  background: #82BC87;
+  background: linear-gradient(180deg, rgb(139, 92, 246), rgb(6, 182, 212));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6ca471;
+  background: linear-gradient(180deg, rgb(109, 40, 217), rgb(8, 145, 178));
 }

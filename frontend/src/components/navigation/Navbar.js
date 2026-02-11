@@ -12,7 +12,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <PrefetchLink to="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981]">
+            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-600">
               Playex
             </span>
           </PrefetchLink>
@@ -22,7 +22,7 @@ const Navbar = () => {
             <PrefetchLink to="/" className="nav-link">Home</PrefetchLink>
             <PrefetchLink to="/movies" className="nav-link">Movies</PrefetchLink>
             <PrefetchLink to="/tv" className="nav-link">TV Shows</PrefetchLink>
-            <PrefetchLink to="/fan-favorites" className="nav-link text-[#E4D981] font-medium">Fan Favorites</PrefetchLink>
+            <PrefetchLink to="/fan-favorites" className="nav-link text-cyan-400 font-medium">Fan Favorites</PrefetchLink>
           </div>
 
           {/* Right Section */}

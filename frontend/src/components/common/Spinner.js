@@ -9,8 +9,8 @@ const Spinner = ({ size = 'medium', color = 'primary' }) => {
   };
   
   const colorClasses = {
-    primary: 'border-t-[#82BC87]',
-    secondary: 'border-t-[#E4D981]',
+    primary: 'border-t-cyan-500',
+    secondary: 'border-t-indigo-400',
     accent: 'border-t-[#E6C6BB]'
   };
   

@@ -25,7 +25,7 @@ const ActorCard = ({ actor }) => {
           <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
             {known_for && known_for.length > 0 && (
               <div className="text-sm text-white/90 bg-black/50 backdrop-blur-sm rounded-lg p-2">
-                <span className="text-[#82BC87] font-medium">Known for:</span>
+                <span className="text-cyan-500 font-medium">Known for:</span>
                 <div className="mt-1 line-clamp-2 text-xs">
                   {known_for.map(work => work.title || work.name).join(', ')}
                 </div>
@@ -36,7 +36,7 @@ const ActorCard = ({ actor }) => {
 
         {/* Info Section */}
         <div className="p-4">
-          <h3 className="font-semibold text-white group-hover:text-[#82BC87] transition-colors duration-300 truncate">
+          <h3 className="font-semibold text-white group-hover:text-cyan-500 transition-colors duration-300 truncate">
             {name}
           </h3>
           <div className="mt-1 flex items-center gap-2">
@@ -49,7 +49,7 @@ const ActorCard = ({ actor }) => {
         {/* Interactive Elements */}
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div className="bg-black/50 backdrop-blur-sm p-2 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
             </svg>
           </div>

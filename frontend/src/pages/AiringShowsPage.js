@@ -58,17 +58,17 @@ const AiringShowsPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-4xl"
           >
-            <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6">
+            <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
               <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500" />
               </span>
-              <span className="text-[#82BC87] font-medium">Currently Airing</span>
+              <span className="text-cyan-400 font-medium">Currently Airing</span>
             </div>
 
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
               Latest TV
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 ml-3">
                 Episodes
               </span>
             </h1>

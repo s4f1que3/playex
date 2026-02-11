@@ -18,24 +18,24 @@ const FilterOption = ({ value, icon, label, current, onClick }) => (
         whileTap={{ scale: 0.98 }}
         onClick={() => onClick(value)}
         className={`w-full text-left px-4 py-3 flex items-center gap-3 group transition-all duration-300
-                   ${active ? 'bg-[#82BC87]/10' : 'bg-transparent'}
-                   ${current ? 'text-[#82BC87]' : 'text-gray-400'}`}
+                   ${active ? 'bg-cyan-500/10' : 'bg-transparent'}
+                   ${current ? 'text-cyan-400' : 'text-gray-400'}`}
       >
         <div className={`w-8 h-8 rounded-lg flex items-center justify-center
-                      ${current ? 'bg-[#82BC87]/20' : 'bg-gray-800/50'} 
-                      group-hover:bg-[#82BC87]/20 transition-all duration-300`}>
+                      ${current ? 'bg-cyan-500/20' : 'bg-gray-800/50'} 
+                      group-hover:bg-cyan-500/20 transition-all duration-300`}>
           {icon}
         </div>
-        <span className="font-medium group-hover:text-[#82BC87] transition-colors duration-300">
+        <span className="font-medium group-hover:text-cyan-500 transition-colors duration-300">
           {label}
         </span>
         {current && (
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="ml-auto bg-[#82BC87]/20 rounded-full p-1"
+            className="ml-auto bg-cyan-500/20 rounded-full p-1"
           >
-            <svg className="w-4 h-4 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+            <svg className="w-4 h-4 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </motion.div>
@@ -302,9 +302,9 @@ const SearchResultsPage = () => {
       {({ open }) => (
         <>
           <Menu.Button className="flex items-center gap-3 px-6 py-3 rounded-xl bg-gray-900/90 
-                                backdrop-blur-xl border border-white/5 hover:border-[#82BC87]/20 
+                                backdrop-blur-xl border border-white/5 hover:border-cyan-500/20 
                                 transition-all duration-300 group relative z-[60]">  {/* Added relative and z-[60] */}
-            <div className="w-8 h-8 rounded-lg bg-[#82BC87]/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
               {filterOptions.find(option => option.value === mediaType)?.icon}
             </div>
             <span className="text-white font-medium">
@@ -313,7 +313,7 @@ const SearchResultsPage = () => {
             <motion.svg
               animate={{ rotate: open ? 180 : 0 }}
               transition={{ duration: 0.3 }}
-              className="w-5 h-5 text-gray-400 group-hover:text-[#82BC87]"
+              className="w-5 h-5 text-gray-400 group-hover:text-cyan-500"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -373,7 +373,7 @@ const SearchResultsPage = () => {
         <div className="relative mb-8 bg-gradient-to-b from-gray-900/80 to-transparent backdrop-blur-sm">
           <div className="container mx-auto px-4 py-8">
             <h1 className="text-4xl font-bold text-white mb-3 flex items-center gap-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
               </svg>
               Results for "{searchQuery}"
@@ -384,13 +384,13 @@ const SearchResultsPage = () => {
                 <div className="bg-gray-800/60 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/5">
                   {isLoading ? (
                     <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 border-2 border-[#82BC87] border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
                       <span className="text-gray-400">Searching...</span>
                     </div>
                   ) : (
                     <span className="text-gray-400">
                       {data?.total_results 
-                        ? <span>Found <strong className="text-[#82BC87] font-medium">{data.total_results}</strong> results</span>
+                        ? <span>Found <strong className="text-cyan-500 font-medium">{data.total_results}</strong> results</span>
                         : 'No results found'}
                     </span>
                   )}
@@ -416,7 +416,7 @@ const SearchResultsPage = () => {
             {isLoading && (
               <div className="absolute inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center">
                 <div className="bg-gray-900/95 p-6 rounded-2xl shadow-xl border border-white/5 flex items-center gap-3">
-                  <div className="w-6 h-6 border-2 border-[#82BC87] border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
                   <span className="text-gray-300 animate-pulse">Loading results...</span>
                 </div>
               </div>

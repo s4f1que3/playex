@@ -93,12 +93,12 @@ const SharePrompt = () => {
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 500 }}
-            className="relative w-full max-w-md bg-[#1a1a1a]/95 backdrop-blur-xl rounded-2xl border border-[#82BC87]/20 shadow-2xl overflow-hidden"
+            className="relative w-full max-w-md bg-[#1a1a1a]/95 backdrop-blur-xl rounded-2xl border border-cyan-500/20 shadow-2xl overflow-hidden"
           >
             {/* Decorative Elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute -top-32 -right-32 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-              <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-[#E4D981]/20 rounded-full filter blur-[100px]" />
+              <div className="absolute -top-32 -right-32 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+              <div className="absolute -bottom-32 -left-32 w-64 h-64 bg-indigo-500/20 rounded-full filter blur-[100px]" />
             </div>
 
             {/* Content */}
@@ -106,7 +106,7 @@ const SharePrompt = () => {
               {/* Header */}
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4 flex-1">
-                  <div className="w-12 h-12 rounded-xl bg-[#82BC87]/20 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
                     <span className="text-2xl">✨</span>
                   </div>
                   <div>
@@ -158,7 +158,7 @@ const SharePrompt = () => {
                       ? 'bg-green-600 text-white'
                       : sending
                       ? 'bg-gray-600 text-white opacity-75 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-[#82BC87] to-[#E4D981] hover:from-[#7ab07a] hover:to-[#d4c978] text-[#1a1a1a]'
+                      : 'bg-gradient-to-r from-cyan-500 to-indigo-500 hover:from-cyan-600 hover:to-indigo-600 text-[#1a1a1a]'
                   }`}
                 >
                   {copied ? (

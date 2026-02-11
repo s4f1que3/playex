@@ -142,22 +142,22 @@ const ActorsPersonal = () => {
                     className="flex gap-3 mt-4 justify-center"
                   >
                     {actor.external_ids.instagram_id && (
-                      <a href={`https://instagram.com/${actor.external_ids.instagram_id}`} target="_blank" rel="noopener noreferrer" className="text-[#82BC87] hover:text-[#E4D981]">
+                      <a href={`https://instagram.com/${actor.external_ids.instagram_id}`} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-indigo-400">
                         Instagram
                       </a>
                     )}
                     {actor.external_ids.twitter_id && (
-                      <a href={`https://twitter.com/${actor.external_ids.twitter_id}`} target="_blank" rel="noopener noreferrer" className="text-[#82BC87] hover:text-[#E4D981]">
+                      <a href={`https://twitter.com/${actor.external_ids.twitter_id}`} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-indigo-400">
                         Twitter
                       </a>
                     )}
                     {actor.external_ids.facebook_id && (
-                      <a href={`https://facebook.com/${actor.external_ids.facebook_id}`} target="_blank" rel="noopener noreferrer" className="text-[#82BC87] hover:text-[#E4D981]">
+                      <a href={`https://facebook.com/${actor.external_ids.facebook_id}`} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-indigo-400">
                         Facebook
                       </a>
                     )}
                     {actor.imdb_id && (
-                      <a href={`https://www.imdb.com/name/${actor.imdb_id}`} target="_blank" rel="noopener noreferrer" className="text-[#82BC87] hover:text-[#E4D981]">
+                      <a href={`https://www.imdb.com/name/${actor.imdb_id}`} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:text-indigo-400">
                         IMDb
                       </a>
                     )}
@@ -178,8 +178,8 @@ const ActorsPersonal = () => {
 
                 {/* Known For Badge */}
                 {actor?.known_for_department && (
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6">
-                    <span className="text-[#82BC87] font-medium">{actor.known_for_department}</span>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6">
+                    <span className="text-cyan-400 font-medium">{actor.known_for_department}</span>
                   </div>
                 )}
 
@@ -233,7 +233,7 @@ const ActorsPersonal = () => {
               className="my-12"
             >
               <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm3 7a1 1 0 100-2 1 1 0 000 2zm-3 2h6v1H7v-1z" clipRule="evenodd"/>
                 </svg>
                 Biography
@@ -252,7 +252,7 @@ const ActorsPersonal = () => {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="mt-4 text-[#82BC87] hover:text-[#6da972] transition-colors duration-300 flex items-center gap-2 group"
+                    className="mt-4 text-cyan-400 hover:text-cyan-300 transition-colors duration-300 flex items-center gap-2 group"
                   >
                     <span>{isExpanded ? 'Show Less' : 'Show More'}</span>
                     <motion.svg
@@ -283,8 +283,8 @@ const ActorsPersonal = () => {
               <div>
                 <div className="flex items-center justify-between gap-3 mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
                       </svg>
                     </div>
@@ -295,13 +295,13 @@ const ActorsPersonal = () => {
                   </div>
                   <Link
                     to={`/actor/${actorUrlBase}/movies`}
-                    className="group px-4 py-2 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
-                             border border-[#82BC87]/20 hover:border-[#82BC87]/30
+                    className="group px-4 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 
+                             border border-cyan-500/20 hover:border-cyan-500/30
                              transition-all duration-300 flex items-center gap-2"
                   >
-                    <span className="text-[#82BC87]">View All</span>
+                    <span className="text-cyan-400">View All</span>
                     <svg xmlns="http://www.w3.org/2000/svg" 
-                         className="h-4 w-4 text-[#82BC87] transform group-hover:translate-x-1 transition-all" 
+                         className="h-4 w-4 text-cyan-400 transform group-hover:translate-x-1 transition-all" 
                          viewBox="0 0 20 20" fill="currentColor"
                     >
                       <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -322,8 +322,8 @@ const ActorsPersonal = () => {
               <div>
                 <div className="flex items-center justify-between gap-3 mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm3 2h6v4H7V5zm8 8v2h1v-2h-1zm-2-2H7v4h6v-4zm2 0h1V9h-1v2zm1-4V5h-1v2h1zM5 5v2H4V5h1zm0 4H4v2h1V9zm-1 4h1v2H4v-2z" clipRule="evenodd" />
                       </svg>
                     </div>
@@ -334,13 +334,13 @@ const ActorsPersonal = () => {
                   </div>
                   <Link
                     to={`/actor/${actorUrlBase}/tv`}
-                    className="group px-4 py-2 rounded-xl bg-[#82BC87]/10 hover:bg-[#82BC87]/20 
-                             border border-[#82BC87]/20 hover:border-[#82BC87]/30
+                    className="group px-4 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 
+                             border border-cyan-500/20 hover:border-cyan-500/30
                              transition-all duration-300 flex items-center gap-2"
                   >
-                    <span className="text-[#82BC87]">View All</span>
+                    <span className="text-cyan-400">View All</span>
                     <svg xmlns="http://www.w3.org/2000/svg" 
-                         className="h-4 w-4 text-[#82BC87] transform group-hover:translate-x-1 transition-all" 
+                         className="h-4 w-4 text-cyan-400 transform group-hover:translate-x-1 transition-all" 
                          viewBox="0 0 20 20" fill="currentColor"
                     >
                       <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />

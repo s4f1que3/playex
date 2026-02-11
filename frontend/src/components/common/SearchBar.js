@@ -178,14 +178,14 @@ const SearchBar = ({ isMobile = false }) => {
               onFocus={() => searchTerm.length > 2 && setShowSuggestions(true)}
               className="w-full bg-gray-900/90 text-white placeholder-gray-400 
                          focus:placeholder-gray-200 placeholder-opacity-60 focus:placeholder-opacity-100
-                         px-10 py-2 md:px-12 md:py-3 rounded-xl border border-white/5 focus:border-[#82BC87]/20
-                         focus:outline-none focus:ring-2 focus:ring-[#82BC87]/20
+                         px-10 py-2 md:px-12 md:py-3 rounded-xl border border-white/5 focus:border-cyan-500/20
+                         focus:outline-none focus:ring-2 focus:ring-cyan-500/20
                          text-sm md:text-base font-medium tracking-normal
                          transition-all duration-300"
             />
             
             <div className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 text-gray-400 
-                          group-hover:text-[#82BC87] transition-colors duration-300">
+                          group-hover:text-cyan-400 transition-colors duration-300">
               <motion.svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 className="h-4 w-4 md:h-5 md:w-5"
@@ -226,18 +226,18 @@ const SearchBar = ({ isMobile = false }) => {
               <div className="bg-gray-900/95 border border-white/5 shadow-[0_20px_70px_-10px_rgba(0,0,0,0.3)]">
                 {isLoading && (
                   <div className="relative p-4 md:p-8 flex items-center justify-center">
-                    <div className="flex items-center gap-3 bg-[#82BC87]/10 px-3 py-2 rounded-xl">
+                    <div className="flex items-center gap-3 bg-cyan-500/10 px-3 py-2 rounded-xl">
                       <motion.div
                         animate={{ rotate: 360 }}
                         transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         className="w-4 h-4 md:w-5 md:h-5"
                       >
-                        <svg className="text-[#82BC87]" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <svg className="text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                         </svg>
                       </motion.div>
-                      <span className="text-[#82BC87] text-sm md:text-base font-medium">Searching...</span>
+                      <span className="text-cyan-400 text-sm md:text-base font-medium">Searching...</span>
                     </div>
                   </div>
                 )}
@@ -246,7 +246,7 @@ const SearchBar = ({ isMobile = false }) => {
                   <div className="relative divide-y divide-white/5">
                     <div className="px-4 md:px-6 py-3 md:py-4">
                       <div className="flex items-center gap-2 text-xs md:text-sm text-gray-400">
-                        <span className="px-2 py-1 rounded-full bg-[#82BC87]/10 text-[#82BC87]">
+                        <span className="px-2 py-1 rounded-full bg-cyan-500/10 text-cyan-400">
                           {results.length} results
                         </span>
                         {!isMobile && (
@@ -270,7 +270,7 @@ const SearchBar = ({ isMobile = false }) => {
                               onClick={() => handleSuggestionClick(item)}
                               className="w-full text-left flex items-start gap-3 md:gap-4 p-3 md:p-4 rounded-xl 
                                        bg-gray-800/30 border border-white/5
-                                       hover:bg-gray-800/50 hover:border-[#82BC87]/20 active:bg-gray-800/60
+                                       hover:bg-gray-800/50 hover:border-cyan-500/20 active:bg-gray-800/60
                                        transition-all duration-300 group"
                               initial={{ opacity: 0, y: 20 }}
                               animate={{ opacity: 1, y: 0 }}
@@ -286,7 +286,7 @@ const SearchBar = ({ isMobile = false }) => {
                               </div>
 
                               <div className="flex-1 min-w-0">
-                                <div className="font-medium text-sm md:text-base text-white group-hover:text-[#82BC87] transition-colors duration-300 truncate">
+                                <div className="font-medium text-sm md:text-base text-white group-hover:text-cyan-400 transition-colors duration-300 truncate">
                                   {item.title || item.name}
                                 </div>
                                 <div className="mt-1 flex items-center gap-2 text-xs md:text-sm text-gray-400">
@@ -319,7 +319,7 @@ const SearchBar = ({ isMobile = false }) => {
                                 </div>
                               </div>
 
-                              <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-[#82BC87] transform group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <svg className="w-4 h-4 md:w-5 md:h-5 text-gray-500 group-hover:text-cyan-400 transform group-hover:translate-x-1 transition-all duration-300 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
                               </svg>
                             </motion.button>
@@ -331,7 +331,7 @@ const SearchBar = ({ isMobile = false }) => {
                     <div className="p-3 md:p-4">
                       <button
                         onClick={handleSearch}
-                        className="w-full py-2 md:py-3 rounded-xl bg-gradient-to-r from-[#82BC87] to-[#6da972]
+                        className="w-full py-2 md:py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600
                                  text-white text-sm md:text-base font-medium hover:opacity-90 transition-all duration-300
                                  flex items-center justify-center gap-2 group"
                       >
@@ -368,8 +368,8 @@ const SearchBar = ({ isMobile = false }) => {
                         <button
                           key={index}
                           onClick={() => setSearchTerm(suggestion)}
-                          className="px-2 py-1 text-xs rounded-lg bg-[#82BC87]/10 text-[#82BC87] 
-                                   hover:bg-[#82BC87]/20 transition-colors duration-300"
+                          className="px-2 py-1 text-xs rounded-lg bg-cyan-500/10 text-cyan-400 
+                                   hover:bg-cyan-500/20 transition-colors duration-300"
                         >
                           {suggestion}
                         </button>

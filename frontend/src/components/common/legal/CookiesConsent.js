@@ -73,8 +73,8 @@ const CookieConsent = () => {
             <div className="relative bg-gray-900/95 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl overflow-y-auto">
               {/* Decorative Elements */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute -top-32 -left-32 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-                <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-[#E4D981]/20 rounded-full filter blur-[100px]" />
+                <div className="absolute -top-32 -left-32 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+                <div className="absolute -bottom-32 -right-32 w-64 h-64 bg-indigo-500/20 rounded-full filter blur-[100px]" />
               </div>
 
               {/* Make content area scrollable */}
@@ -82,8 +82,8 @@ const CookieConsent = () => {
                 {/* Header - Fixed */}
                 <div className="relative p-6 border-b border-white/10 flex-shrink-0">
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#82BC87]/10 flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
                       </svg>
                     </div>
@@ -121,8 +121,8 @@ const CookieConsent = () => {
                         className="bg-white/5 rounded-xl p-4 border border-white/10"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-[#82BC87]/10 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                          <div className="w-8 h-8 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
                               {item.icon}
                             </svg>
                           </div>
@@ -137,11 +137,11 @@ const CookieConsent = () => {
 
                   <div className="text-sm text-gray-400">
                     By continuing, you agree to our{' '}
-                    <PrefetchLink to="/privacy" onClick={handleLearnMore} className="text-[#82BC87] hover:text-[#E4D981] transition-colors duration-300">
+                    <PrefetchLink to="/privacy" onClick={handleLearnMore} className="text-cyan-500 hover:text-indigo-400 transition-colors duration-300">
                       Privacy Policy
                     </PrefetchLink>
                     {' '}and{' '}
-                    <PrefetchLink to="/terms" onClick={handleLearnMore} className="text-[#82BC87] hover:text-[#E4D981] transition-colors duration-300">
+                    <PrefetchLink to="/terms" onClick={handleLearnMore} className="text-cyan-500 hover:text-indigo-400 transition-colors duration-300">
                       Terms of Service
                     </PrefetchLink>
                   </div>
@@ -153,8 +153,8 @@ const CookieConsent = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={handleAccept}
-                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white font-medium 
-                             hover:shadow-lg hover:shadow-[#82BC87]/20 transition-all duration-300"
+                    className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium 
+                             hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-300"
                   >
                     Accept All Cookies
                   </motion.button>

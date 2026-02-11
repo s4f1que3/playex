@@ -51,9 +51,9 @@ const StreamingProviders = () => {
           className="text-center mb-14"
         >
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#82BC87] to-[#6da972] p-[2px] rotate-3">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 p-[2px] rotate-3">
               <div className="w-full h-full rounded-xl bg-gray-900/90 backdrop-blur-xl flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
                 </svg>
               </div>
@@ -61,7 +61,7 @@ const StreamingProviders = () => {
           </div>
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
             <span className="text-white">Browse by </span>
-            <span className="bg-gradient-to-r from-[#82BC87] via-[#E4D981] to-[#82BC87] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-cyan-500 via-indigo-500 to-cyan-500 bg-clip-text text-transparent">
               Streaming Service
             </span>
           </h2>
@@ -90,7 +90,7 @@ const StreamingProviders = () => {
                 className="w-full relative"
               >
                 {/* Card Container */}
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/90 to-black border border-white/10 hover:border-[#82BC87]/50 transition-all duration-500 backdrop-blur-xl group-hover:shadow-2xl group-hover:shadow-[#82BC87]/20">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/90 to-black border border-white/10 hover:border-cyan-500/50 transition-all duration-500 backdrop-blur-xl group-hover:shadow-2xl group-hover:shadow-cyan-500/20">
                   
                   {/* Gradient Background */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${provider.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-500`} />
@@ -131,7 +131,7 @@ const StreamingProviders = () => {
                   />
 
                   {/* Corner Accent */}
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-[#82BC87]/20 to-transparent rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-cyan-500/20 to-transparent rounded-bl-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
 
                 {/* Glow Effect */}
@@ -139,7 +139,7 @@ const StreamingProviders = () => {
                   className={`absolute -inset-1 rounded-2xl blur-xl transition-opacity duration-500 -z-10 ${
                     hoveredProvider === provider.id ? 'opacity-40' : 'opacity-0'
                   }`}
-                  style={{ background: `linear-gradient(135deg, ${provider.color}, #82BC87)` }}
+                  style={{ background: `linear-gradient(135deg, ${provider.color}, #06b6d4)` }}
                 />
               </motion.button>
             </motion.div>
@@ -154,8 +154,8 @@ const StreamingProviders = () => {
           transition={{ delay: 0.8 }}
           className="text-center mt-14"
         >
-          <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-[#82BC87]/10 to-[#E4D981]/10 border border-[#82BC87]/20">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+          <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500/10 to-indigo-500/10 border border-cyan-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-400" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
             </svg>
             <p className="text-gray-400 text-sm font-medium">

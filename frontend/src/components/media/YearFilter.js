@@ -34,7 +34,7 @@ const YearFilter = ({ selectedYear, onChange }) => {
           onChange={handleYearInput}
           onKeyDown={handleKeyDown}
           placeholder="Search year..."
-          className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-[#82BC87] w-2/3"
+          className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500 w-2/3"
         />
         {searchYear && isValidYear(searchYear) && (
           <button
@@ -50,7 +50,7 @@ const YearFilter = ({ selectedYear, onChange }) => {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => handleYearSelect(selectedYear)}
-            className="bg-[#82BC87] text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-[#6ea973] transition-colors"
+            className="bg-cyan-500 text-white px-3 py-1 rounded-full text-sm flex items-center gap-1 hover:bg-blue-600 transition-colors"
           >
             {selectedYear}
             <span className="ml-1">×</span>

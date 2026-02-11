@@ -166,17 +166,17 @@ const FavoritesPage = () => {
               transition={{ delay: 0.2 }}
               className="max-w-4xl"
             >
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#E4D981]/10 border border-[#E4D981]/20 mb-6">
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 mb-6">
                 <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E4D981] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#E4D981]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-500 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500" />
                 </span>
-                <span className="text-[#E4D981] font-medium">My Collection</span>
+                <span className="text-indigo-400 font-medium">My Collection</span>
               </div>
 
               <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
                 My Favorites
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#E4D981] to-[#d4c86e] ml-3">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 ml-3">
                   ({transformedData.length})
                 </span>
               </h1>
@@ -216,7 +216,7 @@ const FavoritesPage = () => {
                   {mediaType === value && (
                     <motion.div
                       layoutId="mediaType"
-                      className="absolute inset-0 bg-gradient-to-r from-[#E4D981] to-[#d4c86e] rounded-lg"
+                      className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg"
                       transition={{ type: "spring", duration: 0.6 }}
                     />
                   )}
@@ -287,7 +287,7 @@ const FavoritesPage = () => {
               transition={{ delay: 0.2 }}
               className="text-center py-12"
             >
-              <div className="text-[#E4D981] mb-4">
+              <div className="text-indigo-400 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>

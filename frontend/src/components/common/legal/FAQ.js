@@ -16,21 +16,21 @@ const FAQItem = ({ question, answer, index }) => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full group bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 text-left border border-white/5 
-                   hover:border-[#82BC87]/20 transition-all duration-500"
+                   hover:border-cyan-500/20 transition-all duration-500"
       >
         <div className="flex justify-between items-center gap-4">
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500
-              ${isOpen ? 'bg-[#82BC87]/20' : 'bg-white/5'}`}
+              ${isOpen ? 'bg-cyan-500/20' : 'bg-white/5'}`}
             >
               <motion.span
-                animate={{ color: isOpen ? '#82BC87' : '#9CA3AF' }}
+                animate={{ color: isOpen ? '#06b6d4' : '#9CA3AF' }}
                 className="text-xl font-bold"
               >
                 {(index + 1).toString().padStart(2, '0')}
               </motion.span>
             </div>
-            <h3 className="text-xl font-bold text-white group-hover:text-[#82BC87] transition-colors duration-300">
+            <h3 className="text-xl font-bold text-white group-hover:text-cyan-500 transition-colors duration-300">
               {question}
             </h3>
           </div>
@@ -38,7 +38,7 @@ const FAQItem = ({ question, answer, index }) => {
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.3 }}
             className={`w-6 h-6 flex items-center justify-center transition-colors duration-300
-              ${isOpen ? 'text-[#82BC87]' : 'text-gray-400'}`}
+              ${isOpen ? 'text-cyan-500' : 'text-gray-400'}`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -68,7 +68,7 @@ const FAQItem = ({ question, answer, index }) => {
       </button>
 
       {/* Decorative elements */}
-      <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-[#82BC87]/20 to-transparent opacity-0 group-hover:opacity-100 blur transition-opacity duration-500 -z-10" />
+      <div className="absolute -inset-px rounded-2xl bg-gradient-to-r from-cyan-500/20 to-transparent opacity-0 group-hover:opacity-100 blur transition-opacity duration-500 -z-10" />
     </motion.div>
   );
 };
@@ -78,7 +78,7 @@ const FAQ = () => {
     {
       question: "Who created playex?",
       answer: (
-        <p>Playex was created by <a href="https://www.linkedin.com/company/safique-solutions" className="text-[#82BC87] hover:text-[#E4D981]">NOVA</a></p>
+        <p>Playex was created by <a href="https://www.linkedin.com/company/safique-solutions" className="text-cyan-500 hover:text-indigo-400">NOVA</a></p>
       )
     },
     {
@@ -97,7 +97,7 @@ const FAQ = () => {
             <li><strong>WI-FI Issues</strong> - Ensure your internet connection is working.</li>
             <li><strong>Wait 2-3 Minutes</strong> - Sometimes, the player may have an interruption fetching the data to play the media. Give the player 2-3 minutes or reload the page to resolve this issue and play your media.</li>
             <li>If none of these work, try reloading the page. If that still doesn't work, contact us at  
-            <ContactLink className="text-[#82BC87] hover:text-[#E4D981]"
+            <ContactLink className="text-cyan-500 hover:text-indigo-400"
             subject="Player Issues">
                contact.playex@gmail.com</ContactLink>, describe your issue, 
                 and we will resolve this to the best of our ability ASAP.</li>
@@ -116,7 +116,7 @@ const FAQ = () => {
     {
       question: "How do I report a problem with a movie or TV show?",
       answer: (
-        <p>You can contact us at <a href="mailto:contact.playex@gmail.com" className="text-[#82BC87] hover:text-[#E4D981]">contact.playex@gmail.com</a>. Be sure to include a brief description of the issue.</p>
+        <p>You can contact us at <a href="mailto:contact.playex@gmail.com" className="text-cyan-500 hover:text-indigo-400">contact.playex@gmail.com</a>. Be sure to include a brief description of the issue.</p>
       )
     },
     {
@@ -160,17 +160,17 @@ const FAQ = () => {
               transition={{ delay: 0.2 }}
               className="max-w-4xl"
             >
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6 backdrop-blur-sm">
                 <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500" />
                 </span>
-                <span className="text-[#82BC87] font-medium">Help Center</span>
+                <span className="text-cyan-500 font-medium">Help Center</span>
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                 Frequently Asked
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 ml-3">
                   Questions
                 </span>
               </h1>
@@ -202,7 +202,7 @@ const FAQ = () => {
           <ContactLink
             buttonStyle={true}
             subject="FAQ Inquiries"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#82BC87] text-white font-medium hover:bg-[#6da972] transition-colors duration-300"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan-500 text-white font-medium hover:bg-blue-600 transition-colors duration-300"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />

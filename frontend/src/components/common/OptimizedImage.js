@@ -18,11 +18,12 @@ const OptimizedImage = ({
   const imgRef = useRef(null);
 
   // Lazy load images when they come into view
+  // Mobile optimization: Use larger margins and lower threshold
   useIntersectionObserver(imgRef, (entry) => {
     if (entry.isIntersecting && !isInView) {
       setIsInView(true);
     }
-  }, { rootMargin: '50px' }); // Start loading 50px before entering viewport
+  }); // Mobile-optimized margins applied automatically by hook
 
   const handleLoad = () => {
     setIsLoaded(true);

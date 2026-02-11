@@ -37,12 +37,12 @@ const Select = ({ value, onChange, options, className = '' }) => {
       <button
         onClick={() => setIsOpen(!isOpen)}
         ref={buttonRef}
-        className="w-full flex items-center justify-between bg-black/40 backdrop-blur-xl text-white border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none hover:border-[#82BC87]/50 transition-all text-sm group"
+        className="w-full flex items-center justify-between bg-black/40 backdrop-blur-xl text-white border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none hover:border-cyan-500/50 transition-all text-sm group"
       >
         <span className="text-gray-200 font-medium">{selectedOption?.name}</span>
         <motion.svg 
           animate={{ rotate: isOpen ? 180 : 0 }}
-          className="w-4 h-4 text-gray-400 group-hover:text-[#82BC87] transition-colors"
+          className="w-4 h-4 text-gray-400 group-hover:text-cyan-400 transition-colors"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -83,7 +83,7 @@ const Select = ({ value, onChange, options, className = '' }) => {
                 }}
                 className={`w-full text-left px-4 py-2.5 text-sm transition-colors
                   ${option.id === value 
-                    ? 'text-[#82BC87] bg-[#82BC87]/10' 
+                    ? 'text-cyan-400 bg-cyan-500/10' 
                     : 'text-gray-300 hover:text-white'}`}
               >
                 {option.name}

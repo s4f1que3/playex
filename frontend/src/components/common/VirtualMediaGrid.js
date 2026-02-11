@@ -2,16 +2,20 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import MediaCard from '../common/MediaCard';
+import { getMobileOverscan } from '../../utils/mobileOptimizations';
 
 const VirtualMediaGrid = ({ 
   items = [], 
   columns = 4,
   gap = 16,
   estimateSize = 300,
-  overscan = 3 
+  overscan 
 }) => {
   const parentRef = useRef(null);
   const parentOffsetRef = useRef(0);
+  
+  // Use mobile-optimized overscan if not provided
+  const effectiveOverscan = overscan ?? getMobileOverscan();
 
   useEffect(() => {
     parentOffsetRef.current = parentRef.current?.offsetTop ?? 0;
@@ -31,7 +35,7 @@ const VirtualMediaGrid = ({
     count: rows.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => estimateSize,
-    overscan: overscan,
+    overscan: effectiveOverscan,
   });
 
   if (!items || items.length === 0) {

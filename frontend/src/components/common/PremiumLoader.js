@@ -15,7 +15,7 @@ const PremiumLoader = ({ size = 'default', text = 'Loading', overlay = false }) 
       {/* Cinematic Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div 
-          className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#82BC87]/10 via-transparent to-transparent"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-500/10 via-transparent to-transparent"
           animate={{ 
             scale: [1, 1.5, 1],
             opacity: [0.3, 0.5, 0.3],
@@ -47,7 +47,7 @@ const PremiumLoader = ({ size = 'default', text = 'Loading', overlay = false }) 
           {[...Array(3)].map((_, index) => (
             <motion.div
               key={index}
-              className="absolute inset-0 rounded-full border border-[#82BC87]/20"
+              className="absolute inset-0 rounded-full border border-cyan-500/20"
               animate={{ 
                 rotate: [0, 360],
                 scale: [1, 1.1, 1]
@@ -72,7 +72,7 @@ const PremiumLoader = ({ size = 'default', text = 'Loading', overlay = false }) 
           {[...Array(12)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-[#82BC87]"
+              className="absolute w-1 h-1 bg-cyan-500"
               style={{
                 top: '50%',
                 left: '50%',
@@ -98,7 +98,7 @@ const PremiumLoader = ({ size = 'default', text = 'Loading', overlay = false }) 
 
           {/* Center Core */}
           <motion.div
-            className="absolute inset-8 rounded-full bg-gradient-to-r from-[#82BC87] to-[#E4D981] opacity-90"
+            className="absolute inset-8 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-500 opacity-90"
             animate={{
               scale: [1, 0.8, 1],
               rotate: [0, 180, 360],
@@ -118,7 +118,7 @@ const PremiumLoader = ({ size = 'default', text = 'Loading', overlay = false }) 
             
             {/* Inner Glow */}
             <motion.div
-              className="absolute inset-0 rounded-full bg-[#82BC87]"
+              className="absolute inset-0 rounded-full bg-cyan-500"
               animate={{
                 opacity: [0.5, 0.8, 0.5],
                 scale: [0.8, 1, 0.8]
@@ -140,7 +140,7 @@ const PremiumLoader = ({ size = 'default', text = 'Loading', overlay = false }) 
           className="mt-12 relative"
         >
           <motion.h2
-            className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] tracking-wider"
+            className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 tracking-wider"
             animate={{
               backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
             }}
@@ -159,7 +159,7 @@ const PremiumLoader = ({ size = 'default', text = 'Loading', overlay = false }) 
             {[...Array(3)].map((_, i) => (
               <motion.div
                 key={i}
-                className="w-2 h-2 rounded-full bg-[#82BC87]"
+                className="w-2 h-2 rounded-full bg-cyan-500"
                 animate={{
                   y: [-2, -8, -2],
                   opacity: [0.5, 1, 0.5],
@@ -177,7 +177,7 @@ const PremiumLoader = ({ size = 'default', text = 'Loading', overlay = false }) 
 
           {/* Glowing Line */}
           <motion.div
-            className="absolute -bottom-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#82BC87] to-transparent"
+            className="absolute -bottom-4 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
             animate={{
               scaleX: [0, 1, 0],
               opacity: [0, 1, 0]

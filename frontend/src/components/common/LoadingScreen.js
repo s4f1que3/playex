@@ -41,7 +41,7 @@ const LoadingScreen = ({ finishLoading }) => {
               cy="50"
             />
             <circle
-              className="text-[#82BC87] animate-loaderSpin origin-center"
+              className="text-cyan-500 animate-loaderSpin origin-center"
               strokeWidth="4"
               strokeDasharray="276"
               strokeDashoffset="20"
@@ -57,7 +57,7 @@ const LoadingScreen = ({ finishLoading }) => {
         
         {/* Text */}
         <div className="absolute bottom-0 left-0 right-0 text-center" style={{bottom: '15px'}}>
-          <h1 className="text-3xl font-bold text-[#82BC87] mb-2 animate-fadeIn"
+          <h1 className="text-3xl font-bold text-cyan-500 mb-2 animate-fadeIn"
           style={{position: 'relative', top: '-25px'}}>
             Playex
           </h1>

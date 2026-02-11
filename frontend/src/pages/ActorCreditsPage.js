@@ -91,7 +91,7 @@ const ActorCreditsPage = ({ type = 'movie' }) => {
             <div className="flex flex-col gap-4">
               <Link
                 to={`/actor/${id}`}
-                className="text-[#82BC87] hover:text-[#E4D981] transition duration-300 flex items-center gap-2 group"
+                className="text-cyan-400 hover:text-indigo-400 transition duration-300 flex items-center gap-2 group"
               >
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
@@ -136,7 +136,7 @@ const ActorCreditsPage = ({ type = 'movie' }) => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-black/30 text-white border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#82BC87]/50 hover:bg-black/40 transition-all duration-300"
+                className="bg-black/30 text-white border border-white/10 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 hover:bg-black/40 transition-all duration-300"
               >
                 <option value="popularity">Sort by Popularity</option>
                 <option value="release_date">Sort by Release Date</option>
@@ -146,7 +146,7 @@ const ActorCreditsPage = ({ type = 'movie' }) => {
 
               <Link
                 to={`/actor/${id}/${type === 'movie' ? 'tv' : 'movies'}`}
-                className="bg-[#82BC87]/10 hover:bg-[#82BC87]/20 text-[#82BC87] px-4 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 border border-[#82BC87]/20"
+                className="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 px-4 py-2 rounded-xl transition-all duration-300 flex items-center gap-2 border border-cyan-500/20"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M4 3a2 2 0 100 4h12a2 2 0 100-4H4z" />

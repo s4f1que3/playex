@@ -8,7 +8,7 @@ import WinterTheme from '../components/common/WinterTheme';
 
 const MainLayout = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-[#161616]">
+    <div className="flex flex-col min-h-screen bg-[#141822]">
       <ScrollToTop />
       <WinterTheme />
       <Header />

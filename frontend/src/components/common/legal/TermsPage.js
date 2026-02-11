@@ -12,8 +12,8 @@ const Section = ({ title, children }) => (
     className="mb-8"
   >
     <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-3">
-      <div className="w-10 h-10 rounded-xl bg-[#82BC87]/10 flex items-center justify-center flex-shrink-0">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-[#82BC87]" viewBox="0 0 20 20" fill="currentColor">
+      <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center flex-shrink-0">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-cyan-500" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0h8v12H6V4z" clipRule="evenodd" />
         </svg>
       </div>
@@ -27,7 +27,7 @@ const Section = ({ title, children }) => (
 
 const Subsection = ({ title, children }) => (
   <div className="mb-6">
-    <h3 className="text-xl font-semibold text-[#E4D981] mb-3">{title}</h3>
+    <h3 className="text-xl font-semibold text-indigo-400 mb-3">{title}</h3>
     <div className="text-gray-300 space-y-4">
       {children}
     </div>
@@ -56,17 +56,17 @@ const TermsPage = () => {
               transition={{ delay: 0.2 }}
               className="max-w-4xl"
             >
-              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-[#82BC87]/10 border border-[#82BC87]/20 mb-6 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 mb-6 backdrop-blur-sm">
                 <span className="relative flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#82BC87] opacity-75" />
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-[#82BC87]" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-500 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500" />
                 </span>
-                <span className="text-[#82BC87] font-medium">Legal Information</span>
+                <span className="text-cyan-500 font-medium">Legal Information</span>
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                 Terms of
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] ml-3">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 ml-3">
                   Service
                 </span>
               </h1>
@@ -85,12 +85,12 @@ const TermsPage = () => {
           >
             {/* Decorative Background */}
             <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#82BC87]/20 rounded-full filter blur-[100px]" />
-              <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-[#E4D981]/10 rounded-full filter blur-[120px]" />
+              <div className="absolute top-0 left-1/4 w-64 h-64 bg-cyan-500/20 rounded-full filter blur-[100px]" />
+              <div className="absolute bottom-0 right-1/3 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-[120px]" />
             </div>
 
             <div className="relative p-8">
-              <div className="text-sm text-[#82BC87] mb-8">Last Updated: March 11, 2025</div>
+              <div className="text-sm text-cyan-500 mb-8">Last Updated: March 11, 2025</div>
 
               <Section title="1. Introduction">
                 <p>
@@ -102,7 +102,7 @@ const TermsPage = () => {
 
               <Section title="1.2 Embed Players">
                 <p>
-                  We use three embed players on our website : Vidlink.pro, Embed.su, and Vidsrc.me. If at any time we refer to embedded players, these are the three we are talking about.
+                  We use six embed players on our website: Nova (Videasy), Star (Vidfast), VidLink, Surge (Mapple), Orion (Vidsrc), and VidSrc. If at any time we refer to embedded players, these are the six we are talking about.
                 </p>
               </Section>
 
@@ -258,7 +258,7 @@ const TermsPage = () => {
                 <ContactLink
                   buttonStyle={true}
                   subject="Terms of Service Inquiry"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#82BC87] text-white font-medium hover:bg-[#6da972] transition-colors duration-300"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan-500 text-white font-medium hover:bg-blue-600 transition-colors duration-300"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />

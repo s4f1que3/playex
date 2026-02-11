@@ -72,7 +72,7 @@ const MovieCarousel = ({ movies }) => {
                   {/* Adjust button size for mobile */}
                   <Link
                     to={`/movie/${movie.id}`}
-                    className="inline-block px-4 md:px-6 py-2 md:py-3 bg-[#82BC87] hover:bg-opacity-80 text-white rounded-lg transition duration-300 text-sm md:text-base"
+                    className="inline-block px-4 md:px-6 py-2 md:py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white rounded-lg transition duration-300 text-sm md:text-base shadow-lg shadow-cyan-500/30"
                   >
                     Watch Now
                   </Link>

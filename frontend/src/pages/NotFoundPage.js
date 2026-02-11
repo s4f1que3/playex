@@ -37,7 +37,7 @@ const NotFoundPage = () => {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#82BC87]/20 rounded-full filter blur-[100px]"
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full filter blur-[100px]"
         />
         <motion.div
           animate={{ 
@@ -49,7 +49,7 @@ const NotFoundPage = () => {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#E4D981]/20 rounded-full filter blur-[120px]"
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-500/20 rounded-full filter blur-[120px]"
         />
       </div>
 
@@ -73,7 +73,7 @@ const NotFoundPage = () => {
             }}
             className="relative inline-block mb-8"
           >
-            <div className="text-[12rem] font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-[#82BC87] to-[#E4D981] filter drop-shadow-glow">
+            <div className="text-[12rem] font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-indigo-500 filter drop-shadow-glow">
               404
             </div>
             <motion.div
@@ -86,7 +86,7 @@ const NotFoundPage = () => {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="absolute inset-0 bg-gradient-to-r from-[#82BC87]/20 to-[#E4D981]/20 filter blur-3xl"
+              className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-indigo-500/20 filter blur-3xl"
             />
           </motion.div>
 
@@ -115,8 +115,8 @@ const NotFoundPage = () => {
           >
             <Link
               to="/"
-              className="group relative overflow-hidden px-8 py-4 rounded-xl bg-gradient-to-r from-[#82BC87] to-[#6da972] text-white font-medium 
-                         hover:shadow-lg hover:shadow-[#82BC87]/20 transition-all duration-500"
+              className="group relative overflow-hidden px-8 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium 
+                         hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-500"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent 
                              transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
