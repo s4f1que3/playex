@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Toggle this boolean to enable/disable the system announcement
+const ENABLE_SYSTEM_ANNOUNCEMENT = false;
+
 const SystemAnnouncement = () => {
   const [showAnnouncement, setShowAnnouncement] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -12,6 +15,11 @@ const SystemAnnouncement = () => {
       setShowAnnouncement(false);
     }
   }, []);
+
+  // Return null if system announcement is disabled
+  if (!ENABLE_SYSTEM_ANNOUNCEMENT) {
+    return null;
+  }
 
   const handleDismiss = () => {
     sessionStorage.setItem('announcementDismissed', 'true');
