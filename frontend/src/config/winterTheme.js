@@ -1,7 +1,7 @@
 // ===== WINTER THEME CONFIGURATION =====
 // Master switch to enable/disable winter theme globally
 // Set to false to completely disable winter effects and hide toggle button
-export const WINTER_THEME_ENABLED = true;
+export const WINTER_THEME_ENABLED = false;
 
 // Snow configuration - optimized for performance
 export const SNOWFLAKE_COUNT = 30; // Number of falling snowflakes (reduced from 50)

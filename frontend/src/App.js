@@ -7,8 +7,6 @@ import PremiumLoader from './components/common/PremiumLoader';
 import { lazyLoadRoute, routeConfig } from './utils/lazyLoad';
 import { prefetchRoute, prefetchInitialData } from './utils/prefetchRoutes';
 import { HelmetProvider } from 'react-helmet-async';
-import { useSecurityProtection } from './hooks/useSecurityProtection';
-import { useDevToolsDetection } from './hooks/useDevToolsDetection';
 
 // Layouts
 import MainLayout from './Layouts/MainLayout';
@@ -55,10 +53,6 @@ const routes = {
 };
 
 function App() {
-  // Activate DevTools detection
-  useDevToolsDetection();
-  
-  useSecurityProtection();
 
   const [loading, setLoading] = useState(true);
   

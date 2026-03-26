@@ -1,5 +1,5 @@
 // Optimized Image Component with lazy loading, blur placeholder, and WebP support
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
 
 const OptimizedImage = ({ 

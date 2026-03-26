@@ -261,9 +261,7 @@ const SearchBar = ({ isMobile = false }) => {
                     <div className="max-h-[40vh] md:max-h-[60vh] overflow-y-auto overscroll-contain">
                       <div className="p-2 md:p-4 grid grid-cols-1 gap-2">
                         {results.map((item, index) => {
-                          const mediaType = item.media_type || (item.first_air_date ? 'tv' : 'movie');
-                          const title = item.title || item.name;
-
+                  
                           return (
                             <motion.button
                               key={`${item.id}-${item.media_type}`}

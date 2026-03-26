@@ -6,7 +6,7 @@ const { tmdbApi } = require('../config/tmdb');
 
 const generateSitemap = async () => {
   try {
-    const baseUrl = process.env.SITE_URL || 'https://playex.vercel.app';
+    const baseUrl = process.env.SITE_URL || 'https://playex.cc';
     const links = [];
 
     // Add static routes

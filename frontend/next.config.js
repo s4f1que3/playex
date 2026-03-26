@@ -15,7 +15,7 @@ const nextConfig = {
   // Environment variables
   env: {
     TMDB_API_KEY: process.env.TMDB_API_KEY,
-    SITE_URL: process.env.SITE_URL || 'https://playex.vercel.app',
+    SITE_URL: process.env.SITE_URL || 'https://playex.cc',
   },
 
   // Compression and bundling optimizations

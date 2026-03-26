@@ -8,6 +8,7 @@ const compression = require('compression');
 const emailRoutes = require('./routes/emailRoutes');
 const sharesRoutes = require('./routes/sharesRoutes');
 const tmdbRoutes = require('./routes/tmdbRoutes');
+const videoRoutes = require('./routes/videoRoutes');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -28,7 +29,7 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'http://localhost:5000',
-    'https://playex.vercel.app',
+    'https://playex.cc',
     'https://playex-frontend.vercel.app',
     'https://playex-backend.vercel.app',
     'https://playex.cc',
@@ -75,6 +76,7 @@ app.get('/', (req, res) => {
 app.use('/api/email', emailRoutes);
 app.use('/api/shares', sharesRoutes);
 app.use('/api/tmdb', tmdbRoutes);
+app.use('/api/video', videoRoutes);
 
 // 404 handler
 app.use((req, res) => {

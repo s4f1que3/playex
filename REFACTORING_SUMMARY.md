@@ -255,7 +255,7 @@ const { result } = await executeMonitoredQuery(db, query.query, query.values, { 
 1. **Load Testing**:
 ```bash
 # Use Apache Bench or LoadImpact
-ab -n 10000 -c 100 https://playex.vercel.app/
+ab -n 10000 -c 100 https://playex.cc/
 ```
 
 2. **Performance Profiling**:

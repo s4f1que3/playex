@@ -7,7 +7,6 @@ import { setLastWatchedEpisode, addToContinueWatching } from '../utils/LocalStor
 import { motion, AnimatePresence } from 'framer-motion';
 import PremiumLoader from '../components/common/PremiumLoader';
 import { useSlugResolver } from '../hooks/useSlugResolver';
-import { parseMediaUrl, createMediaUrl, getIdFromSlug } from '../utils/slugify';
 import SEO from '../components/common/SEO';
 import { setShowCompleted, removeShowCompleted } from '../utils/LocalStorage';
 
@@ -17,10 +16,10 @@ const PlayerPage = ({ mediaType }) => {
   const navigate = useNavigate();
   
   // Set to true to show Nova as temporarily unavailable
-  const NOVA_TEMPORARILY_UNAVAILABLE = false;
+  const NOVA_TEMPORARILY_UNAVAILABLE = true;
   
   const [playerType, setPlayerType] = useState(() => {
-    return localStorage.getItem('preferredPlayer') || 'mapple';
+    return localStorage.getItem('preferredPlayer') || 'mapple'; // MultiStream Pro is default
   });
   
   const [showUnavailableModal, setShowUnavailableModal] = useState(false);
@@ -256,7 +255,9 @@ const PlayerPage = ({ mediaType }) => {
                           viewBox="0 0 20 20"
                           fill="currentColor"
                         >
-                          {playerType === 'nova' ? (
+                          {playerType === 'custom' ? (
+                            <path fillRule="evenodd" d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 2V5h1v1H5zM3 13a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1v-3zm2 2v-1h1v1H5zM13 3a1 1 0 00-1 1v3a1 1 0 001 1h3a1 1 0 001-1V4a1 1 0 00-1-1h-3zm1 2v1h1V5h-1zm-1 8a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-3zm2 2v-1h1v1h-1z" clipRule="evenodd" />
+                          ) : playerType === 'nova' ? (
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           ) : playerType === 'star' ? (
                             <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" />
@@ -331,7 +332,7 @@ const PlayerPage = ({ mediaType }) => {
                             { id: 'vidsrc', displayName: 'Orion', icon: (
                               <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z" />
                             )}
-                          ].map(({ id, displayName, icon }, index) => (
+                          ].map(({ id, displayName, icon, featured, description }, index) => (
                             <motion.button
                               key={id}
                               initial={{ opacity: 0, x: -20 }}
@@ -346,7 +347,9 @@ const PlayerPage = ({ mediaType }) => {
                                 playerType === id
                                   ? 'bg-gradient-to-r from-cyan-500/20 to-indigo-500/20 border border-cyan-500/30'
                                   : 'hover:bg-white/5 border border-transparent'
-                              } ${(id === 'vidlink') && NOVA_TEMPORARILY_UNAVAILABLE ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              } ${(id === 'vidlink') && NOVA_TEMPORARILY_UNAVAILABLE ? 'opacity-50 cursor-not-allowed' : ''} ${
+                                featured ? 'border border-cyan-500/20' : ''
+                              }`}
                             >
                               {/* Icon */}
                               <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
@@ -367,11 +370,23 @@ const PlayerPage = ({ mediaType }) => {
                               </div>
                               
                               {/* Name */}
-                              <span className={`font-medium ${
-                                playerType === id ? 'text-white' : 'text-gray-300'
-                              }`}>
-                                {displayName}
-                              </span>
+                              <div className="flex flex-col items-start flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className={`font-medium ${
+                                    playerType === id ? 'text-white' : 'text-gray-300'
+                                  }`}>
+                                    {displayName}
+                                  </span>
+                                  {featured && playerType !== id && (
+                                    <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-gradient-to-r from-cyan-500 to-indigo-500 text-white rounded-full">
+                                      Recommended
+                                    </span>
+                                  )}
+                                </div>
+                                {featured && (
+                                  <span className="text-xs text-cyan-400">{description}</span>
+                                )}
+                              </div>
                               
                               {/* Active Indicator */}
                               {playerType === id && (
@@ -396,7 +411,7 @@ const PlayerPage = ({ mediaType }) => {
             </div>
 
             <AnimatePresence>
-              {(playerType === 'nova' || playerType === 'star' || playerType === 'vidlink' || playerType === 'mapple' || playerType === 'vidsrc') && (
+              {(playerType === 'nova' || playerType === 'star' || playerType === 'vidlink' || playerType === 'mapple' || playerType === 'vidsrc' || playerType === 'custom') && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -410,15 +425,20 @@ const PlayerPage = ({ mediaType }) => {
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                       </svg>
                       <span className="text-gray-300">
-                        If {playerType === 'nova' ? 'Nova' : playerType === 'star' ? 'Star' : playerType === 'vidlink' ? 'VidLink' : playerType === 'mapple' ? 'Surge' : playerType === 'vidsrc' ? 'Orion' : ''} isn't working, please try another player: 
-                        <span> Ensure you have an</span>
-                        <span className="
-                        text-cyan-400 font-medium ml-1 hover:text-cyan-300 
-                        cursor-pointer transition-colors duration-300"> 
-                            <a href=
-                            "/AdBlockers" target = "_blank" rel="noreferrer noopener">
-                              ad blocker.</a>
-                          </span>
+                        {playerType === 'custom' 
+                          ? 'Multiple sources available. Switch sources if one isn\'t working.'
+                          : `If ${playerType === 'nova' ? 'Nova' : playerType === 'star' ? 'Star' : playerType === 'vidlink' ? 'VidLink' : playerType === 'mapple' ? 'Surge' : playerType === 'vidsrc' ? 'Orion' : ''} isn't working, please try another player:`
+                        }
+                        {playerType !== 'custom' && (
+                          <>
+                            <span> Ensure you have an</span>
+                            <span className="text-cyan-400 font-medium ml-1 hover:text-cyan-300 cursor-pointer transition-colors duration-300"> 
+                              <a href="/AdBlockers" target="_blank" rel="noreferrer noopener">
+                                ad blocker.
+                              </a>
+                            </span>
+                          </>
+                        )}
                       </span>
                     </div>
                   </div>

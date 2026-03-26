@@ -7,13 +7,9 @@ import './styles/winter.css';
 import './styles/chrome-optimizations.css';
 import './styles/mobile-optimizations.css';
 import './i18n'; // Initialize i18n
-import { initializeSourceCodeProtection, sanitizeSourceMaps } from './utils/sourceCodeProtection';
 import { initAllChromeOptimizations } from './utils/chromeOptimizations';
 import { initMobileOptimizations } from './utils/mobileOptimizations';
 
-// Initialize source code protection
-initializeSourceCodeProtection();
-sanitizeSourceMaps();
 
 // Initialize Chrome-specific optimizations
 initAllChromeOptimizations();
@@ -29,13 +25,15 @@ const queryClient = new QueryClient({
       cacheTime: 900000, // 15 minutes
       retry: 2,
       refetchOnWindowFocus: false,
-      // Use Chrome's requestIdleCallback for background refetching
-      refetchOnMount: window.__USE_IDLE_CALLBACK__ ? 'always' : true,
     },
   },
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Root element not found');
+}
+const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>

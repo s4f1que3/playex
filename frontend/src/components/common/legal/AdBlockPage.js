@@ -25,14 +25,7 @@ const Section = ({ title, children }) => (
   </motion.div>
 );
 
-const Subsection = ({ title, children }) => (
-  <div className="mb-6">
-    <h3 className="text-xl font-semibold text-indigo-400 mb-3">{title}</h3>
-    <div className="text-gray-300 space-y-4">
-      {children}
-    </div>
-  </div>
-);
+
 
 const AdBlockCard = ({ title, description, link }) => (
   <div className="bg-gray-800/50 rounded-xl p-6 hover:bg-gray-800/70 transition-all duration-300 border border-white/5">

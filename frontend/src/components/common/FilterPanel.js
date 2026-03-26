@@ -138,7 +138,7 @@ const FilterPanel = ({ mediaType }) => {
   ).length;
 
   // Fetch genres
-  const { data } = useQuery({
+  const {} = useQuery({
     queryKey: ['genres', mediaType],
     queryFn: () => tmdbApi.get(`/genre/${mediaType === 'tv' ? 'tv' : 'movie'}/list`)
       .then(res => res.data.genres),

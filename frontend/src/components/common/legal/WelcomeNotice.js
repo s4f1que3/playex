@@ -75,7 +75,7 @@ const WelcomeNotice = () => {
                   <div className="space-y-4">
                     <h4 className="text-lg font-semibold text-indigo-400">Domain Update</h4>
                     <p className="text-gray-300">
-                      We've moved from "playex.vercel.app" to "playex.cc" for an improved experience.
+                      We've moved from "playex.cc" to "playex.cc" for an improved experience.
                       This change might affect your saved preferences and viewing history.
                     </p>
                   </div>
