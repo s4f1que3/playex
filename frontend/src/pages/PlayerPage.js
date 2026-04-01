@@ -67,7 +67,9 @@ const PlayerPage = ({ mediaType }) => {
       }
     },
     staleTime: 300000,
-    enabled: !(playerType === 'vidlink' && NOVA_TEMPORARILY_UNAVAILABLE)
+    enabled: !(playerType === 'vidlink' && NOVA_TEMPORARILY_UNAVAILABLE) && 
+             !!id && 
+             (mediaType === 'movie' || (mediaType === 'tv' && !!season && !!episode))
   });
   
   useEffect(() => {
@@ -92,6 +94,11 @@ const PlayerPage = ({ mediaType }) => {
       }
     }
   }, [mediaType, id, season, episode, data]);
+  
+  
+  if (slugLoading) {
+    return <PremiumLoader size="large" text="Loading Content" overlay={true} />;
+  }
   
   if (isLoading) {
     return <PremiumLoader size="large" text="Preparing Content" overlay={true} />;
