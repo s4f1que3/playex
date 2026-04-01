@@ -19,7 +19,7 @@ const PlayerPage = ({ mediaType }) => {
   const NOVA_TEMPORARILY_UNAVAILABLE = true;
   
   const [playerType, setPlayerType] = useState(() => {
-    return localStorage.getItem('preferredPlayer') || 'mapple'; // MultiStream Pro is default
+    return localStorage.getItem('preferredPlayer') || 'vidsrc'; 
   });
   
   const [showUnavailableModal, setShowUnavailableModal] = useState(false);
